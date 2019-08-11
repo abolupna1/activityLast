@@ -15,6 +15,9 @@ namespace AActivity.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
+
+
+
     public class AcademicYearsController : Controller
     {
         private readonly ApplicationDbContext _context;
