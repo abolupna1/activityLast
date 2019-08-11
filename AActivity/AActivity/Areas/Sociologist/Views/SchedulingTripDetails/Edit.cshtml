@@ -1,0 +1,111 @@
+﻿
+@model IList<AActivity.Models.SchedulingTripDetail>
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int bb = ViewBag.tripCount;
+}
+@functions{
+    string getTripDateById(int id)
+    {
+        return "TripDate" + id;
+    }
+}
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-plus"></i>
+        رحلات جديدة
+    </h5>
+    <div class="card-body">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <ul class="list-group list-group-horizontal m-3">
+                <li class="list-group-item bg-primary text-white">الجهة التعليمية</li>
+                <li class="list-group-item">@ViewBag.EducationalBodies.Name</li>
+                <li class="list-group-item bg-primary text-white">الفترة </li>
+                <li class="list-group-item">
+                    السنة الدراسية :  @ViewBag.SchedulingTripHeadId.AcademicYear / @ViewBag.SchedulingTripHeadId.Semester / التاريخ : @ViewBag.SchedulingTripHeadId.FromDate.ToString("dd / MM / yyyy") -  @ViewBag.SchedulingTripHeadId.ToDate.ToString("dd / MM / yyyy")
+                </li>
+            </ul>
+            <table class="table table-bordered ">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>نوع الرحلة</th>
+                        <th>التريخ</th>
+                        <th>ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <input type="hidden" name"id" value="@ViewBag.SchedulingTripHeadId.Id" />
+                    <input type="hidden" name"EducationalBodyId" value="@ViewBag.EducationalBodies.Id" />
+                    <input type="hidden" name"tripCount" value="@bb" />
+
+                    @{ int c = 1;}
+                    @for (int i = 0; i < ViewBag.tripCount; i++)
+                    {
+                        <tr>
+                            <td hidden>
+                                <input type="hidden" asp-for="@Model[i].Id" />
+
+                                <input type="hidden" asp-for="@Model[i].EducationalBodyId" class="form-control" value="@ViewBag.EducationalBodies.Id" />
+                                <input type="hidden" asp-for="@Model[i].SchedulingTripHeadId" class="form-control" value="@ViewBag.SchedulingTripHeadId.Id" />
+                            </td>
+                            <td>@c</td>
+                            <td>
+                                <select asp-for="@Model[i].TripTypeId" class="custom-select" asp-items="ViewBag.TripTypeId">
+                                    <option value="">الرجاء الإختيار</option>
+                                </select>
+                                <span asp-validation-for="@Model[i].TripTypeId" class="text-danger"></span>
+
+                            </td>
+                        
+                            <td>
+                                <input type="text" id="@getTripDateById(i)" asp-for="@Model[i].TripDate" class="form-control" />
+                                <span asp-validation-for="@Model[i].TripDate" class="text-danger"></span>
+                            </td>
+                            <td>
+                                <input asp-for="@Model[i].Notce" class="form-control" />
+                                <span asp-validation-for="@Model[i].Notce" class="text-danger"></span>
+                            </td>
+                        </tr>
+                        c++;
+                    }
+
+                </tbody>
+            </table>
+
+            <div class="form-group col-12 mt-5">
+                <a class="btn  btn-outline-primary btn-lg" asp-action="Details" asp-route-id="@ViewBag.EducationalBodies.Id" asp-controller="SchedulingTripDetails"> <i class="fas fa-share-square"></i> تراجع </a>
+
+                <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            @for (int b = 0; b   < bb ; b++) {
+
+                @:$("#@getTripDateById(b)").datepicker();
+            };
+
+
+        });
+
+
+    </script>
+
+}

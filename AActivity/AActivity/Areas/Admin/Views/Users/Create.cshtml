@@ -1,0 +1,78 @@
+﻿@model AActivity.Areas.Admin.ModelViews.UserCreate
+
+@{
+    ViewData["Title"] = "انشاء";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   
+    
+}
+
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-plus"></i>
+        مستخد جديد
+    </h5>
+    <div class="card-body">
+        @if (ViewBag.msg != null)
+        {
+        <h5 class="text-center text-danger">@ViewBag.msg</h5>
+        }
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label "></label>
+                <input asp-for="FullName" class="form-control form-control-lg" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control form-control-lg" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control form-control-lg" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control form-control-lg" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+
+            @foreach (var role in Model.Roles)
+            {
+          
+                <div class="custom-control custom-checkbox   my-1 mr-sm-2">
+
+                    <input type="checkbox" name="roles[]" value="@role.Name" class="custom-control-input" id="@role.Name">
+                    <label class="custom-control-label" for="@role.Name">@role.ArName</label>
+                </div>
+         
+
+            }
+
+
+
+
+
+            <div class="form-group col-12 mt-5">
+
+                <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+                <a class="btn  btn-outline-primary btn-lg" asp-action="Index"> <i class="fas fa-share-square"></i> تراجع </a>
+
+            </div>
+            </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

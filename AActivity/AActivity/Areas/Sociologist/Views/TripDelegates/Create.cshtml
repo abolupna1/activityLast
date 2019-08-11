@@ -1,0 +1,121 @@
+﻿@model List<AActivity.Models.TripDelegate>
+
+@{
+    ViewData["Title"] = "اضافة";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@functions{
+    string ishidden()
+    {
+        if (User.IsInRole("Admin")) { return ""; }
+
+        return "hidden";
+    }
+}
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold " >
+        <i class="fas fa-plus"></i>
+        اضافة منتدبين
+    </h5>
+    <div class="card-body">
+        @if ( @TempData["message"] != null)
+        {
+            <div class="alert alert-danger">@TempData["message"] </div>
+
+        }
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input hidden name="bokingId" value="@ViewBag.TripBookingId" />
+            <table class="table table-bordered">
+                <thead>
+                <th>#</th>
+                <th>رقم الموظف</th>
+                <th>اسم الموظف</th>
+                <th>المسمى الوظيفي</th>
+                <th @ishidden()> الجهات التعليمية</th>
+                </thead>
+                <tbody>
+                    @{int i = 1;}
+                    @for (int j = 0; j < ViewBag.countbus; j++)
+                    {
+                        <tr>
+                            <th>@i</th>
+                            <td>
+
+                                <input type="text" asp-for="@Model[j].EmployeeNumber" class="form-control" />
+                                <span asp-validation-for="@Model[j].EmployeeNumber" class="text-danger"></span>
+                            </td>
+                            <td>
+                                <input asp-for="@Model[j].EmployeeName" class="form-control" />
+                                <span asp-validation-for="@Model[j].EmployeeName" class="text-danger"></span>
+                            </td>
+                            <td>
+                                <input asp-for="@Model[j].JopName" class="form-control" />
+                                <span asp-validation-for="@Model[j].JopName" class="text-danger"></span>
+                            </td>
+
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <td class="text-center">
+                                    <div class="form-group form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" asp-for="@Model[j].IsFromEducationBody" />
+                                        </label>
+                                    </div>
+                                </td>
+                            }
+
+                            else if (User.IsInRole("Supervisor"))
+                            {
+                                <td hidden>
+                                    <div class="form-group form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" checked asp-for="@Model[j].IsFromEducationBody" />
+                                        </label>
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td hidden>
+                                    <div class="form-group form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" asp-for="@Model[j].IsFromEducationBody" />
+                                        </label>
+                                    </div>
+                                </td>
+                            }
+
+                            <td hidden>
+                                <input asp-for="@Model[j].TripBookingId" value="@ViewBag.TripBookingId" class="form-control" asp-items="ViewBag.TripBookingId" />
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+            </table>
+
+
+            <div class="form-group col-12 mt-5">
+                @if (ViewBag.countbus > 0)
+                {
+                    <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+                }
+
+                <a class="btn  btn-outline-primary btn-lg" asp-action="Index" asp-route-bokingId="@ViewBag.TripBookingId" asp-controller="TripDelegates"> <i class="fas fa-share-square"></i> تراجع </a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+
+}

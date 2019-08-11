@@ -1,0 +1,160 @@
+﻿
+@model IList<AActivity.Models.SchedulingTripDetail>
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int bb = ViewBag.tripCount;
+}
+@functions{
+    string checkbox(int id)
+    {
+
+        return "checkbox" + id;
+
+    }
+}
+
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-info"></i>
+        تفاصيل رحلات الجهة التعليمية
+    </h5>
+    <div class="card-body">
+        <h3 class="text-center text-danger mt-3 mb-3">هل  تريد الحذف بالفعل ؟</h3>
+        <form asp-action="Delete" id="form_Delete">
+            
+            <input name="id" type="hidden" value="@ViewBag.SchedulingTripHeadId.Id" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <ul class="list-group list-group-horizontal m-3">
+                <li class="list-group-item bg-primary text-white">الجهة التعليمية</li>
+                <li class="list-group-item">@ViewBag.EducationalBodies.Name</li>
+                <li class="list-group-item bg-primary text-white">الفترة </li>
+                <li class="list-group-item">
+                    السنة الدراسية :  @ViewBag.SchedulingTripHeadId.AcademicYear / @ViewBag.SchedulingTripHeadId.Semester / التاريخ : @ViewBag.SchedulingTripHeadId.FromDate.ToString("dd / MM / yyyy") -  @ViewBag.SchedulingTripHeadId.ToDate.ToString("dd / MM / yyyy")
+                </li>
+            </ul>
+            <table class="table table-bordered ">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>نوع الرحلة</th>
+                        <th>التريخ</th>
+                        <th>ملاحظات</th>
+                        <th>
+                            <div class="custom-control custom-checkbox text-danger">
+                                <input type="checkbox" class="custom-control-input text-danger" id="checkAll">
+                                <label class="custom-control-label" for="checkAll"></label>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @{ int c = 1;}
+                    @for (int i = 0; i < ViewBag.tripCount; i++)
+                    {
+                        <tr>
+
+                            <td>@c</td>
+                            <td>
+                                @Model[i].TripType.Name
+
+                            </td>
+                          
+                            <td>
+                                @Model[i].TripDate.ToString("dd - MM - yyyy")
+                            </td>
+                            <td>
+                                @Model[i].Notce
+                            </td>
+                            <td>
+                                <div class="custom-control custom-checkbox">
+
+                                    <input type="checkbox" name="checkForDelete" value="@Model[i].Id" class="custom-control-input chkId" id="@checkbox(Model[i].Id)">
+                                    <label class="custom-control-label" for="@checkbox(Model[i].Id)"></label>
+                                </div>
+                            </td>
+                        </tr>
+                        c++;
+                    }
+
+                </tbody>
+            </table>
+
+            <div class="form-group col-12 mt-5">
+
+
+                <a class="btn  btn-outline-primary btn-lg" asp-action="Details" asp-route-id="@ViewBag.EducationalBodies.Id" asp-controller="SchedulingTripDetails"> <i class="fas fa-share-square"></i> تراجع </a>
+
+                <a class="btn  btn-outline-danger btn-lg" data-toggle="modal" data-target="#CreateTrips" href="#"><i class="fas fa-trash"></i>     حذف السجلات المحددة </a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- model delete -->
+
+<div class="modal  fade" id="CreateTrips">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title text-center">
+                    تاكيد الحذف
+
+                </h4>
+            </div>
+
+            <div class="modal-body">
+
+
+                <h3 class="text-center text-danger">هل انت متاكد من حذف السجلات  ؟</h3>
+
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-success text-white" data-dismiss="modal"> <i class="fas fa-redo"></i> تراجع</a>
+
+                <button id="submit" class="btn btn-outline-danger  " style="cursor:pointer"> <i class="fas fa-trash"></i>   نعم  </button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#checkAll').click(function () {
+                if ($(this).is(":checked"))
+                    $('.chkId').prop('checked', true);
+                else
+                    $('.chkId').prop('checked', false);
+            });
+
+            $("#submit").click(function () {
+                $("#form_Delete").submit();
+
+            })
+
+
+        });
+
+
+    </script>
+
+}

@@ -1,0 +1,91 @@
+﻿@model AActivity.Models.AppSetting
+
+@{
+    ViewData["Title"] = "ضبط الإعدادات";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-cogs"></i>
+       ضبط الإعدادات
+    </h5>
+    <div class="card-body">
+
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-row">
+                <div class="form-group col-md-3 mb-4">
+                    <label asp-for="BookingTime" class="control-label"></label>
+                    <input asp-for="BookingTime" class="form-control form-control-lg" />
+                    <span asp-validation-for="BookingTime" class="text-danger"></span>
+                </div>
+                <div class="form-group  col-md-3 mb-4">
+                    <label asp-for="QtyDeanshipDelegates" class="control-label"></label>
+                    <input asp-for="QtyDeanshipDelegates" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyDeanshipDelegates" class="text-danger"></span>
+                </div>
+                <div class="form-group  col-md-3 mb-4">
+                    <label asp-for="QtyInstitutesDelegates" class="control-label"></label>
+                    <input asp-for="QtyInstitutesDelegates" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyInstitutesDelegates" class="text-danger"></span>
+                </div>
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="QtyCollegesDelegates" class="control-label"></label>
+                    <input asp-for="QtyCollegesDelegates" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyCollegesDelegates" class="text-danger"></span>
+                </div>
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="QtyPassengersInOneBus" class="control-label"></label>
+                    <input asp-for="QtyPassengersInOneBus" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyPassengersInOneBus" class="text-danger"></span>
+                </div>
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="QtyOmrahDaysTrip" class="control-label"></label>
+                    <input asp-for="QtyOmrahDaysTrip" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyOmrahDaysTrip" class="text-danger"></span>
+                </div>
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="QtyInternalDaysTrip" class="control-label"></label>
+                    <input asp-for="QtyInternalDaysTrip" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyInternalDaysTrip" class="text-danger"></span>
+                </div>
+
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="QtyExternalDaysTrip" class="control-label"></label>
+                    <input asp-for="QtyExternalDaysTrip" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyExternalDaysTrip" class="text-danger"></span>
+                </div>
+
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="AmountExternalCreditToTrip" class="control-label"></label>
+                    <input asp-for="AmountExternalCreditToTrip" class="form-control form-control-lg" />
+                    <span asp-validation-for="AmountExternalCreditToTrip" class="text-danger"></span>
+                </div>
+
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="AmountInternalCreditToTrip" class="control-label"></label>
+                    <input asp-for="AmountInternalCreditToTrip" class="form-control form-control-lg" />
+                    <span asp-validation-for="AmountInternalCreditToTrip" class="text-danger"></span>
+                </div>
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="AmountOmrahCreditToTrip" class="control-label"></label>
+                    <input asp-for="AmountOmrahCreditToTrip" class="form-control form-control-lg" />
+                    <span asp-validation-for="AmountOmrahCreditToTrip" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-12 mt-5">
+                    <a class="btn  btn-outline-primary btn-lg" asp-action="Index"> <i class="fas fa-share-square"></i> تراجع </a>
+
+                    <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

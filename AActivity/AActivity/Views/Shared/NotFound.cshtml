@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewData["Title"] = "غير موجود";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="alert alert-dismissible alert-warning">
+
+    <h1 class="alert-heading">خطا 404</h1>
+
+    @if (ViewBag.errorMessage != null)
+    {
+        <h3 class="mb-0"> @ViewBag.errorMessage</h3>
+        <hr />
+        <h3 class="mb-0"> @ViewBag.Path</h3>
+        <hr />
+        <h3 class="mb-0"> @ViewBag.QS</h3>
+
+    }
+
+
+
+</div>
+
+<a class="btn  btn-outline-primary btn-lg" asp-area="Sociologist" asp-controller="Home" asp-action="Index"> <i class="fas fa-share-square"></i> الرجوع للقائمة </a>
+

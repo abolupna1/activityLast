@@ -1,0 +1,185 @@
+﻿@model IEnumerable<AActivity.Models.AppSetting>
+
+@{
+    ViewData["Title"] = "الإعدادات";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .text-gold {
+        color: #c0a05f !important
+    }
+</style>
+
+
+<div class="card mt-5">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-cogs"></i>
+        ضبط الإعدادات
+    </h5>
+
+</div>
+@if (Model.Any())
+{
+    @foreach (var item in Model)
+    {
+<ul class="list-group ">
+    <li class="list-group-item text-primary">
+
+        <div class="row ">
+            <i class="fa fa-calendar-alt fa-2x text-left  col-1"></i>
+            <h5 class="col-10 text-right "> @Html.DisplayNameFor(model => model.BookingTime)</h5>
+            <h5 class="col-1 text-right">
+                <span class=" font-weight-bolder">
+                    @Html.DisplayFor(modelItem => item.BookingTime)
+                </span>
+            </h5>
+        </div>
+    </li>
+    <li class="list-group-item text-success">
+        <div class="row">
+            <i class="fa fa-users fa-2x text-left  col-1"></i>
+            <h5 class="col-10 text-right"> @Html.DisplayNameFor(model => model.QtyDeanshipDelegates)</h5>
+            <h4 class="col-1 text-right">
+                <span class="font-weight-bolder">
+                    @Html.DisplayFor(modelItem => item.QtyDeanshipDelegates)
+                </span>
+            </h4>
+        </div>
+    </li>
+    <li class="list-group-item text-success">
+        <div class="row">
+            <i class="fa fa-users fa-2x text-left col-1"></i>
+            <h5 class="col-10 text-right"> @Html.DisplayNameFor(model => model.QtyInstitutesDelegates)</h5>
+            <h4 class="col-1 text-right">
+                <span class="font-weight-bolder">
+                    @Html.DisplayFor(modelItem => item.QtyInstitutesDelegates)
+                </span>
+            </h4>
+        </div>
+
+    </li>
+    <li class="list-group-item text-success">
+        <div class="row">
+            <i class="fa fa-users fa-2x text-left col-1"></i>
+            <h5 class="col-10 text-right"> @Html.DisplayNameFor(model => model.QtyCollegesDelegates)</h5>
+            <h4 class="col-1 text-right">
+                <span class="font-weight-bolder">
+                    @Html.DisplayFor(modelItem => item.QtyCollegesDelegates)
+                </span>
+            </h4>
+        </div>
+    </li>
+    <li class="list-group-item text-success">
+
+        <div class="row">
+            <i class="fa fa-users fa-2x text-left  col-1"></i>
+            <h5 class="col-10 text-right"> @Html.DisplayNameFor(model => model.QtyPassengersInOneBus)</h5>
+            <h4 class="col-1 text-right">
+                <span class="font-weight-bolder">
+                    @Html.DisplayFor(modelItem => item.QtyPassengersInOneBus)
+                </span>
+            </h4>
+        </div>
+    </li>
+    <li class="list-group-item text-warning">
+
+        <div class="row">
+            <i class="fa fa-credit-card fa-2x text-left  col-1"></i>
+            <h5 class="col-10 text-right"> @Html.DisplayNameFor(model => model.AmountExternalCreditToTrip)</h5>
+            <h4 class="col-1 text-right">
+                <span class="font-weight-bolder">
+                    @Html.DisplayFor(modelItem => item.AmountExternalCreditToTrip)
+                </span>
+            </h4>
+        </div>
+    </li>
+
+    <li class="list-group-item text-warning">
+
+        <div class="row">
+            <i class="fa fa-credit-card fa-2x text-left  col-1"></i>
+            <h5 class="col-10 text-right"> @Html.DisplayNameFor(model => model.AmountInternalCreditToTrip)</h5>
+            <h4 class="col-1 text-right">
+                <span class="font-weight-bolder">
+                    @Html.DisplayFor(modelItem => item.AmountInternalCreditToTrip)
+                </span>
+            </h4>
+        </div>
+    </li>
+
+    <li class="list-group-item text-warning">
+
+        <div class="row">
+            <i class="fa fa-credit-card fa-2x text-left  col-1"></i>
+            <h5 class="col-10 text-right"> @Html.DisplayNameFor(model => model.AmountOmrahCreditToTrip)</h5>
+            <h4 class="col-1 text-right">
+                <span class="font-weight-bolder">
+                    @Html.DisplayFor(modelItem => item.AmountOmrahCreditToTrip)
+                </span>
+            </h4>
+        </div>
+    </li>
+
+    <li class="list-group-item text-dark">
+
+        <div class="row">
+            <i class="fa fa-calendar-day fa-2x text-left  col-1"></i>
+            <h5 class="col-10 text-right"> @Html.DisplayNameFor(model => model.QtyExternalDaysTrip)</h5>
+            <h4 class="col-1 text-right">
+                <span class="font-weight-bolder">
+                    @Html.DisplayFor(modelItem => item.QtyExternalDaysTrip)
+                </span>
+            </h4>
+        </div>
+    </li>
+
+    <li class="list-group-item">
+
+        <div class="row">
+            <i class="fa fa-calendar-day fa-2x text-left  col-1"></i>
+            <h5 class="col-10 text-right"> @Html.DisplayNameFor(model => model.QtyInternalDaysTrip)</h5>
+            <h4 class="col-1 text-right">
+                <span class="font-weight-bolder">
+                    @Html.DisplayFor(modelItem => item.QtyInternalDaysTrip)
+                </span>
+            </h4>
+        </div>
+    </li>
+
+    <li class="list-group-item">
+
+        <div class="row">
+            <i class="fa fa-calendar-day fa-2x text-left  col-1"></i>
+            <h5 class="col-10 text-right"> @Html.DisplayNameFor(model => model.QtyOmrahDaysTrip)</h5>
+            <h4 class="col-1 text-right">
+                <span class="font-weight-bolder">
+                    @Html.DisplayFor(modelItem => item.QtyOmrahDaysTrip)
+                </span>
+            </h4>
+        </div>
+    </li>
+
+    <li class="list-group-item">
+        <a class="btn  btn-outline-primary btn-lg" asp-action="Index" asp-controller="Home"> <i class="fas fa-share-square"></i> تراجع </a>
+
+        <a class="btn btn-lg btn-outline-gold" asp-action="Edit" asp-route-id="@item.Id">ضبط الإعدادات</a>
+
+
+    </li>
+</ul>
+ 
+}
+}else{
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a class="btn  btn-outline-primary btn-lg" asp-action="Index" asp-controller="Home"> <i class="fas fa-share-square"></i> تراجع </a>
+
+            <a class="btn btn-lg btn-outline-gold" asp-action="Create">ضبط الإعدادات </a>
+
+        </li>
+    </ul>
+   
+}
+
+

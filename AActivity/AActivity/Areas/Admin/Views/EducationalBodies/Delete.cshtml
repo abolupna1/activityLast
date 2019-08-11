@@ -1,0 +1,50 @@
+﻿@model AActivity.Models.EducationalBody
+
+@{
+    ViewData["Title"] = "  جهة تعليمية حذف";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-trash"></i>
+        حذف الجهة التعليمية
+    </h5>
+    <div class="card-body">
+        <h3 class="text-center text-danger">هل تريد الحذف بالفعل ؟</h3>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name) :
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.EntityType) :
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.EntityType)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.User):
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.User.FullName)
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group col-12 mt-5">
+
+
+                <a class="btn  btn-outline-primary btn-lg" asp-action="Index"> <i class="fas fa-share-square"></i> تراجع </a>
+                <button class="btn btn-outline-danger  btn-lg" style="cursor:pointer"> <i class="fas fa-trash"></i>   احذف </button>
+
+            </div>
+        </form>
+    </div>
+</div>
+

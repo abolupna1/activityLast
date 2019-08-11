@@ -1,0 +1,60 @@
+﻿@model AActivity.Models.StudentsParticipatingInTrip
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+</style>
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-edit"></i>
+        تعديل طالب
+    </h5>
+    <div class="card-body">
+        @if (TempData["message"] != null)
+        {
+
+            <div class="alert alert-danger">@TempData["message"] </div>
+        }
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="StudentNumber" class="control-label"></label>
+                <input type="text" asp-for="StudentNumber" class="form-control" />
+                <span asp-validation-for="StudentNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentName" class="control-label"></label>
+                <input  asp-for="StudentName" class="form-control" />
+                <span asp-validation-for="StudentName" class="text-danger"></span>
+            </div>
+            <div class="form-group " hidden>
+                <input asp-for="TripBookingId" class="form-control" />
+
+            </div>
+
+            <div class="form-group col-12 mt-5">
+
+                <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+                <a class="btn  btn-outline-primary btn-lg" asp-action="Index" asp-route-bokingId="@Model.TripBookingId" asp-controller="StudentsParticipatingInTrips"> <i class="fas fa-share-square"></i> تراجع </a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+
+    }

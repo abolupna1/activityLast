@@ -1,0 +1,76 @@
+﻿@model IEnumerable<AActivity.Models.EducationalBody>
+
+@{
+    ViewData["Title"] = "الجهات التعليمية ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="mt-5 mb-3">
+    <p class="d-inline text-secondary "> <i class="fas fa-university fa-2x"></i>   الجهات التعليمية </p>
+
+
+    <p class="d-inline">
+        <a class="btn btn-outline-primary btn-lg float-left " asp-action="Create"> <i class="fas fa-plus"></i>    جهة تعليمية جديدة</a>
+    </p>
+
+
+</div>
+@{ int i = 1;}
+<table class="table  table-hover table-bordered table-striped ">
+    <thead class="table-primary ">
+        <tr>
+            <th>#</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EntityType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() > 0) { 
+        @foreach (var item in Model)
+        {
+        <tr>
+            <th>@i</th>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EntityType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.FullName)
+            </td>
+            <td>
+                <a asp-action="Edit" class="btn btn-sm btn-outline-success" asp-route-id="@item.Id">
+
+                    <i class="fas fa-edit"></i>
+                    تعديل
+                </a>
+
+                <a asp-action="Delete" class="btn btn-sm btn-outline-danger" asp-route-id="@item.Id">
+                    <i class="fas fa-trash"></i>
+                    حذف
+                </a>
+            </td>
+        </tr>
+            i++;
+        }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">
+                    لايوجد بيانات
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

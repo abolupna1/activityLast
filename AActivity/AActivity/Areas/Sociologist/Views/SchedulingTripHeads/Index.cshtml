@@ -1,0 +1,179 @@
+﻿@model IEnumerable<AActivity.Models.SchedulingTripHead>
+
+@{
+    ViewData["Title"] = "جدولة الرحلات";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@functions{
+    string opacityStatus(bool status)
+    {
+        if (!status)
+        {
+            return "scdual-status-false-opacity";
+
+        }
+        return "";
+
+    }
+    string StatusChange(int id)
+    {
+
+        return "Switch"+id;
+
+    }
+
+    string StatusSubimt(int id)
+    {
+
+        return "submited" + id;
+
+    }
+    string disabledStatus(bool status,int count)
+    {
+        if (status && count > 1)
+        {
+            return "disabled";
+
+        }
+        return "";
+
+    }
+    string cursorStatus(bool status ,int count)
+    {
+        if (!status || count == 1)
+        {
+            return "cursor";
+
+        }
+        return "";
+
+    }
+    
+}
+
+
+
+<div class="mt-5 mb-4">
+    <p class="d-inline text-secondary "> <i class="fas fa-calendar-alt fa-2x"></i>    جدولة الرحلات </p>
+
+
+    <p class="d-inline">
+        <a class="btn btn-outline-primary btn-lg float-left " asp-action="Create"> <i class="fas fa-plus"></i>    جدول  جديد</a>
+    </p>
+
+
+</div>
+
+@if (Model.Any())
+{
+    int i = 1;
+    @foreach (var s in Model)
+    {
+        <div class="card  mb-5 @opacityStatus(s.Status)">
+            <div class="card-header text-white bg-primary ">
+                # <span class="badge badge-pill badge-light font-weight-bolder p-1 ">@i</span>
+
+                // السنة الدراسية :  @s.AcademicYear / @s.Semester / التاريخ : @s.FromDate.ToString("dd / MM / yyyy") - @s.ToDate.ToString("dd / MM / yyyy")
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-primary "><i class="fa fa-university text-white"></i></span>
+                            <div class="info-box-content text-center">
+                                <span class="info-box-text mb-3 ">الجهات التعليمية</span>
+                                <span class="info-box-number ">@s.SchedulingTripDetails.GroupBy(e=>e.EducationalBodyId).Count()</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-success  "><i class="fa fa-kaaba text-white"></i></span>
+                            <div class="info-box-content text-center">
+                                <span class="info-box-text mb-3 "> رحلة عمرة</span>
+                                <span class="info-box-number ">@s.SchedulingTripDetails.Where(o=>o.TripTypeId==1).Count()</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-warning   "><i class="fa fa-map-marker-alt text-white"></i></span>
+                            <div class="info-box-content text-center">
+                                <span class="info-box-text mb-3 "> رحلة داخلية</span>
+                                <span class="info-box-number ">@s.SchedulingTripDetails.Where(o=>o.TripTypeId==2).Count()</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-info   "><i class="fa fa-map-marked-alt text-white"></i></span>
+                            <div class="info-box-content text-center">
+                                <span class="info-box-text mb-3 "> رحلة خارجية</span>
+                                <span class="info-box-number ">@s.SchedulingTripDetails.Where(o=>o.TripTypeId==3).Count()</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="card-footer text-muted">
+                <div class="row">
+                    <div class=" col-8 ">
+                        <a class="btn  btn-outline-primary btn-lg" asp-action="Details" asp-route-id="@s.Id"> <i class="fas fa-info-circle"></i> تفاصيل الجدول </a>
+                        <a class="btn  btn-outline-success btn-lg" asp-action="Edit" asp-route-id="@s.Id"> <i class="fas fa-edit"></i> تعديل </a>
+                        <a class="btn  btn-outline-danger btn-lg" asp-action="Delete" asp-route-id="@s.Id"> <i class="fas fa-trash"></i> حذف</a>
+                    </div>
+                    <div class=" col-2  pt-2 ">
+                        <form asp-action="StatusUpdate" id="@StatusSubimt(s.Id)">
+                            <input type="hidden" asp-for="@s.Id" name="Id" />
+                            <div class="form-group justify-content-end" style="direction:ltr">
+                                <div class="custom-control custom-switch ">
+                                    <input type="checkbox" name="status"   class="custom-control-input" id="@StatusChange(s.Id)" checked="@s.Status" @disabledStatus(s.Status,Model.Count())>
+                                    <label class="custom-control-label @cursorStatus(s.Status,Model.Count())"  for="@StatusChange(s.Id)">نشر الجدول</label>
+                                </div>
+                            </div>
+                           
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        i++;
+    }
+
+}
+else
+{
+    <div class="card text-white mb-3">
+        <div class="card-header bg-primary ">
+            لاتوجد بيانات
+        </div>
+        <div class="card-body">
+
+
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+
+    @foreach (var b in Model)
+    {
+        @:$("#@StatusChange(b.Id)").click(function () { $("#@StatusSubimt(b.Id)").submit() });
+    };
+        });
+
+    </script>
+}
+

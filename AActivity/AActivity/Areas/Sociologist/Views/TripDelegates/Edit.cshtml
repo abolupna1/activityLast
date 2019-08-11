@@ -1,0 +1,61 @@
+﻿@model AActivity.Models.TripDelegate
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-edit"></i>
+        تعديل موظف
+    </h5>
+    <div class="card-body">
+        @if (TempData["message"] != null)
+        {
+
+            <div class="alert alert-danger">@TempData["message"] </div>
+        }
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="EmployeeNumber" class="control-label"></label>
+                <input asp-for="EmployeeNumber" class="form-control" />
+                <span asp-validation-for="EmployeeNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmployeeName" class="control-label"></label>
+                <input asp-for="EmployeeName" class="form-control" />
+                <span asp-validation-for="EmployeeName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JopName" class="control-label"></label>
+                <input asp-for="JopName" class="form-control" />
+                <span asp-validation-for="JopName" class="text-danger"></span>
+            </div>
+            <div class="form-group" hidden>
+                <label asp-for="TripBookingId" class="control-label"></label>
+                <input asp-for="TripBookingId" class="form-control" />
+
+                <span asp-validation-for="TripBookingId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-12 mt-5">
+
+                <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+                <a class="btn  btn-outline-primary btn-lg" asp-action="Index" asp-route-bokingId="@Model.TripBookingId" asp-controller="TripDelegates"> <i class="fas fa-share-square"></i> تراجع </a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+
+}

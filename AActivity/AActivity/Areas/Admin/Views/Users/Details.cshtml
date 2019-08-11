@@ -1,0 +1,57 @@
+﻿@model AActivity.Areas.Admin.ModelViews.UserCreate
+
+@{
+    ViewData["Title"] = "تفاصيل";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-info"></i>
+        تفاصيل
+    </h5>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <strong class="font-weight-bold"> @Html.DisplayNameFor(model => model.FullName) :</strong>
+                <span> @Html.DisplayFor(model => model.FullName)</span>
+            </li>
+            <li class="list-group-item">
+                <strong class="font-weight-bold">  @Html.DisplayNameFor(model => model.UserName) :</strong>
+                <span>   @Html.DisplayFor(model => model.UserName)</span>
+            </li>
+            <li class="list-group-item">
+                <strong class="font-weight-bold">  @Html.DisplayNameFor(model => model.Email) :</strong>
+                <span>       @Html.DisplayFor(model => model.Email) </span>
+            </li>
+            <li class="list-group-item">
+                <strong class="font-weight-bold">        @Html.DisplayNameFor(model => model.PhoneNumber) :</strong>
+                <span>        @Html.DisplayFor(model => model.PhoneNumber)</span>
+            </li>
+            <li class="list-group-item">
+                <strong class="font-weight-bold">       الأدوار :</strong>
+                @foreach (var role in Model.UserRoles)
+                {
+                    <span class="badge badge-primary badge-pill p-2">
+                        @role.Role.ArName
+                    </span>
+
+                }
+
+            </li>
+        </ul>
+
+
+
+        <div class=" col-12 mt-5">
+
+
+            <a class="btn  btn-outline-primary btn-lg" asp-action="Index"> <i class="fas fa-share-square"></i> الرجوع للقائمة </a>
+            <a class="btn  btn-outline-success btn-lg" asp-action="Edit" asp-route-id="@Model.Id"> <i class="fas fa-user-edit"></i> تعديل </a>
+            <a class="btn  btn-outline-danger btn-lg" asp-action="Delete" asp-route-id="@Model.Id"> <i class="fas fa-trash"></i> حذف</a>
+
+        </div>
+     
+    </div>
+</div>

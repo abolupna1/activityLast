@@ -1,0 +1,113 @@
+﻿@model AActivity.Areas.Admin.ModelViews.SignatureCreateViewModel
+
+@{
+    ViewData["Title"] = "انشاء";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-plus"></i>
+        توقيع جديد
+    </h5>
+    <div class="card-body">
+        @if (ViewBag.SignatureExists != null)
+        {
+            <div class="alert alert-danger">@ViewBag.SignatureExists</div>
+        }
+
+        @if (ViewBag.msg != null)
+        {
+            <div class="alert alert-danger">@ViewBag.msg</div>
+
+        }
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group row">
+                    <label asp-for="UserId" class="col-sm-2 control-label"></label>
+                    <div class="col-sm-10">
+                        <select asp-for="UserId" class="form-control form-control-lg" asp-items="ViewBag.UserId"></select>
+
+                    </div>
+                    <span asp-validation-for="UserId" class="text-danger"></span>
+
+                </div>
+
+                <div class="form-group row">
+                    <label asp-for="Degree" class="col-sm-2 control-label"></label>
+                    <div class="col-sm-10">
+                        <select asp-for="Degree" class="form-control form-control-lg" asp-items="ViewBag.DegreeList"></select>
+
+                    </div>
+                    <span asp-validation-for="Degree" class="text-danger"></span>
+
+                </div>
+
+
+                <div class="form-group row">
+                    <label asp-for="SignatureRole" class="col-sm-2 control-label"></label>
+                    <div class="col-sm-10">
+                        <select asp-for="SignatureRole" class="form-control form-control-lg" asp-items="ViewBag.SignaturesRolesList"></select>
+
+                    </div>
+                    <span asp-validation-for="SignatureRole" class="text-danger"></span>
+
+                </div>
+
+                <div class="form-group row">
+                    <label asp-for="Status" class="col-sm-2 control-label"></label>
+                    <div class="col-sm-10">
+                        <select asp-for="Status" class="form-control form-control-lg" asp-items="ViewBag.ValidUnValidList"></select>
+
+                    </div>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+
+                </div>
+
+
+                <div class="form-group row">
+                    <label asp-for="SignaturePhoto" class="col-sm-2 control-label"></label>
+                    <div class="col-sm-10">
+                        <input type="file" asp-for="SignaturePhoto" onchange="FillImage(event);" accept=".png,.gif,.jpeg,.jpg,.bmp" class="form-control form-control-lg" />
+                        <span asp-validation-for="SignaturePhoto" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <img id="image" src="" alt="" class="img-thumbnail">
+
+                </div>
+
+
+                <div class="form-group col-12 mt-5">
+
+                    <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+                    <a class="btn  btn-outline-primary btn-lg" asp-action="Index"> <i class="fas fa-share-square"></i> تراجع </a>
+
+                </div>
+            </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+  <script>
+
+      var imgsrc = $("#image").src;
+      if (imgsrc == undefined) {
+          $("#image").attr("hidden",true)
+      }
+
+      var FillImage = function (event) {
+          $("#image").attr("hidden", false)
+          
+          var ima = document.getElementById("image");
+          ima.src = URL.createObjectURL(event.target.files[0])
+     
+
+
+      }
+        </script>
+
+            }}

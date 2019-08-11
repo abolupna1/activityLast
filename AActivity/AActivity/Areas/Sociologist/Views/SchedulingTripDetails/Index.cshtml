@@ -1,0 +1,83 @@
+﻿@model IEnumerable<AActivity.Models.SchedulingTripDetail>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Model.Any())
+{
+    <ul class="list-group list-group-horizontal mt-5 mb-4 text-center ">
+        <li class="list-group-item bg-primary text-white">السنة الدراسية  </li>
+        <li class="list-group-item ">
+            @Model.FirstOrDefault().SchedulingTripHead.AcademicYear
+        </li>
+        <li class="list-group-item bg-primary text-white"> الفصل  </li>
+        <li class="list-group-item">
+            @Model.FirstOrDefault().SchedulingTripHead.Semester
+        </li>
+        <li class="list-group-item bg-primary text-white"> من تاريخ  </li>
+        <li class="list-group-item">
+            @Model.FirstOrDefault().SchedulingTripHead.FromDate.ToString("dd / MM / yyyy")
+        </li>
+        <li class="list-group-item bg-primary text-white"> الى تاريخ  </li>
+        <li class="list-group-item">
+            @Model.FirstOrDefault().SchedulingTripHead.ToDate.ToString("dd / MM / yyyy")
+        </li>
+
+    </ul>
+}
+    <div class="row">
+        @if (Model.Any())
+        {
+            int i = 1;
+            @foreach (var s in Model)
+            {
+
+                <div class="col-md-6 ">
+                    <div class="card  mb-5 ">
+                        <div class="card-header text-white bg-primary ">
+                            # <span class="badge badge-pill badge-light font-weight-bolder p-1 ">@i</span>
+                            رحلة   @s.TripType.Name
+                        </div>
+                        <div class="card-body">
+
+                            <div class="card-title">الجهةالتعليمية : @s.EducationalBody.Name</div>
+                            <div class="card-title">تاريخ الرحلة : @s.TripDate.ToString("dd - MM - yyyy")</div>
+                            <div class="card-title">
+                                الحالة :
+                                جاهزة / غير جاهزة / مستمرة / منتهية/لايمكن الطلب
+                            </div>
+
+
+                        </div>
+                        <div class=" card-footer ">
+                            <a class="btn  btn-outline-gold btn-lg" asp-action="DetailsMore" asp-route-id="@s.Id"> <i class="fas fa-info-circle"></i> تفاصيل اكثر للرحلة </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                i++;
+            }
+
+        }
+        else
+        {
+                <div class="col">
+                    <div class="card text-white mb-3">
+                        <div class="card-header bg-primary ">
+                            لاتوجدرحلات نشطة  
+                        </div>
+                        <div class="card-body">
+
+                            <a class="btn  btn-outline-primary btn-lg" asp-action="Index" asp-controller="Home" > <i class="fas fa-info-circle"></i>الرجوع للقائمة الرئيسية </a>
+
+                        </div>
+                    </div>
+                </div>
+        }
+
+
+    </div>

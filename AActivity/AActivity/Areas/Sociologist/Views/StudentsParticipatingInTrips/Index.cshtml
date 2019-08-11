@@ -1,0 +1,236 @@
+﻿@model IEnumerable<AActivity.Models.StudentsParticipatingInTrip>
+
+@{
+    ViewData["Title"] = "الطلاب المشاركين";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@functions{
+    string checkbox(int id)
+    {
+
+        return "checkbox" + id;
+
+    }
+}
+
+<style>
+    div.dataTables_wrapper div.dataTables_filter label {
+       
+        float: left;
+    }
+</style>
+<div class="mt-5 mb-3">
+    <p class="d-inline text-secondary "> <i class="fas fa-users fa-2x text-muted"></i>    الطلاب المشاركين في الرحلة </p>
+
+
+    <p class="d-inline">
+
+
+        <!-- Button trigger modal -->
+        @*<button type="button" class="btn  btn-outline-danger float-left  btn-lg" data-toggle="modal" data-target="#exampleModal">
+            <i class="fas fa-trash"></i>     حذف السجلات المحددة
+        </button>*@
+
+        <a class="btn btn-outline-success btn-lg float-left ml-2 "
+           data-toggle="modal" data-target="#CreateTrips" href="#">
+            <i class="fas fa-plus"></i>    اضافة طلاب
+        </a>
+        <a class="btn  btn-outline-primary float-left ml-2 btn-lg" asp-area="Sociologist" asp-controller="SchedulingTripDetails" asp-action="DetailsMore" asp-route-id="@ViewBag.TripBoking.SchedulingTripDetailId"> <i class="fas fa-share-square"></i> تراجع </a>
+     
+
+    </p>
+
+
+</div>
+<div class="clearfix"></div>
+<hr />
+@{ int i = 1;}
+<div class="table-responsive-sm">
+
+
+
+    <table class="table  table-hover table-bordered table-striped " id="table">
+        <thead class="table-primary ">
+            <tr>
+                <th >#</th>
+                <th >
+                    رقم الطالب
+                </th>
+                <th >
+                    اسم الطالب
+                </th>
+
+                <th ></th>
+
+                @*<th>
+
+                        <div class="custom-control custom-checkbox text-danger">
+                            <input type="checkbox" class="custom-control-input text-danger" id="checkAll">
+                            <label class="custom-control-label" for="checkAll"></label>
+                        </div>
+
+                    </th>*@
+            </tr>
+        </thead>
+        <tbody>
+
+            @if (Model.Count() > 0)
+            {
+                int j = 0;
+                <form asp-action="DeleteMulti" id="form_Delete">
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <th>@i</th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StudentNumber)
+                            </td>
+                            <td class="d-inline-block text-truncate">
+                                @Html.DisplayFor(modelItem => item.StudentName)
+                            </td>
+
+                            <td>
+                                <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.Id">حذف</a>
+                                <a asp-action="Edit" class="btn btn-success btn-sm" asp-route-id="@item.Id">تعديل</a>
+                            </td>
+
+
+
+                            @*<td>
+                                    <div class="custom-control custom-checkbox">
+
+                                        <input type="checkbox" name="checkForDelete" value="@Model[j].Id" class="custom-control-input chkId" id="@checkbox(Model[j].Id)">
+                                        <label class="custom-control-label" for="@checkbox(Model[j].Id)"></label>
+                                    </div>
+                                </td>*@
+                        </tr>
+                        i++;
+                        j++;
+                    }
+                </form>
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center">
+                        لايوجد بيانات
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title text-center text-danger">
+                    تاكيد الحذف
+
+                </h4>
+            </div>
+
+            <div class="modal-body">
+
+
+                <h3 class="text-center text-danger">هل انت متاكد من حذف السجلات  ؟</h3>
+
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-success text-white" data-dismiss="modal"> <i class="fas fa-redo"></i> تراجع</a>
+
+                <button id="submit" class="btn btn-outline-danger  " style="cursor:pointer"> <i class="fas fa-trash"></i>   نعم  </button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal  fade" id="CreateTrips">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title text-center">
+                    عدد الطلاب
+
+                </h4>
+            </div>
+
+            <form asp-action="Adapter" asp-controller="StudentsParticipatingInTrips">
+                <div class="modal-body">
+
+
+
+                    <input type="hidden" name="bokingId" value="@ViewBag.TripBoking.Id" />
+
+                    <div class="form-group  col-12 mt-5">
+
+                        <div class="form-group">
+                            <label class="control-label"> عدد الطلاب  </label>
+                            <input type="number" min="1" name="count" class="form-control" />
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-success  " style="cursor:pointer"> <i class="fas fa-plus"></i>   اضافة  طلاب </button>
+
+                    <a class="btn btn-outline-info " data-dismiss="modal"> <i class="fas fa-redo"></i> تراجع</a>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    
+        <script>
+
+            $(document).ready(function () {
+
+
+                $('#checkAll').click(function () {
+                    if ($(this).is(":checked")) {
+                        $('.chkId').prop('checked', true);
+                    } else {
+                        $('.chkId').prop('checked', false);
+                    }
+
+                });
+
+             
+
+
+            });
+
+
+        </script>
+        <partial name="~/Views/Shared/_DatatableJqueryPartial.cshtml" />
+
+    }

@@ -1,0 +1,175 @@
+﻿@model AActivity.Areas.Sociologist.ModelViews.SchedulingTripDetailsView
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card  ">
+    <div class="card-header text-white bg-primary ">
+
+        السنة الدراسية : @Model.SchedulingTripHead.AcademicYear / @Model.SchedulingTripHead.Semester / التاريخ : @Model.SchedulingTripHead.FromDate.ToString("dd / MM / yyyy") - @Model.SchedulingTripHead.ToDate.ToString("dd / MM / yyyy")
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-primary "><i class="fa fa-university text-white"></i></span>
+                    <div class="info-box-content text-center">
+                        <span class="info-box-text mb-3 ">الجهات التعليمية</span>
+                        <span class="info-box-number ">@Model.SchedulingTripDetails.GroupBy(e => e.EducationalBodyId).Count()</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-success  "><i class="fa fa-mosque text-white"></i></span>
+                    <div class="info-box-content text-center">
+                        <span class="info-box-text mb-3 "> رحلة عمرة</span>
+                        <span class="info-box-number ">@Model.SchedulingTripDetails.Where(o => o.TripTypeId == 1).Count()</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-warning   "><i class="fa fa-map-marker-alt text-white"></i></span>
+                    <div class="info-box-content text-center">
+                        <span class="info-box-text mb-3 "> رحلة داخلية</span>
+                        <span class="info-box-number ">@Model.SchedulingTripDetails.Where(o => o.TripTypeId == 2).Count()</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-info   "><i class="fa fa-map-marked-alt text-white"></i></span>
+                    <div class="info-box-content text-center">
+                        <span class="info-box-text mb-3 "> رحلة خارجية</span>
+                        <span class="info-box-number ">@Model.SchedulingTripDetails.Where(o => o.TripTypeId == 3).Count()</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="m-2">
+
+
+        <a class="btn  btn-outline-primary btn-lg" asp-action="Index"> <i class="fas fa-share-square"></i> تراجع </a>
+
+   
+        <a class="btn btn-outline-success btn-lg  " data-toggle="modal" data-target="#CreateTrips" href="#"><i class="fas fa-plus"></i>    رحلة جديدة </a>
+
+    </div>
+</div>
+
+
+<table class="table table-bordered table-hover table-striped ">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>الجهة</th>
+            <th>عمرة</th>
+            <th>داخلية</th>
+            <th>خارجية</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 1;}
+        @foreach (var edu in Model.EducationalBodies)
+        {
+            if (Model.SchedulingTripDetails.Any(e => e.EducationalBodyId == edu.Id))
+            {
+                <tr>
+                    <th>@i</th>
+                    <td>
+<a asp-action="Details" asp-route-id="@edu.Id" asp-controller="SchedulingTripDetails">@edu.Name</a></td>
+                    <td>
+                        @foreach (var omr in Model.SchedulingTripDetails.Where(o => o.TripTypeId == 1 && o.EducationalBodyId == edu.Id))
+                        {
+                            <span class="badge badge-success">@omr.TripDate.ToString("dd / MM / yyyy")</span>
+                        }
+                    </td>
+                    <td>
+                        @foreach (var omr in Model.SchedulingTripDetails.Where(o => o.TripTypeId == 2 && o.EducationalBodyId == edu.Id))
+                        {
+                            <span class="badge badge-warning">@omr.TripDate.ToString("dd / MM / yyyy")</span>
+                        }
+                    </td>
+                    <td>
+                        @foreach (var omr in Model.SchedulingTripDetails.Where(o => o.TripTypeId == 3 && o.EducationalBodyId == edu.Id))
+                        {
+                            <span class="badge badge-info">@omr.TripDate.ToString("dd / MM / yyyy")</span>
+                        }
+                    </td>
+                </tr>
+            }
+
+            i++;
+        }
+
+    </tbody>
+</table>
+
+
+
+<!-- model delete -->
+
+<div class="modal  fade" id="CreateTrips">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title text-center">
+                    الجهة وعدد الرحلات
+
+                </h4>
+            </div>
+         
+            <form asp-action="CreateTripsCount" asp-controller="SchedulingTripDetails">
+                <div class="modal-body">
+
+
+
+                    <input type="hidden" name="id" value="@Model.SchedulingTripHead.Id" />
+
+                    <div class="form-group  col-12 mt-5">
+                        <div class="form-group">
+                            <label class="control-label">الجهة التعليمية </label>
+                            <select name="EducationalBodyId" class="form-control">
+                                @foreach (var ed in Model.EducationalBodies)
+                                {
+
+                                    <option value="@ed.Id">@ed.Name</option>
+
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"> عدد الرحلات </label>
+                            <input type="number" min="1" name="tripCount" class="form-control" />
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-success  " style="cursor:pointer"> <i class="fas fa-plus"></i>   اضافة رحلات جديدة </button>
+
+                    <a class="btn btn-outline-info " data-dismiss="modal"> <i class="fas fa-redo"></i> تراجع</a>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

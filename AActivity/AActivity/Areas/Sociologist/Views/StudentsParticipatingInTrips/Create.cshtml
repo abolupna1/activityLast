@@ -1,0 +1,86 @@
+﻿@model IList<AActivity.Models.StudentsParticipatingInTrip>
+
+@{
+    ViewData["Title"] = "اضافة";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<style>
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+</style>
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-plus"></i>
+        اضافة طلاب
+    </h5>
+    <div class="card-body">
+        @if (TempData["message"] != null)
+        {
+          
+        <div class="alert alert-danger">@TempData["message"] </div>
+        }
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <table class="table table-bordered ">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th> رقم الطالب</th>
+
+                        <th>اسم الطالب</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @{ int c = 1;}
+                    @for (int i = 0; i < ViewBag.StudentCount; i++)
+                    {
+                        <tr>
+                            <td hidden>
+                                <input asp-for="@Model[i].TripBookingId" class="form-control" value="@ViewBag.TripBookingId" />
+
+                            </td>
+                            <td>@c</td>
+                            <td style="width:20%">
+                                <input type="text" asp-for="@Model[i].StudentNumber" class="form-control StudentNumber" />
+                                <span asp-validation-for="@Model[i].StudentNumber" class="text-danger"></span>
+
+                            </td>
+
+
+                            <td>
+                                <input asp-for="@Model[i].StudentName" class="form-control" />
+                                <span asp-validation-for="@Model[i].StudentName" class="text-danger"></span>
+
+                            </td>
+                        </tr>
+                        c++;
+                    }
+
+                </tbody>
+            </table>
+
+            <div class="form-group col-12 mt-5">
+
+                <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+                <a class="btn  btn-outline-primary btn-lg" asp-action="Index" asp-route-bokingId="@ViewBag.TripBookingId" asp-controller="StudentsParticipatingInTrips"> <i class="fas fa-share-square"></i> تراجع </a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+
+}

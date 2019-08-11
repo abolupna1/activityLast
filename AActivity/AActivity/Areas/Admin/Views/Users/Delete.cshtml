@@ -1,0 +1,68 @@
+﻿@model AActivity.Areas.Admin.ModelViews.UserCreate
+
+@{
+    ViewData["Title"] = "تفاصيل";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-trash"></i>
+        تأكيد الحذف
+    </h5>
+    <div class="card-body">
+        @if (ViewBag.successMsg != null)
+        {
+            <div class="alert alert-dismissible alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>@ViewBag.successMsg </strong> 
+            </div>
+        }
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <strong class="font-weight-bold"> @Html.DisplayNameFor(model => model.FullName) :</strong>
+                <span> @Html.DisplayFor(model => model.FullName)</span>
+            </li>
+            <li class="list-group-item">
+                <strong class="font-weight-bold">  @Html.DisplayNameFor(model => model.UserName) :</strong>
+                <span>   @Html.DisplayFor(model => model.UserName)</span>
+            </li>
+            <li class="list-group-item">
+                <strong class="font-weight-bold">  @Html.DisplayNameFor(model => model.Email) :</strong>
+                <span>       @Html.DisplayFor(model => model.Email) </span>
+            </li>
+            <li class="list-group-item">
+                <strong class="font-weight-bold">        @Html.DisplayNameFor(model => model.PhoneNumber) :</strong>
+                <span>        @Html.DisplayFor(model => model.PhoneNumber)</span>
+            </li>
+            <li class="list-group-item">
+                <strong class="font-weight-bold">       الأدوار :</strong>
+                @foreach (var role in Model.UserRoles)
+                {
+                    <span class="badge badge-primary badge-pill p-2">
+                        @role.Role.ArName
+                    </span>
+
+                }
+
+            </li>
+        </ul>
+
+
+
+        <div class=" col-12 mt-5">
+            <h5 class=" text-danger font-weight-bold mb-3">هل تريد الحذف بالفعل ؟</h5>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <a class="btn  btn-outline-primary btn-lg" asp-action="Details" asp-route-id="@Model.Id"> <i class="fas fa-share-square"></i> تراجع  </a>
+
+                <button class="btn  btn-outline-danger btn-lg" type="submit"><i class="fas fa-trash"></i> نعم إحذف </button>
+            </form>
+
+
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "الرئيسية ";
+}
+
+
+
+
+<style>
+    .counter {
+        background-color: #025d94;
+        padding: 20px 0;
+        border-radius: 5px;
+        color: white;
+    }
+
+        .counter:hover {
+            background-color: #01a2ce;
+            color: white;
+        }
+
+    .count-title {
+        font-size: 40px;
+        font-weight: normal;
+        margin-top: 10px;
+        margin-bottom: 0;
+        text-align: center;
+    }
+
+    .count-text {
+        font-size: 13px;
+        font-weight: normal;
+        margin-top: 10px;
+        margin-bottom: 0;
+        text-align: center;
+    }
+
+    .fa-2x {
+        margin: 0 auto;
+        float: none;
+        display: table;
+        color: #214565;
+    }
+
+    .btnA, .btnA:hover {
+        text-decoration: none;
+        color: #214565;
+    }
+</style>
+
+<div class="container mt-5">
+
+
+
+
+    <div class="row text-center ">
+
+
+
+        <div class="col">
+            <a asp-controller="SchedulingTripHeads" asp-area="Sociologist" asp-action="Index" class="btnA">
+                <div class="counter">
+                    <i class="fa fa-stream fa-3x"></i>
+                    <p class="count-text ">
+                        <h4 class="mt-4">جدولة الرحلات</h4>
+                    </p>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="col">
+            <a asp-controller="SchedulingTripDetails" asp-area="Sociologist" asp-action="Index" class="btnA">
+                <div class="counter">
+                    <i class="fa fa-list-ol fa-3x"></i>
+                    <p class="count-text ">
+                        <h4 class="mt-4"> الرحلات</h4>
+                    </p>
+                </div>
+            </a>
+        </div>
+
+
+
+
+
+
+
+    </div>
+
+
+</div>

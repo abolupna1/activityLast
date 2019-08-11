@@ -1,0 +1,132 @@
+﻿
+@font-face {
+    font-family: "JF-Flat";
+    src: url(../font/JF-Flat-Regular.ttf);
+}
+@font-face {
+    font-family: "Droid-Arabic-Kufi";
+    src: url(../font/Droid-Arabic-Kufi.ttf);
+}
+@font-face {
+    font-family: "Droid-Arabic-Kufi-1";
+    src: url(../font/Droid-Arabic-Kufi-1.ttf);
+}
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    padding: 0;
+    font-size: 1rem;
+    font-family: 'Droid-Arabic-Kufi-1';
+}
+
+.form-control-lg {
+    padding: 0.25rem 1rem;
+
+}
+.btn-outline-gold {
+    background-color: #fff;
+    border: 1px solid #c0a05f;
+    color: #c0a05f !important;
+}
+.btn-outline-gold:hover {
+    background-color: #c0a05f;
+    border: 1px solid #fff;
+    color: #fff !important;
+}
+
+.bg-primary-bold {
+    background-color: #0073a6;
+    color: #fff !important;
+}
+
+
+.control-label {
+    font-size: 1rem;
+   
+}
+
+.ar {
+    direction: rtl;
+    text-align: right
+}
+.table {
+    font-size: 1.1rem;
+   
+}
+
+.top-bar {
+    position: relative;
+    z-index: 1;
+  
+    width: 100%;
+    background: #0073a6 url(/img/ium-blue-bg.jpg) no-repeat center center / cover;
+}
+a.navbar-brand {
+    color: white !important;
+    letter-spacing: 0.5px;
+    font-weight: bold;
+    font-size: 2rem;
+    font-family: 'JF-Flat';
+}
+
+.nav-link:hover, .nav-link:focus {
+    text-decoration: none;
+    color: #be9f5e !important;
+}
+
+.nav-link {
+    color: white !important;
+    letter-spacing: 0.5px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    font-family: 'Droid-Arabic-Kufi';
+}
+
+.dropdown-item:hover {
+    color: pink !important;
+}
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+}
+
