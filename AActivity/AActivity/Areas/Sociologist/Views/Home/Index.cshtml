@@ -79,6 +79,22 @@
             </a>
         </div>
 
+        @if (ViewBag.Signutre > 0 && ViewBag.SignutreName != null && ViewBag.SignutreName ==true)
+        {
+            <div class="col">
+                <a asp-controller="SignutreDelegates" asp-area="Sociologist" asp-action="Index" class="btnA">
+                    <div class="counter">
+                        <i class="fa fa-fingerprint fa-3x"></i>
+                        <p class="count-text ">
+                            <h4 class="mt-4">  المفوضين بالتوقيع </h4>
+                        </p>
+                    </div>
+                </a>
+            </div>
+
+        }
+
+
 
 
 

@@ -273,12 +273,24 @@ namespace AActivity.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var signature = await _context.Signatures.FindAsync(id);
-            string filePathForDelete = Path.Combine(_ihostingEnvironment.WebRootPath,
-              "img/signatures", signature.SignaturePhoto);
-            System.IO.File.Delete(filePathForDelete);
-            _context.Signatures.Remove(signature);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+           
+            try
+            {
+               
+                _context.Signatures.Remove(signature);
+                await _context.SaveChangesAsync();
+                string filePathForDelete = Path.Combine(_ihostingEnvironment.WebRootPath,
+               "img/signatures", signature.SignaturePhoto);
+                System.IO.File.Delete(filePathForDelete);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                var user = await _context.Users.FindAsync(signature.UserId);
+                ViewBag.ErrorTitle = $"توقيع ( {user.FullName}  ) مستخدم";
+                ViewBag.ErrorMessage = $"( {user.FullName}  )  توقيعه مستخدم لبعض الخطابات يجب حذف جميع الخطابات الموقع منه";
+                return View("Error");
+            }
         }
 
         private bool SignatureExists(int id,int userId)
@@ -316,11 +328,12 @@ namespace AActivity.Areas.Admin.Controllers
         {
             IList<SignaturesRolesHelpr> SignaturesRole = new List<SignaturesRolesHelpr>()
             {
-                new SignaturesRolesHelpr(){Name = "رئيس قسم النشاط الاجتماعي" },
+                new SignaturesRolesHelpr(){ Name = "رئيس قسم النشاط الاجتماعي" },
                 new SignaturesRolesHelpr(){Name = "مدير إدارة النشاط" },
                 new SignaturesRolesHelpr(){Name = "وكيل العمادة لشؤون النشاط" },
                 new SignaturesRolesHelpr(){Name = "عميد شؤون الطلاب" },
-                    
+                new SignaturesRolesHelpr(){Name = "مفوض" },
+
             };
             return SignaturesRole;
         }

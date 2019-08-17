@@ -7,12 +7,21 @@ using Microsoft.AspNetCore.Mvc;
 using AActivity.Models;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
+using AActivity.Data;
+using AActivity.Areas.Sociologist.Helpers;
+using System.Security.Claims;
 
 namespace AActivity.Controllers
 {
     [Area("Sociologist")]
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         public async Task<IActionResult> Index()
         {
             //string baseUrl = "http://localhost:5000/api/emps";
@@ -28,7 +37,7 @@ namespace AActivity.Controllers
             //            if (data != null)
             //            {
 
-                          
+
             //                return Ok(data);
             //            }
             //            else
@@ -39,6 +48,26 @@ namespace AActivity.Controllers
             //    }
 
             //}
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var sd = SignutreOfUserHelper.getUserSignutre(userId, _context);
+            ViewBag.Signutre = sd;
+            
+            var sig = _context.Signatures.FindAsync(sd);
+            if (sig.Result != null)
+            {
+                if (sig.Result.SignatureRole == "مفوض")
+                {
+                    ViewBag.SignutreName = false;
+
+                }
+                else
+                {
+                    ViewBag.SignutreName = true;
+
+                }
+
+
+            }
 
             return View();
         }

@@ -37,6 +37,7 @@ DataType(DataType.Date, ErrorMessage = "المدخل يجب ان يكون تار
 
         public IEnumerable<StudentsParticipatingInTrip> StudentsParticipatingInTrips { get; set; }
         public IEnumerable<TripDelegate> TripDelegates { get; set; }
+        public IEnumerable<Letter> Letters { get; set; }
 
     }
 }

@@ -1,0 +1,66 @@
+﻿@model AActivity.Models.SignutreDelegate
+
+@{
+    ViewData["Title"] = "انشاء";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-plus"></i>
+        مفوض جديد
+    </h5>
+    <div class="card-body">
+        <form asp-action="Create">
+            @if (ViewBag.SignutreExist != null)
+            {
+                <div class="alert alert-danger">@ViewBag.SignutreExist</div>
+            }
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-row">
+                <div class="form-group col-md-6" hidden>
+                    <label asp-for="SignatureId" class="control-label"></label>
+                    <input asp-for="SignatureId" class="form-control form-control-lg" value="@ViewBag.SignatureId" />
+                </div>
+                <div class="form-group col-md-8">
+                    <label asp-for="UserId" class="control-label"></label>
+                    <select asp-for="UserId" class="form-control form-control-lg" asp-items="ViewBag.UserId"></select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Status" class="control-label"></label>
+                    <select asp-for="Status" class="form-control form-control-lg" asp-items="ViewBag.Status"></select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="StartAtDate" class="control-label"></label>
+                    <input asp-for="StartAtDate" id="StartAtDate" type="text" class="form-control form-control-lg" />
+                    <span asp-validation-for="StartAtDate" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="EndAtDate" class="control-label"></label>
+                    <input asp-for="EndAtDate" id="EndAtDate" type="text" class="form-control form-control-lg" />
+                    <span asp-validation-for="EndAtDate" class="text-danger"></span>
+                </div>
+
+            </div>
+            <div class="form-group col-12 mt-5">
+
+                <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+                <a class="btn  btn-outline-primary btn-lg" asp-action="Index"> <i class="fas fa-share-square"></i> تراجع </a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script>
+        $("#StartAtDate").datepicker({ minDate: 0 });
+        $("#EndAtDate").datepicker({ minDate: 1 });
+
+    </script>
+
+}

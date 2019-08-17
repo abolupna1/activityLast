@@ -59,60 +59,15 @@
                 </div>
 
                 <div class="col-12 m-2">
-                    <a class="btn btn-primary btn-lg" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id" asp-controller="StudentsParticipatingInTrips" asp-action="index">الطلاب</a>
+
+                    <a class="btn btn-primary btn-lg" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id"  asp-controller="TripTransportSignatures" asp-action="Details">تامين وسلة نقل</a>
 
                     <a class="btn btn-success btn-lg" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id" asp-controller="TripDelegates" asp-action="index">المنتدبين</a>
 
                 </div>
             </div>
         </div>
-        <ul class="list-group  text-white">
-            <li class="list-group-item">
-                @{int td = Model.TripBookings.FirstOrDefault().TripDelegates.Count();}
-                @if (td == 0)
-                {
-                    <span class="text-primary font-weight-bold">
-                        لتاكيد الحجز :
-                        1- اضافة طلاب  .
-                        2- اضافة منتدبين
-                    </span>
-                }
-                else if (Model.TripBookings.FirstOrDefault().TripStatus == 0)
-                {
-                    @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))
-                    {
-                        <form asp-action="BookingConfirmed" asp-controller="TripBookings" asp-route-id="@Model.TripBookings.FirstOrDefault().Id">
 
-
-                            <span id="confirmDeleteSpan_@Model.TripBookings.FirstOrDefault().Id" style="display:none">
-                                <span class="text-center text-danger font-weight-bold">هل انت متاكد من تأكيد الحجز ؟</span>
-                                <button type="submit" class="btn btn-danger btn-lg">نعم</button>
-                                <a href="#" class="btn btn-primary btn-lg" onclick="confirmDelete('@Model.TripBookings.FirstOrDefault().Id',false)">لا</a>
-                            </span>
-                            <span id="deleteSpan_@Model.TripBookings.FirstOrDefault().Id">
-                                <a class="btn  btn-danger btn-lg " onclick="confirmDelete('@Model.TripBookings.FirstOrDefault().Id',true)">
-                                    <i class="fas fa-question-circle"></i>
-                                    تأكيد الحجز
-                                </a>
-                            </span>
-                        </form>
-                    }
-                    @if (User.IsInRole("DirectorOfSocialActivity") || User.IsInRole("SocialActivityOfficer"))
-                    {
-                        <span class="text-center text-muted font-weight-bold">
-                            انتظار تاكيد الحجز من قبل الجهة التعليمية
-                        </span>
-                    }
-                }
-                else
-                {
-                    <span class="text-center text-success font-weight-bold">
-                        الحجز مؤكد من قبل الجهة
-                    </span>
-                }
-
-            </li>
-        </ul>
     </div>
 
 </li>

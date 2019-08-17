@@ -53,6 +53,9 @@ namespace AActivity.Areas.Sociologist.Controllers
                     .ThenInclude(stu => stu.StudentsParticipatingInTrips)
                       .Include(st => st.TripBookings)
                     .ThenInclude(td => td.TripDelegates)
+                   
+                  .Include(t=>t.TripType)
+                   
                     .Include(s => s.TripType)
                     .FirstOrDefaultAsync(e=>e.Id==id);
             if (schedulingTripDetail == null)

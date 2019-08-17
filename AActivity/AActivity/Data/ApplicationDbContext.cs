@@ -37,8 +37,11 @@ namespace AActivity.Data
         public DbSet<StudentsParticipatingInTrip> StudentsParticipatingInTrip { get; set; }
         public DbSet<TripDelegate> TripDelegates { get; set; }
         public DbSet<Signature> Signatures { get; set; }
+        public DbSet<SignutreDelegate> SignutreDelegates { get; set; }
+        public DbSet<Letter> Letters { get; set; }
+        public DbSet<TripTransportSignature> TripTransportSignatures { get; set; }
 
-        
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -90,7 +90,7 @@ namespace AActivity.Data
                 new TripType(){Name = "عمرة" },
                 new TripType(){Name = "داخلية" },
                 new TripType(){Name = "خارجية" },
-                new TripType(){Name = "أخرى" },
+                new TripType(){Name = "زيارة" },
             };
 
                 foreach (var t in Trips)

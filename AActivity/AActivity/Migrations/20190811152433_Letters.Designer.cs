@@ -4,14 +4,16 @@ using AActivity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AActivity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190811152433_Letters")]
+    partial class Letters
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -298,33 +300,6 @@ namespace AActivity.Migrations
                     b.ToTable("Signatures");
                 });
 
-            modelBuilder.Entity("AActivity.Models.SignutreDelegate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("EndAtDate");
-
-                    b.Property<int>("SignatureId");
-
-                    b.Property<DateTime>("StartAtDate");
-
-                    b.Property<bool>("Status");
-
-                    b.Property<DateTime>("TimeStamp");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SignatureId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("SignutreDelegates");
-                });
-
             modelBuilder.Entity("AActivity.Models.StudentsParticipatingInTrip", b =>
                 {
                     b.Property<int>("Id")
@@ -396,27 +371,6 @@ namespace AActivity.Migrations
                     b.HasIndex("TripBookingId");
 
                     b.ToTable("TripDelegates");
-                });
-
-            modelBuilder.Entity("AActivity.Models.TripTransportSignature", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("LetterId");
-
-                    b.Property<int>("SignatureId");
-
-                    b.Property<int>("StatusSignature");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LetterId");
-
-                    b.HasIndex("SignatureId");
-
-                    b.ToTable("TripTransportSignatures");
                 });
 
             modelBuilder.Entity("AActivity.Models.TripType", b =>
@@ -565,19 +519,6 @@ namespace AActivity.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("AActivity.Models.SignutreDelegate", b =>
-                {
-                    b.HasOne("AActivity.Models.Signature", "Signature")
-                        .WithMany("SignutreDelegates")
-                        .HasForeignKey("SignatureId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("AActivity.Models.AppUser", "User")
-                        .WithMany("SignutreDelegates")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("AActivity.Models.StudentsParticipatingInTrip", b =>
                 {
                     b.HasOne("AActivity.Models.TripBooking", "TripBooking")
@@ -604,19 +545,6 @@ namespace AActivity.Migrations
                     b.HasOne("AActivity.Models.TripBooking", "TripBooking")
                         .WithMany("TripDelegates")
                         .HasForeignKey("TripBookingId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("AActivity.Models.TripTransportSignature", b =>
-                {
-                    b.HasOne("AActivity.Models.Letter", "Letter")
-                        .WithMany("TripTransportSignatures")
-                        .HasForeignKey("LetterId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("AActivity.Models.Signature", "Signature")
-                        .WithMany("TripTransportSignatures")
-                        .HasForeignKey("SignatureId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

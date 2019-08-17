@@ -8,19 +8,31 @@
 
 <div class="alert alert-dismissible alert-warning">
 
-    <h1 class="alert-heading">خطا </h1>
-
-    @if (ViewBag.errorMessage != null)
+    @if (ViewBag.ErrorTitle == null)
     {
-        <h3 class="mb-0"> @ViewBag.errorMessage</h3>
-        <hr />
-        <h3 class="mb-0"> @ViewBag.ExceptionPath</h3>
-        <hr />
-        <h3 class="mb-0"> @ViewBag.ExceptionMessage</h3>
-        <hr />
-        <h3 class="mb-0"> @ViewBag.ExceptionStacktrace</h3>
+        <h1 class="alert-heading">خطا </h1>
+        <h1>حدث خطأ أثناء معالجة طلبك.!!</h1>
+        <h1>الرجاء الإتصال بالمسؤول abolupna1@gmail.com</h1>
 
     }
+    else
+    {
+        <h1 class="alert-heading">@ViewBag.ErrorTitle </h1>
+        <h6 class="alert-heading">@ViewBag.ErrorMessage</h6>
+    }
+
+
+    @*@if (ViewBag.errorMessage != null)
+        {
+            <h3 class="mb-0"> @ViewBag.errorMessage</h3>
+            <hr />
+            <h3 class="mb-0"> @ViewBag.ExceptionPath</h3>
+            <hr />
+            <h3 class="mb-0"> @ViewBag.ExceptionMessage</h3>
+            <hr />
+            <h3 class="mb-0"> @ViewBag.ExceptionStacktrace</h3>
+
+        }*@
 
 
 

@@ -29,6 +29,11 @@ namespace AActivity.Models
         public string SignatureRole { get; set; }
 
         [Display(Name = "حالة التوقيع"), Required(ErrorMessage = "{0} مطلوب")]
-        public bool Status { get; set; } 
+        public bool Status { get; set; }
+
+        public IEnumerable<TripTransportSignature> TripTransportSignatures { get; set; }
+        public IEnumerable<SignutreDelegate> SignutreDelegates { get; set; }
+
+
     }
 }
