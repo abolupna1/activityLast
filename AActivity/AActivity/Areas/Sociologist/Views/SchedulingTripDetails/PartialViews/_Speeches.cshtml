@@ -1,6 +1,9 @@
 ﻿<li>
     @model AActivity.Models.SchedulingTripDetail
-
+    @{ 
+       var NoMersal = Model.TripBookings.FirstOrDefault().Letters.FirstOrDefault();
+       
+    }
     <i class="fa fa-file-pdf bg-blue"></i>
     <div class="timeline-item">
 
@@ -13,23 +16,38 @@
         <div class="timeline-body">
             <div class="row">
 
-                <div class="col">
+                <div class="col-md-3">
                     <div class="info-box">
-                        <span class="info-box-icon bg-primary "><i class="fa fa-users text-white"></i></span>
+                        <span class="info-box-icon bg-warning "><i class="fa fa-bus text-white"></i></span>
                         <div class="info-box-content text-center">
-                            <span class="info-box-text mb-4 ">تامين وسيلة نقل </span>
+                            <span class="info-box-text mb-4 ">تامين النقل </span>
                             <span class="info-box-number font-weight-bolder ">
-                             1256
+                                @if (NoMersal != null)
+                                {
+                                    if (NoMersal.NoMersal != null)
+                                    {
+                                        @Model.TripBookings.FirstOrDefault().Letters.FirstOrDefault().NoMersal
+
+                                    }
+                                    else
+                                    { <em> مرسال</em>}
+                                }
+                                else
+                                { <em> مرسال</em>}
                             </span>
                         </div>
                     </div>
+                    @await Html.PartialAsync("Speeches/_Transport.cshtml", Model)
+       
+
+
                 </div>
 
 
 
-                <div class="col">
+                <div class="col-md-3">
                     <div class="info-box">
-                        <span class="info-box-icon bg-primary "><i class="fa fa-users text-white"></i></span>
+                        <span class="info-box-icon bg-success "><i class="fa fa-bread-slice text-white"></i></span>
                         <div class="info-box-content text-center">
                             <span class="info-box-text mb-4"> التغذية </span>
                             <span class="info-box-number font-weight-bolder ">
@@ -38,17 +56,21 @@
 
                         </div>
                     </div>
+                  
+
+
+
                 </div>
 
 
 
 
 
-                <div class="col">
+                <div class="col-md-3">
                     <div class="info-box">
                         <span class="info-box-icon bg-primary "><i class="fa fa-users text-white"></i></span>
                         <div class="info-box-content text-center">
-                            <span class="info-box-text mb-4 ">منتدبين العمادة </span>
+                            <span class="info-box-text mb-4 "> الإنتداب </span>
                             <span class="info-box-number font-weight-bolder ">
                                 @Model.TripBookings.FirstOrDefault().TripDelegates.Where(t => t.IsFromEducationBody == false).Count()
 
@@ -58,13 +80,22 @@
                     </div>
                 </div>
 
-                <div class="col-12 m-2">
+                <div class="col-md-3">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-danger "><i class="fa fa-money-check text-white"></i></span>
+                        <div class="info-box-content text-center">
+                            <span class="info-box-text mb-4 ">السلفة  </span>
+                            <span class="info-box-number font-weight-bolder ">
+                                @Model.TripBookings.FirstOrDefault().TripDelegates.Where(t => t.IsFromEducationBody == false).Count()
 
-                    <a class="btn btn-primary btn-lg" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id"  asp-controller="TripTransportSignatures" asp-action="Details">تامين وسلة نقل</a>
+                            </span>
 
-                    <a class="btn btn-success btn-lg" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id" asp-controller="TripDelegates" asp-action="index">المنتدبين</a>
+                        </div>
+                    </div>
 
                 </div>
+
+           
             </div>
         </div>
 

@@ -1,256 +1,223 @@
 ﻿@model AActivity.Models.Letter
-@inject IEnumerable<AActivity.Models.Signature> signutreRole
+
+
 
 @{
-    ViewData["Title"] = "تأمين نقل";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 
-    signutreRole = ViewBag.signutre;
+    var signature3 = Model.TripTransportSignatures.Where(d => d.StatusSignature == 3).FirstOrDefault();
+    var signature2 = Model.TripTransportSignatures.Where(d => d.StatusSignature == 2).FirstOrDefault();
+    var signature1 = Model.TripTransportSignatures.Where(d => d.StatusSignature == 1).FirstOrDefault();
+
+    int userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+
+
 }
+
+
 @functions{
-    string typeTrip(int id)
+    bool signutreRole(int user_id, string roleName)
     {
-        int tripId = Model.TripBooking.SchedulingTripDetail.TripTypeId;
+        var getSignutrelist = ViewBag.signutre as IEnumerable<AActivity.Models.Signature>;
 
-        if (tripId == id) { return ""; }
-
-
-        else return "hidden";
-    }
-
-    string typeTripColor(int id)
-    {
-        int tripId = Model.TripBooking.SchedulingTripDetail.TripTypeId;
-
-        if (tripId == id) { return ""; }
-
-
-        else return "text-success";
-    }
-
-
-
-    string signutreRoleName(string role)
-    {
-        foreach (var sr in signutreRole)
+        foreach (var b in getSignutrelist)
         {
-            if (sr.SignatureRole == role)
+            if (b.UserId == user_id && b.SignatureRole == roleName)
             {
-                return sr.User.FullName;
+                return true;
+            }
+
+            if (b.SignatureRole == roleName)
+            {
+                foreach (var c in b.SignutreDelegates.Where(s => s.SignatureId == b.Id).ToList())
+                {
+                    if (c.UserId == user_id)
+                    {
+                        if (c.Status == true && c.EndAtDate > DateTime.Now)
+                        {
+                            return true;
+
+                        }
+                    }
+                }
+            }
+
+        }
+
+        return false;
+
+    }
+}
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-file-pdf"></i>
+        تأمين وسيلة نقل
+    </h5>
+    <div class="card-body">
+        <h5 class="text-center ">
+            تأمين وسيلة نقل لفعاليات النشاط الاجتماعي
+
+        </h5>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2 ">
+                نوع الرحلة:
+            </dt>
+            <dd class="col-sm-2  mb-3">
+                @Model.TripBooking.SchedulingTripDetail.TripType.Name
+            </dd>
+            <dt class="col-sm-2">
+                الكلية :
+            </dt>
+            <dd class="col-sm-2 mb-3">
+                @Model.TripBooking.SchedulingTripDetail.EducationalBody.Name
+            </dd>
+            <dt class="col-sm-2 mb-3">
+                عدد الطلاب :
+            </dt>
+            <dd class="col-sm-2 mb-3">
+                @Model.TripBooking.StudentsParticipatingInTrips.Count()
+            </dd>
+
+            <dt class="col-sm-2 mb-3">
+                المشرف على الرحلة :
+            </dt>
+            <dd class="col-sm-4 mb-3">
+                @Model.TripBooking.SchedulingTripDetail.EducationalBody.User.FullName
+            </dd>
+            <dt class="col-sm-2 mb-3">
+                رقم الجوال :
+            </dt>
+            <dd class="col-sm-4 mb-3">
+                @Model.TripBooking.SchedulingTripDetail.EducationalBody.User.PhoneNumber
+            </dd>
+
+            <dt class="col-sm-2 mb-3">
+                رحلة إلى :
+            </dt>
+            <dd class="col-sm-4 mb-3">
+                @Model.TripBooking.City.LocationName
+            </dd>
+            <dt class="col-sm-2 mb-3">
+                التاريخ :
+            </dt>
+            <dd class="col-sm-4 mb-3">
+                <em> @Model.TripBooking.SchedulingTripDetail.TripDate.ToString("dddd", ViewBag.cultureInfo)</em>
+                @Model.TripBooking.SchedulingTripDetail.TripDate.ToString("dd - MM - yyyy")
+            </dd>
+
+            <dt class="col-sm-2 mb-3">
+                عدد الباصات :
+            </dt>
+            <dd class="col-sm-4 mb-3">
+                @ViewBag.countBus
+            </dd>
+
+
+        </dl>
+        @if (signutreRole(userId, "رئيس قسم النشاط الاجتماعي"))
+        {
+            if (signature3 == null)
+            {
+                <form class="formhidden" asp-action="Create" asp-controller="TripTransportSignatures" asp-route-LetterId="@Model.Id">
+
+                    <input hidden name="StatusSignature" value="3" />
+                    <input hidden name="bokingId" value="@Model.TripBookingId" />
+                    <span id="confirmDeleteSpan_@Model.Id" style="display:none">
+                        <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
+                        <button type="submit" class="btn btn-danger btn-sm">نعم</button>
+                        <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@Model.Id',false)">لا</a>
+                    </span>
+                    <span id="deleteSpan_@Model.Id">
+                        <a class="btn  btn-danger btn-sm text-white " onclick="confirmDelete('@Model.Id',true)">
+                            <i class="fas fa-question-circle"></i>
+                            توقيع
+                        </a>
+                    </span>
+                </form>
+            }
+            else
+            {
+                <h3>
+                    <span class="badge badge-success">
+                        <i class="fa fa-fingerprint"></i>
+
+                        تم  التوقيع
+                    </span>
+                </h3>
             }
         }
-        return string.Empty;
+        else if (signutreRole(userId, "مدير إدارة النشاط"))
+        {
+            @if (signature3 != null && signature2 == null)
+            {
+                <form class="formhidden" asp-action="Create" asp-controller="TripTransportSignatures" asp-route-LetterId="@Model.Id">
 
-    }
-
-
-}
-
-<style>
-    .hidden {
-        display: none;
-    }
-</style>
-
-<button id="print" class="btn btn-outline-gold"><i class="fa fa-print fa-3x"></i></button>
-<hr class="text-gold" />
-<div class="col-sm-4 col-md-4 col-lg-4 col-xl-4 p-2">
-    <table id="table" class="ar">
-        <thead>
-            <tr>
-                <th colspan="4">
-                    <img src="~/img/letter/letterHeade.PNG" width="100%" />
-                </th>
-            </tr>
-            <tr class="text-center">
-                <th colspan="4" class="p-5">
-                    <h4> نموذج طلب تأمين وسيلة نقل لفعاليات النشاط الاجتماعي</h4>
-                </th>
-            </tr>
-
-        </thead>
-        <tbody class="table table-bordered  m-5">
-            <tr class="text-center">
-                <td class="font-weight-bold p-3">
-
-                    <span class="badge badge-pill p-2 " >
-                        <i class="far fa-check-circle  @typeTrip(1)"></i>
+                    <input hidden name="StatusSignature" value="2" />
+                    <input hidden name="bokingId" value="@Model.TripBookingId" />
+                    <span id="confirmDeleteSpan_@Model.Id" style="display:none">
+                        <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
+                        <button type="submit" class="btn btn-danger btn-sm">نعم</button>
+                        <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@Model.Id',false)">لا</a>
                     </span>
-                    رحلة عمرة
-                </td>
-                <td class="font-weight-bold p-3">
-                    <span class="badge badge-pill p-2 badge-secondary"><i class="far fa-check-circle @typeTrip(2) "></i></span>
-                    رحلة داخلية
-                </td>
-                <td class="font-weight-bold p-3">
-                    <span class="badge badge-pill p-2 badge-secondary"><i class="far fa-check-circle @typeTrip(3)"></i></span>
-                    رحلة خارجية
-                </td>
-                <td class="font-weight-bold p-3">
-                    <span class="badge badge-pill p-2 badge-secondary">
-                        <i class="far fa-check-circle @typeTrip(4)"></i>
+                    <span id="deleteSpan_@Model.Id">
+                        <a class="btn  btn-danger btn-sm text-white " onclick="confirmDelete('@Model.Id',true)">
+                            <i class="fas fa-question-circle"></i>
+                            توقيع
+                        </a>
                     </span>
-                    زيارة
-                </td>
+                </form>
+            }
+            else
+            {
+                <h3>
+                    <span class="badge badge-success">
+                        <i class="fa fa-fingerprint"></i>
 
+                        تم  التوقيع
+                    </span>
+                </h3>
+            }
+        }
+        else if (signutreRole(userId, "وكيل العمادة لشؤون النشاط"))
+        {
+            if (signature3 != null && signature2 != null && signature1 == null)
+            {
+                <form class="formhidden" asp-action="Create" asp-controller="TripTransportSignatures" asp-route-LetterId="@Model.Id">
 
-            </tr>
-            <tr class="text-center">
-                <th colspan="2" class="p-3">
-                    كلية / @Model.TripBooking.SchedulingTripDetail.EducationalBody.Name
-                </th>
-                <th colspan="2">
-                    عدد الطلاب / <span>@Model.TripBooking.StudentsParticipatingInTrips.Count()</span> طالب
-                </th>
-            </tr>
-            <tr class="text-center">
-                <th colspan="2" class="p-3">
-                    المشرف على الرحلة/  @Model.TripBooking.SchedulingTripDetail.EducationalBody.User.FullName
-                </th>
-                <th colspan="2">
-                    رقم الجوال /  @Model.TripBooking.SchedulingTripDetail.EducationalBody.User.PhoneNumber
-                </th>
-            </tr>
-        </tbody>
-        <tbody class="border-bottom ">
-            <tr>
-                <th colspan="4">
-                    <p class="pt-3 lead">
-                        <span class="ml-5 ">  سعادة مدير إدارة النشاط</span>
-                        <br />
-                        <span class="ml-5">السلام عليكم ورحمة الله وبركاته </span>  <span class="ml-5">وبعد.</span>
-                        <br />
-                        <span class="ml-5">
-                            نظرًا لقيام رحلة إلى<em>
-                                @Model.TripBooking.City.LocationName
-                            </em>
+                    <input hidden name="StatusSignature" value="1" />
+                    <input hidden name="bokingId" value="@Model.TripBookingId" />
+                    <span id="confirmDeleteSpan_@Model.Id" style="display:none">
+                        <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
+                        <button type="submit" class="btn btn-danger btn-sm">نعم</button>
+                        <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@Model.Id',false)">لا</a>
+                    </span>
+                    <span id="deleteSpan_@Model.Id">
+                        <a class="btn  btn-danger btn-sm text-white " onclick="confirmDelete('@Model.Id',true)">
+                            <i class="fas fa-question-circle"></i>
+                            توقيع
+                        </a>
+                    </span>
+                </form>
+            }
+            else
+            {
+                if (signature1 != null)
+                {
+                    <h3>
+                        <span class="badge badge-success">
+                            <i class="fa fa-fingerprint"></i>
+
+                            تم  التوقيع
                         </span>
-                        <span class="ml-5">يوم/ <em> @Model.TripBooking.SchedulingTripDetail.TripDate.ToString("dddd", ViewBag.cultureInfo)</em></span>
-                        <span>الموافق/  <em>@Model.TripBooking.SchedulingTripDetail.TripDate.ToString("dd - MM - yyyy", ViewBag.cultureInfo)  هـ. </em></span>
-                        <span>لفعاليات النشاط الاجتماعي.</span>
-                        <br />
-                        <span class="ml-5 ">آمل من سعادتكم التكرم بتأمين عدد /  <em>   </em></span>
-                        <span>  باصات للرحلة المذكورة أعلاه  .</span>
-                        <br />
-                        <span class="ml-5"> </span>
-                        <span class="ml-5"> </span>
-                        <span class="ml-5"> </span>
-                        <span class="ml-5"> وفق الله الجميع؛؛؛ </span>
-                        <br />
-                        <span class="ml-5"> </span>
-                        <span class="ml-5"> </span>
-                        <span class="ml-5"> </span>
-                        <span class="ml-2">والسلام عليكم ورحمة الله وبركاته </span>
+                    </h3>
+                }
 
+            }
+        }
 
+        <a class="btn btn-primary btn-lg mt-4" asp-route-bokingId="@Model.TripBookingId" target="_blank" asp-controller="TripTransportSignatures" asp-action="Print">عرض / طباعة </a>
 
-                    </p>
-
-
-
-
-
-                 
-                    <div class=" float-left text-center" style="width:30%">
-
-                        <p class="  lead ">
-                            <span class=" ">رئيس قسم النشاط الاجتماعي</span>
-                        </p>
-                      
-                        @await Html.PartialAsync("_Create3.cshtml", Model) 
-
-                        <p class="  lead ">
-                            <span class=" mr-5">
-                                @signutreRoleName("رئيس قسم النشاط الاجتماعي")
-                            </span>
-                        </p>
-                    </div>
-
-                </th>
-            </tr>
-        </tbody>
-        <tbody class="border-bottom">
-            <tr>
-                <th colspan="4">
-                    <p class="lead p-3">
-                        <span class="ml-5">مع التحية لسعادة وكيل العمادة لشؤون النشاط   </span>
-                        <br />
-                        <span class="ml-5">       آمل من سعادتكم التكرم بالاطلاع والتوجيه .  </span>
-                    </p>
-                    <p class="text-left pr-5 lead">
-                        <span class="mr-5">             مدير إدارة النشاط</span>
-                        <br />
-                        <br />
-                        <br />
-                        <span class="mr-5">      أ . عبداعزيز  </span>
-                    </p>
-                </th>
-            </tr>
-        </tbody>
-        <tbody class="border-bottom">
-            <tr>
-                <th colspan="4">
-                    <p class="lead p-3">
-                        <span class="ml-5">مع التحية لسعادة المشرف على إدارة المدينة الجامعية           </span>
-                        <br />
-                        <span class="ml-5">       آمل من سعادتكم التكرم بالاطلاع والتوجيه .  </span>
-                    </p>
-                    <p class="text-left pr-5 lead">
-                        <span class="mr-5">          وكيل العمادة لشؤون النشاط</span>
-                        <br />
-                        <br /> <br />
-
-                        <span class="mr-5">            د. مصطفى بن سعد الخضر  </span>
-                    </p>
-                </th>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr class="mt-5">
-                <th colspan="4">
-                    <img src="~/img/letter/letterfooter.PNG" />
-                </th>
-            </tr>
-        </tfoot>
-    </table>
-
+    </div>
 </div>
 
-
-
-
-@section Scripts{
-    <script src="~/lib/printThis/printThis.js"></script>
-
-    <script>
-        $('#print').click(function () {
-            $('.formhidden').addClass('hidden')
-            $("#table").printThis({
-                debug: false,               // show the iframe for debugging
-                importCSS: true,            // import parent page css
-                importStyle: true,         // import style tags
-                printContainer: true,       // print outer container/$.selector
-                loadCSS: "",                // path to additional css file - use an array [] for multiple
-                pageTitle: "",              // add title to print page
-                removeInline: false,        // remove inline styles from print elements
-                removeInlineSelector: "*",  // custom selectors to filter inline styles. removeInline must be true
-                printDelay: 333,            // variable print delay
-                header: null,               // prefix to html
-                footer: null,               // postfix to html
-                base: false,                // preserve the BASE tag or accept a string for the URL
-                formValues: true,           // preserve input/form values
-                canvas: false,              // copy canvas content
-                doctypeString: '...',       // enter a different doctype for older markup
-                removeScripts: false,       // remove script tags from print content
-                copyTagClasses: false,      // copy classes from the html & body tag
-                beforePrintEvent: null,     // function for printEvent in iframe
-                beforePrint: null,          // function called before iframe is filled
-                afterPrint: null            // function called before iframe is removed
-            });
-
-        });
-
-
-    </script>
-}
 

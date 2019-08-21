@@ -1,0 +1,70 @@
+﻿@model IEnumerable<AActivity.Models.Letter>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@functions{
+    string TypeLetterName(int TypeLetter)
+    {
+        string TypeLetterString;
+        switch (TypeLetter)
+        {
+            case 1:
+                TypeLetterString = "تأمين وسيلة نقل";
+                break;
+            default:
+                TypeLetterString = "";
+                break;
+        }
+        return TypeLetterString;
+    }
+ 
+}
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+
+
+
+            <th>
+                @Html.DisplayNameFor(model => model.TypeLetter)
+            </th>
+            <th>
+                الجهة التعليمية
+            </th>
+            <th>
+                التاريخ
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+
+
+
+            <td>
+                @TypeLetterName(item.TypeLetter)
+            </td>
+            <td>
+                @item.TripBooking.SchedulingTripDetail.EducationalBody.Name
+            </td>
+            <td>
+                @item.TripBooking.SchedulingTripDetail.TripDate.ToString("dd - MM - yyyy")
+
+            </td>
+            <td>
+                <a asp-controller="TripTransportSignatures" asp-action="Details" asp-route-bokingId="@item.TripBookingId">الخطاب</a> 
+             
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

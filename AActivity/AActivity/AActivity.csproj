@@ -17,6 +17,13 @@
     <Compile Remove="Migrations\20190815183507_SignutreDelegate.cs" />
     <Compile Remove="Migrations\20190815183724_SignutreDelegate.cs" />
     <Compile Remove="Migrations\20190816035041_TimeStamp.cs" />
+    <Compile Remove="Migrations\20190818043132_NotificationsLetter.cs" />
+    <Compile Remove="Migrations\20190818043254_NotificationsLetter.cs" />
+    <Compile Remove="Migrations\20190818043254_NotificationsLetter.Designer.cs" />
+    <Compile Remove="Migrations\20190819012529_addContollerNametoNotifications.cs" />
+    <Compile Remove="Migrations\20190819012529_addContollerNametoNotifications.Designer.cs" />
+    <Compile Remove="Migrations\20190819021530_addIsSignutretoNotifications.cs" />
+    <Compile Remove="Migrations\20190819021530_addIsSignutretoNotifications.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,7 +70,7 @@
 
 
   <ItemGroup>
-    <Folder Include="Areas\Sociologist\Views\SchedulingTripDetails\PartialViews\Speeches\" />
+    <Folder Include="Data\Repository\" />
     <Folder Include="wwwroot\img\signatures\" />
   </ItemGroup>
 

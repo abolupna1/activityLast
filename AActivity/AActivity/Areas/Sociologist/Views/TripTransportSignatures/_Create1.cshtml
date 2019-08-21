@@ -1,56 +1,32 @@
 ﻿@model AActivity.Models.Letter
+
 @{
 
-    var signature = Model.TripTransportSignatures.Where(d => d.StatusSignature == 3).FirstOrDefault();
+    var signature1 = Model.TripTransportSignatures.Where(d => d.StatusSignature == 1).FirstOrDefault();
 
-   
+
+}
+@functions{
+    bool IsSameSignutre(int userId)
+    {
+        var cc = ViewBag.signutre as List<AActivity.Models.Signature>;
+        foreach (var si in cc)
+        {
+            if (si.UserId == userId && si.SignatureRole == "وكيل العمادة لشؤون النشاط" && si.Status==true)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
-
-
-
-@if (signature != null)
+@if (signature1 != null)
 {
+    if (!IsSameSignutre(signature1.Signature.UserId))
+    {
+        @:عنه
+    }
+    <img class="" width="90px" height="90px" src="~/img/signatures/@signature1.Signature.SignaturePhoto" />
 
-    <img class="" width="90px" height="90px" src="~/img/signatures/b8023ebe-3727-4adb-aea6-853c65a60bed_Signature_of_Ziad_Hussein.png" />
-
-    <form class="formhidden" asp-action="Delete" asp-controller="TripTransportSignatures" asp-route-id="@signature.Id">
-        <input hidden name="bokingId" value="@Model.TripBookingId" />
-
-        <span id="confirmDeleteSpan_@signature.Id" style="display:none">
-            <span class="text-center text-danger font-weight-bold">هل تريد الغاءالتوقيع ؟</span>
-            <button type="submit" class="btn btn-danger btn-sm">نعم</button>
-            <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@signature.Id',false)">لا</a>
-        </span>
-        <span id="deleteSpan_@signature.Id">
-            <a class="btn  btn-danger btn-sm text-white " onclick="confirmDelete('@signature.Id',true)">
-                <i class="fas fa-question-circle"></i>
-                الغاءالتوقيع
-            </a>
-        </span>
-    </form>
 }
-else
-{
-
-    <form class="formhidden" asp-action="Create" asp-controller="TripTransportSignatures" asp-route-LetterId="@Model.Id">
-
-        <input hidden name="StatusSignature" value="3" />
-        <input hidden name="bokingId" value="@Model.TripBookingId" />
-        <span id="confirmDeleteSpan_@Model.Id" style="display:none">
-            <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
-            <button type="submit" class="btn btn-danger btn-sm">نعم</button>
-            <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@Model.Id',false)">لا</a>
-        </span>
-        <span id="deleteSpan_@Model.Id">
-            <a class="btn  btn-danger btn-sm text-white " onclick="confirmDelete('@Model.Id',true)">
-                <i class="fas fa-question-circle"></i>
-                توقيع
-            </a>
-        </span>
-    </form>
-
-  
-}
-
-

@@ -30,6 +30,7 @@
 
     <link rel="stylesheet" href="~/css/site.css" />
     <link href="~/css/myStyle.css" rel="stylesheet" />
+  
 </head>
 <body class="ar">
    
@@ -37,28 +38,45 @@
 
         <nav  class="navbar navbar-expand-sm top-bar navbar-toggleable-sm navbar-dark  bg-primary border-bottom box-shadow mb-3">
          
-                <a class="navbar-brand " asp-area="" asp-controller="Home" asp-action="Index">وكالة النشاط</a>
+                <a class="navbar-brand " asp-area="Sociologist" asp-controller="Home" asp-action="Index"> النشاط الإجتماعي</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                        <partial name="_LoginPartial" />
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link active" asp-area="Sociologist" asp-controller="Home" asp-action="Index">الرئيسية</a>
-                            </li>
-                            @if (User.IsInRole("Admin") || User.IsInRole("Owner"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link " asp-area="Admin" asp-controller="Home" asp-action="Index"> إدارة النظام </a>
-                                </li>
-                            }
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link active" asp-area="Sociologist" asp-controller="Home" asp-action="Index">
 
-                        </ul>
-                    </div>
+                                <i class="fa fa-home"></i>
+                                الرئيسية
+                            </a>
+                        </li>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Owner"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link " asp-area="Admin" asp-controller="Home" asp-action="Index">
+                                    <i class="fa fa-cogs"></i>
+                                    إدارة النظام
+                                </a>
+                            </li>
+                        }
+
+                        <li class="nav-item ">
+                            <a class="nav-link active" asp-area="Sociologist" asp-controller="Letters" asp-action="Index">
+
+                                <i class="fa fa-envelope"></i>
+
+<span id="notiCount"></span>
+
+                            </a>
+                        </li>
+                    </ul>
+             
+                </div>
                 }
               
         </nav>

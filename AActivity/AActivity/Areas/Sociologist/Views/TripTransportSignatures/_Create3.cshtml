@@ -1,103 +1,38 @@
 ﻿@model AActivity.Models.Letter
+
 @{
 
     var signature = Model.TripTransportSignatures.Where(d => d.StatusSignature == 3).FirstOrDefault();
-    var signature2 = Model.TripTransportSignatures.Where(d => d.StatusSignature == 2).FirstOrDefault();
-    var signature3 = Model.TripTransportSignatures.Where(d => d.StatusSignature == 2).FirstOrDefault();
-
-    int userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+    //signature.Signature.SignatureRole
+ 
 
     
 }
 
 @functions{
-    bool signutreRole(int user_id,string roleName)
+    bool IsSameSignutre(int userId)
     {
-        var getSignutrelist = ViewBag.signutre as IEnumerable<AActivity.Models.Signature>;
-
-        foreach (var b in getSignutrelist)
+        var cc = ViewBag.signutre as List<AActivity.Models.Signature>;
+        foreach (var si in cc)
         {
-            if (b.UserId == user_id && b.SignatureRole == roleName)
+            if( si.UserId == userId && si.SignatureRole == "رئيس قسم النشاط الاجتماعي" && si.Status==true)
             {
                 return true;
             }
-
-            if (b.SignatureRole == roleName)
-            {
-                foreach (var c in b.SignutreDelegates.Where(s=>s.SignatureId==b.Id).ToList())
-                {
-                    if (c.UserId == user_id)
-                    {
-                        if (c.Status == true && c.EndAtDate > DateTime.Now)
-                        {
-                            return true;
-
-                        }
-                    }
-                }
-            }
-
         }
-
         return false;
-
     }
 }
 
-
-@if (signature != null )
+@if (signature != null)
 {
+    if ( !IsSameSignutre(signature.Signature.UserId))
+    {
+        @:عنه
+    }
 
     <img class="" width="90px" height="90px" src="~/img/signatures/@signature.Signature.SignaturePhoto" />
-    @if (signature2 == null || signature2.StatusSignature == null )
-    {
-        if (ViewBag.userId == signature.Signature.UserId &&  signutreRole(userId, "رئيس قسم النشاط الاجتماعي"))
-        {
 
-
-            <form class="formhidden" asp-action="Delete" asp-controller="TripTransportSignatures" asp-route-id="@signature.Id">
-                <input hidden name="bokingId" value="@Model.TripBookingId" />
-
-                <span id="confirmDeleteSpan_@signature.Id" style="display:none">
-                    <span class="text-center text-danger font-weight-bold">هل تريد الغاءالتوقيع ؟</span>
-                    <button type="submit" class="btn btn-danger btn-sm">نعم</button>
-                    <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@signature.Id',false)">لا</a>
-                </span>
-                <span id="deleteSpan_@signature.Id">
-                    <a class="btn  btn-danger btn-sm text-white " onclick="confirmDelete('@signature.Id',true)">
-                        <i class="fas fa-question-circle"></i>
-                        الغاءالتوقيع
-                    </a>
-                </span>
-            </form>
-        }
-    }
-
-}
-else
-{
-    if(signutreRole(userId, "رئيس قسم النشاط الاجتماعي"))
-    {
-
-  
-    <form class="formhidden" asp-action="Create" asp-controller="TripTransportSignatures" asp-route-LetterId="@Model.Id">
-
-        <input hidden name="StatusSignature" value="3" />
-        <input hidden name="bokingId" value="@Model.TripBookingId" />
-        <span id="confirmDeleteSpan_@Model.Id" style="display:none">
-            <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
-            <button type="submit" class="btn btn-danger btn-sm">نعم</button>
-            <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@Model.Id',false)">لا</a>
-        </span>
-        <span id="deleteSpan_@Model.Id">
-            <a class="btn  btn-danger btn-sm text-white " onclick="confirmDelete('@Model.Id',true)">
-                <i class="fas fa-question-circle"></i>
-                توقيع
-            </a>
-        </span>
-    </form>
-
-    }
 }
 
 

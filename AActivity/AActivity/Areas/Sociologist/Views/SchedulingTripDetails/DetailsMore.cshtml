@@ -122,7 +122,11 @@
 
     @if (Model.TripBookings.Any())
     {
-        @await Html.PartialAsync("PartialViews/_Speeches.cshtml", Model)
+        if (Model.TripBookings.First().TripStatus == 1)
+        {
+            @await Html.PartialAsync("PartialViews/_Speeches.cshtml", Model)
+
+        }
 
     }
 

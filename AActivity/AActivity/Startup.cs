@@ -79,7 +79,7 @@ namespace AActivity
             //);
             services.AddFlashes();
 
-         
+
             services.AddMvc(
                 options =>
                 {
@@ -88,7 +88,9 @@ namespace AActivity
                     .Build();
                     options.Filters.Add(new AuthorizeFilter(policy));
                 }
-                ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                )
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+               
 
             services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

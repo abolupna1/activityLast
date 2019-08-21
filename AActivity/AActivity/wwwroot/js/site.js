@@ -10,3 +10,22 @@
         $('#' + confirmDeleteSpan).hide();
     }
 }
+
+$(function () {
+
+    function getNotificationCount() {
+        $.ajax({
+            url: "/NotiCount/getSignutreCount",
+            method: "GET",
+            success: function (resault) {
+                $("#notiCount").html(resault.count);
+                console.log(resault.count);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    };
+
+    getNotificationCount();
+})

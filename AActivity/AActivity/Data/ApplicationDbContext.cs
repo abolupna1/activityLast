@@ -42,7 +42,6 @@ namespace AActivity.Data
         public DbSet<TripTransportSignature> TripTransportSignatures { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

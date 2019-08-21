@@ -17,12 +17,6 @@ namespace AActivity.Areas.Sociologist.Helpers
        
        
 
-        public static string signatureRoleOfUser(int userid)
-        {
-          
-            return "rdtfghjk";
-        }
-
         public static int   getUserSignutre(int userId, ApplicationDbContext context)
         {
           var signutre =   context.Signatures.FirstOrDefault(u => u.UserId == userId);

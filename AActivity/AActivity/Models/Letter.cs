@@ -23,6 +23,7 @@ namespace AActivity.Models
 
         public bool Status { get; set; } = false;
 
+        [Display(Name = " نوع الخطاب  ")]
         public int TypeLetter { get; set; } // النقل=1 - التغذية=2 -الانتداب =3 - السلفة = 4 - الى من يهمه الأمر=5 - وثسقة اداء مهمة =6  - 
 
 

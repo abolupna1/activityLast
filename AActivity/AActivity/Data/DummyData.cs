@@ -31,10 +31,21 @@ namespace AActivity.Data
 
             string roleSocialActivityOfficer = "SocialActivityOfficer";
             string roleSocialActivityOfficerAr = " مسؤول النشاط الإجتماعي";
-            
+
+            string roleActivityOfficer = "ActivityOfficer";
+            string roleActivityOfficerAr = " مدير إدارة النشاط";
+
+            string roleDeanForActivity = "DeanForActivity ";
+            string roleDeanForActivityAr = "وكيل العمادة لشؤون النشاط";
+
+
+
             string password = "2329472589";
 
-         
+            if (await roleManager.FindByNameAsync(roleDeanForActivity) == null)
+            {
+                var resault = await roleManager.CreateAsync(new AppRole(roleDeanForActivity, roleDeanForActivityAr));
+            }
 
             if (await roleManager.FindByNameAsync(roleAdmin) == null)
             {
@@ -58,7 +69,10 @@ namespace AActivity.Data
                 var resault = await roleManager.CreateAsync(new AppRole(roleSocialActivityOfficer, roleSocialActivityOfficerAr));
             }
 
-
+            if (await roleManager.FindByNameAsync(roleActivityOfficer) == null)
+            {
+                var resault = await roleManager.CreateAsync(new AppRole(roleActivityOfficer, roleActivityOfficerAr));
+            }
 
 
 
