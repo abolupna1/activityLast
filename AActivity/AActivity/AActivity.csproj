@@ -24,6 +24,18 @@
     <Compile Remove="Migrations\20190819012529_addContollerNametoNotifications.Designer.cs" />
     <Compile Remove="Migrations\20190819021530_addIsSignutretoNotifications.cs" />
     <Compile Remove="Migrations\20190819021530_addIsSignutretoNotifications.Designer.cs" />
+    <Compile Remove="Migrations\20190821084738_TripFoodsSignature.cs" />
+    <Compile Remove="Migrations\20190821084738_TripFoodsSignature.Designer.cs" />
+    <Compile Remove="Migrations\20190821084913_TripFoodsSignature.cs" />
+    <Compile Remove="Migrations\20190821084913_TripFoodsSignature.Designer.cs" />
+    <Compile Remove="Migrations\20190821085058_TripFoodsSignature.cs" />
+    <Compile Remove="Migrations\20190821085058_TripFoodsSignature.Designer.cs" />
+    <Compile Remove="Migrations\20190822072320_TripFood.cs" />
+    <Compile Remove="Migrations\20190822072320_TripFood.Designer.cs" />
+    <Compile Remove="Migrations\20190822072706_TripFood.cs" />
+    <Compile Remove="Migrations\20190822072706_TripFood.Designer.cs" />
+    <Compile Remove="Migrations\20190822073853_TripFoodsSignature.cs" />
+    <Compile Remove="Migrations\20190822073853_TripFoodsSignature.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -60,8 +60,13 @@ namespace AActivity.Areas.Sociologist.Controllers
                     .ThenInclude(l => l.Letters)
                     .ThenInclude(g=>g.TripTransportSignatures)
 
+                        .Include(l => l.TripBookings)
+                    .ThenInclude(l => l.Letters)
+                    .ThenInclude(g => g.TripFoodsSignatures)
+
                   .Include(t=>t.TripType)
                    
+
                     //.Include(s => s.TripType)
                     .FirstOrDefaultAsync(e=>e.Id==id);
             if (schedulingTripDetail == null)

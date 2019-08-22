@@ -40,8 +40,11 @@ namespace AActivity.Data
         public DbSet<SignutreDelegate> SignutreDelegates { get; set; }
         public DbSet<Letter> Letters { get; set; }
         public DbSet<TripTransportSignature> TripTransportSignatures { get; set; }
-
-
+        public DbSet<TripFoodsSignature> TripFoodsSignatures { get; set; }
+        public DbSet<TripFood> TripFoods { get; set; }
+        
+     
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -66,7 +69,9 @@ namespace AActivity.Data
 
   
 
- 
+
+
+
 
 
 

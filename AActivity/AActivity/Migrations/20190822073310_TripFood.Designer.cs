@@ -4,14 +4,16 @@ using AActivity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AActivity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190822073310_TripFood")]
+    partial class TripFood
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -424,27 +426,6 @@ namespace AActivity.Migrations
                     b.ToTable("TripFoods");
                 });
 
-            modelBuilder.Entity("AActivity.Models.TripFoodsSignature", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("LetterId");
-
-                    b.Property<int>("SignatureId");
-
-                    b.Property<int>("WhoHasSignutre");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LetterId");
-
-                    b.HasIndex("SignatureId");
-
-                    b.ToTable("TripFoodsSignatures");
-                });
-
             modelBuilder.Entity("AActivity.Models.TripTransportSignature", b =>
                 {
                     b.Property<int>("Id")
@@ -659,19 +640,6 @@ namespace AActivity.Migrations
                     b.HasOne("AActivity.Models.Letter", "Letter")
                         .WithOne("TripFood")
                         .HasForeignKey("AActivity.Models.TripFood", "LetterId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("AActivity.Models.TripFoodsSignature", b =>
-                {
-                    b.HasOne("AActivity.Models.Letter", "Letter")
-                        .WithMany("TripFoodsSignatures")
-                        .HasForeignKey("LetterId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("AActivity.Models.Signature", "Signature")
-                        .WithMany("TripFoodsSignatures")
-                        .HasForeignKey("SignatureId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

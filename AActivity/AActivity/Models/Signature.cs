@@ -34,6 +34,7 @@ namespace AActivity.Models
         public IEnumerable<TripTransportSignature> TripTransportSignatures { get; set; }
         public IEnumerable<SignutreDelegate> SignutreDelegates { get; set; }
 
+        public IEnumerable<TripFoodsSignature> TripFoodsSignatures { get; set; }
 
     }
 }

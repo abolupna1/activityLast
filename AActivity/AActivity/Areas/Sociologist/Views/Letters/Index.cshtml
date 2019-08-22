@@ -13,13 +13,36 @@
             case 1:
                 TypeLetterString = "تأمين وسيلة نقل";
                 break;
+            case 2:
+                TypeLetterString = "تأمين تغذية";
+                break;
             default:
                 TypeLetterString = "";
                 break;
         }
         return TypeLetterString;
     }
- 
+
+}
+@functions{
+    string ContollerName(int TypeLetter)
+    {
+        string TypeLetterString;
+        switch (TypeLetter)
+        {
+            case 1:
+                TypeLetterString = "TripTransportSignatures";
+                break;
+            case 2:
+                TypeLetterString = "تأمين تغذية";
+                break;
+            default:
+                TypeLetterString = "";
+                break;
+        }
+        return TypeLetterString;
+    }
+
 }
 <h1>Index</h1>
 
@@ -45,26 +68,27 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
+        @foreach (var item in Model)
+        {
+            <tr>
 
 
 
-            <td>
-                @TypeLetterName(item.TypeLetter)
-            </td>
-            <td>
-                @item.TripBooking.SchedulingTripDetail.EducationalBody.Name
-            </td>
-            <td>
-                @item.TripBooking.SchedulingTripDetail.TripDate.ToString("dd - MM - yyyy")
+                <td>
+                    @TypeLetterName(item.TypeLetter)
+                </td>
+                <td>
+                    @item.TripBooking.SchedulingTripDetail.EducationalBody.Name
+                </td>
+                <td>
+                    @item.TripBooking.SchedulingTripDetail.TripDate.ToString("dd - MM - yyyy")
 
-            </td>
-            <td>
-                <a asp-controller="TripTransportSignatures" asp-action="Details" asp-route-bokingId="@item.TripBookingId">الخطاب</a> 
-             
-            </td>
-        </tr>
-}
+                </td>
+                <td>
+                    <a asp-controller="@ContollerName(item.TypeLetter)" asp-action="Details" asp-route-bokingId="@item.TripBookingId">الخطاب</a>
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

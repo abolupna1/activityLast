@@ -38,9 +38,16 @@ namespace AActivity.Data
             string roleDeanForActivity = "DeanForActivity ";
             string roleDeanForActivityAr = "وكيل العمادة لشؤون النشاط";
 
+            string roleAmaid = "Amaid";
+            string roleAmaidAr = "عميد شؤون الطلاب";
 
 
             string password = "2329472589";
+
+            if (await roleManager.FindByNameAsync(roleAmaid) == null)
+            {
+                var resault = await roleManager.CreateAsync(new AppRole(roleAmaid, roleAmaidAr));
+            }
 
             if (await roleManager.FindByNameAsync(roleDeanForActivity) == null)
             {

@@ -1,0 +1,308 @@
+﻿@model AActivity.Models.Letter
+
+@{
+    ViewData["Title"] = "تفاصيل";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var signature4 = Model.TripFoodsSignatures.Where(d => d.WhoHasSignutre == 4).FirstOrDefault();
+    var signature3 = Model.TripFoodsSignatures.Where(d => d.WhoHasSignutre == 3).FirstOrDefault();
+    var signature2 = Model.TripFoodsSignatures.Where(d => d.WhoHasSignutre == 2).FirstOrDefault();
+    var signature1 = Model.TripFoodsSignatures.Where(d => d.WhoHasSignutre == 1).FirstOrDefault();
+
+    int userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+
+}
+
+
+@functions{
+    bool signutreRole(int user_id, string roleName)
+    {
+        var getSignutrelist = ViewBag.signutre as IEnumerable<AActivity.Models.Signature>;
+
+        foreach (var b in getSignutrelist)
+        {
+            if (b.UserId == user_id && b.SignatureRole == roleName)
+            {
+                return true;
+            }
+
+            if (b.SignatureRole == roleName)
+            {
+                foreach (var c in b.SignutreDelegates.Where(s => s.SignatureId == b.Id).ToList())
+                {
+                    if (c.UserId == user_id)
+                    {
+                        if (c.Status == true && c.EndAtDate > DateTime.Now)
+                        {
+                            return true;
+
+                        }
+                    }
+                }
+            }
+
+        }
+
+        return false;
+
+    }
+
+   
+}
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-file-pdf"></i>
+        تأمين  تغذية
+    </h5>
+    <div class="card-body">
+        <h5 class="text-center ">
+            طلب تأمين تغذية لفعاليات النشاط الاجتماعي
+
+        </h5>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2 ">
+                نوع الرحلة:
+            </dt>
+            <dd class="col-sm-2  mb-3">
+                @Model.TripBooking.SchedulingTripDetail.TripType.Name
+            </dd>
+            <dt class="col-sm-2 ">
+                الكلية:
+            </dt>
+            <dd class="col-sm-2  mb-3">
+                @Model.TripBooking.SchedulingTripDetail.EducationalBody.Name
+            </dd>
+            <dt class="col-sm-2 ">
+                التاريخ:
+            </dt>
+            <dd class="col-sm-2  mb-3">
+                @Model.TripBooking.SchedulingTripDetail.TripDate.ToString("dd - MM - yyyy")
+            </dd>
+            <dt class="col-sm-2 ">
+                جهة الرحلة:
+            </dt>
+            <dd class="col-sm-2  mb-3">
+                @Model.TripBooking.City.LocationName
+            </dd>
+            <dt class="col-sm-2 ">
+                عدد الطلاب:
+            </dt>
+            <dd class="col-sm-2  mb-3">
+                @Model.TripBooking.StudentsParticipatingInTrips.Count()
+            </dd>
+            <dt class="col-sm-2 ">
+                عدد الوجبات:
+            </dt>
+            <dd class="col-sm-2  mb-3">
+                @Model.TripFood.QtyMeals
+            </dd>
+            <dt class="col-sm-2 ">
+                موعد اول وجبة:
+            </dt>
+            <dd class="col-sm-2  mb-3">
+                @Model.TripFood.FirstMealText / @Model.TripFood.FirstMeal.ToString("dd / MM")
+            </dd>
+
+            <dt class="col-sm-2 ">
+                موعد آخر وجبة:
+            </dt>
+            <dd class="col-sm-2  mb-3">
+                @Model.TripFood.LastMealText / @Model.TripFood.LastMeal.ToString("dd / MM")
+            </dd>
+
+
+
+
+        </dl>
+        @{int sigCont = Model.TripFoodsSignatures.Count();}
+        @if (signutreRole(userId, "رئيس قسم النشاط الاجتماعي"))
+        {
+            if (signature1 == null)
+            {
+
+
+                <form asp-action="Create" asp-controller="TripFoodsSignatures">
+
+                    <input hidden name="LetterId" value="@Model.Id" />
+                    <input hidden name="WhoHasSignutre" value="1" />
+                    <span id="confirmDeleteSpan_@Model.Id" style="display:none">
+                        <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
+                        <button type="submit" class="btn btn-danger btn-lg">نعم</button>
+                        <a href="#" class="btn btn-primary btn-lg" onclick="confirmDelete('@Model.Id',false)">لا</a>
+                    </span>
+                    <span id="deleteSpan_@Model.Id">
+                        <a class="btn  btn-danger btn-lg text-white " onclick="confirmDelete('@Model.Id',true)">
+                            <i class="fas fa-question-circle"></i>
+                            توقيع
+                        </a>
+                    </span>
+                </form>
+            }
+            else
+            {
+                if (signature1 != null)
+                {
+                    <h3>
+                        <span class="badge badge-success badge-pill p-3">
+                            <i class="fa fa-fingerprint"></i>
+
+                            تم  التوقيع
+                        </span>
+                    </h3>
+                }
+            }
+        }
+
+
+        else if (signutreRole(userId, "مدير إدارة النشاط"))
+        {
+            if (signature2 == null && signature1 != null)
+            {
+
+
+                <form asp-action="Create" asp-controller="TripFoodsSignatures">
+
+                    <input hidden name="LetterId" value="@Model.Id" />
+                    <input hidden name="WhoHasSignutre" value="2" />
+                    <span id="confirmDeleteSpan_@Model.Id" style="display:none">
+                        <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
+                        <button type="submit" class="btn btn-danger btn-lg">نعم</button>
+                        <a href="#" class="btn btn-primary btn-lg" onclick="confirmDelete('@Model.Id',false)">لا</a>
+                    </span>
+                    <span id="deleteSpan_@Model.Id">
+                        <a class="btn  btn-danger btn-lg text-white " onclick="confirmDelete('@Model.Id',true)">
+                            <i class="fas fa-question-circle"></i>
+                            توقيع
+                        </a>
+                    </span>
+                </form>
+            }
+            else
+            {
+                if (signature2 != null)
+                {
+                    <h3>
+                        <span class="badge badge-success badge-pill p-3">
+                            <i class="fa fa-fingerprint"></i>
+
+                            تم  التوقيع
+                        </span>
+                    </h3>
+                }
+                else
+                {
+                    <h3>
+                        <span class="badge badge-warning badge-pill p-3">
+                            <i class="fa fa-fingerprint"></i>
+
+                            انتظار توقيع رئيس قسم النشاط الاجتماعي
+                        </span>
+                    </h3>
+                }
+            }
+        }
+
+
+        else if (signutreRole(userId, "وكيل العمادة لشؤون النشاط"))
+        {
+            if (signature3 == null && signature2 != null)
+            {
+
+
+                <form asp-action="Create" asp-controller="TripFoodsSignatures">
+
+                    <input hidden name="LetterId" value="@Model.Id" />
+                    <input hidden name="WhoHasSignutre" value="3" />
+                    <span id="confirmDeleteSpan_@Model.Id" style="display:none">
+                        <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
+                        <button type="submit" class="btn btn-danger btn-lg">نعم</button>
+                        <a href="#" class="btn btn-primary btn-lg" onclick="confirmDelete('@Model.Id',false)">لا</a>
+                    </span>
+                    <span id="deleteSpan_@Model.Id">
+                        <a class="btn  btn-danger btn-lg text-white " onclick="confirmDelete('@Model.Id',true)">
+                            <i class="fas fa-question-circle"></i>
+                            توقيع
+                        </a>
+                    </span>
+                </form>
+            }
+            else
+            {
+                if (signature3 != null)
+                {
+                    <h3>
+                        <span class="badge badge-success badge-pill p-3">
+                            <i class="fa fa-fingerprint"></i>
+
+                            تم  التوقيع
+                        </span>
+                    </h3>
+                }
+                else
+                {
+                    <h3>
+                        <span class="badge badge-warning badge-pill p-3">
+                            <i class="fa fa-fingerprint"></i>
+
+                            انتظار توقيع مدير إدارة النشاط
+                        </span>
+                    </h3>
+                }
+            }
+        }
+
+        else if (signutreRole(userId, "عميد شؤون الطلاب"))
+        {
+            if (signature4 == null && signature3 != null)
+            {
+
+
+                <form asp-action="Create" asp-controller="TripFoodsSignatures">
+
+                    <input hidden name="LetterId" value="@Model.Id" />
+                    <input hidden name="WhoHasSignutre" value="4" />
+                    <span id="confirmDeleteSpan_@Model.Id" style="display:none">
+                        <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
+                        <button type="submit" class="btn btn-danger btn-lg">نعم</button>
+                        <a href="#" class="btn btn-primary btn-lg" onclick="confirmDelete('@Model.Id',false)">لا</a>
+                    </span>
+                    <span id="deleteSpan_@Model.Id">
+                        <a class="btn  btn-danger btn-lg text-white " onclick="confirmDelete('@Model.Id',true)">
+                            <i class="fas fa-question-circle"></i>
+                            توقيع
+                        </a>
+                    </span>
+                </form>
+            }
+            else
+            {
+                if (signature4 != null)
+                {
+                    <h3>
+                        <span class="badge badge-success badge-pill p-3">
+                            <i class="fa fa-fingerprint"></i>
+
+                            تم  التوقيع
+                        </span>
+                    </h3>
+                }
+                else
+                {
+                    <h3>
+                        <span class="badge badge-warning badge-pill p-3">
+                            <i class="fa fa-fingerprint"></i>
+
+                            انتظار توقيع مدير إدارة النشاط
+                        </span>
+                    </h3>
+                }
+            }
+        }
+
+        <a class="btn btn-primary btn-lg mt-4" asp-route-bokingId="@Model.Id" target="_blank" asp-controller="TripTransportSignatures" asp-action="Print">عرض / طباعة </a>
+
+    </div>
+</div>
+
+

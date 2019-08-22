@@ -161,8 +161,7 @@ namespace AActivity.Areas.Sociologist.Controllers
                 _context.Add(tripTransportSignature);
                 await _context.SaveChangesAsync();
         
-            await _context.SaveChangesAsync();
-          
+         
 
             return RedirectToAction(nameof(Details),new { bokingId= bokingId });
         

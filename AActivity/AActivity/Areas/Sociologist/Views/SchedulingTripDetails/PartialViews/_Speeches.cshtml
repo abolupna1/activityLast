@@ -1,7 +1,8 @@
 ﻿<li>
     @model AActivity.Models.SchedulingTripDetail
     @{ 
-       var NoMersal = Model.TripBookings.FirstOrDefault().Letters.FirstOrDefault();
+       var NoMersal1 = Model.TripBookings.FirstOrDefault().Letters.Where(l=>l.TypeLetter==1).FirstOrDefault();
+       var NoMersal2 = Model.TripBookings.FirstOrDefault().Letters.Where(l=>l.TypeLetter==2).FirstOrDefault();
        
     }
     <i class="fa fa-file-pdf bg-blue"></i>
@@ -22,12 +23,11 @@
                         <div class="info-box-content text-center">
                             <span class="info-box-text mb-4 ">تامين النقل </span>
                             <span class="info-box-number font-weight-bolder ">
-                                @if (NoMersal != null)
+                                @if (NoMersal1 != null)
                                 {
-                                    if (NoMersal.NoMersal != null)
+                                    if (NoMersal1.NoMersal != null)
                                     {
-                                        @Model.TripBookings.FirstOrDefault().Letters.FirstOrDefault().NoMersal
-
+                                        @NoMersal1.NoMersal
                                     }
                                     else
                                     { <em> مرسال</em>}
@@ -51,12 +51,23 @@
                         <div class="info-box-content text-center">
                             <span class="info-box-text mb-4"> التغذية </span>
                             <span class="info-box-number font-weight-bolder ">
-                                96526
+                                @if (NoMersal2 != null)
+                                {
+                                    if (NoMersal2.NoMersal != null)
+                                    {
+                                        @NoMersal2.NoMersal
+                                    }
+                                    else
+                                    { <em> مرسال</em>}
+                                }
+                                else
+                                { <em> مرسال</em>}
                             </span>
-
+                            
                         </div>
                     </div>
-                  
+                    @await Html.PartialAsync("Speeches/_Foods.cshtml", Model)
+
 
 
 
