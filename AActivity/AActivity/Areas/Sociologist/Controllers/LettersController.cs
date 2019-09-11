@@ -20,71 +20,129 @@ namespace AActivity.Areas.Sociologist.Controllers
             _context = context;
         }
 
-        // GET: Sociologist/Letters
+
+      
+
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Letters.Include(l => l.TripBooking).ThenInclude(l=>l.SchedulingTripDetail.EducationalBody);
-            return View(await applicationDbContext.ToListAsync());
+            var applicationDbContext = _context.Letters.Where(m=>m.NoMersal == 0)
+                .Include(l=>l.LetterTransports);
+            return View(await applicationDbContext.OrderByDescending(i=>i.Id).ToListAsync());
         }
 
-        // GET: Sociologist/Letters/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Sociologist/Letters/NoMersalUpdate")]
+        public async Task<IActionResult> NoMersalUpdate(int letterId, int NoMersal)
+        {
+
+            var letter = await _context.Letters.FindAsync(letterId);
+            letter.NoMersal = NoMersal;
+            _context.Update(letter);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(IndexByBoking),new { bokingId = letter.TripBookingId});
+
+        }
+
+        [Route("Sociologist/Letters/IndexByBoking/{bokingId:int}")]
+        public async Task<IActionResult> IndexByBoking(int bokingId)
+        {
+            var boking = await _context.TripBookings.FindAsync(bokingId);
+    
+            var Letters = await _context.Letters
+                .Where(b => b.TripBookingId == bokingId)
+               .Include(t => t.LetterTransports)
+               .Include(t => t.LetterTransports).ThenInclude(u=>u.User)
+               .Include(b=>b.TripBooking.StudentsParticipatingInTrips)
+               .Include(t => t.LetteSignutres)
+               .Include(a => a.LetterAdvancedDelegations)
+               .Include(b => b.LetterAdvancedEducations)
+               .Include(f => f.LetterFoods)
+               .Include(f => f.TripBooking.SchedulingTripDetail.TripType)
+               .Include(f => f.TripBooking.SchedulingTripDetail.EducationalBody)
+                .ToListAsync();
+            ViewBag.bokingId = bokingId;
+            ViewBag.detailId = boking.SchedulingTripDetailId;
+            return View(Letters);
+        }
+
+    
+
+        // GET: Sociologist/Letters/Create
+        public IActionResult Create()
+        {
+            ViewData["TripBookingId"] = new SelectList(_context.TripBookings, "Id", "TripLocationName");
+            return View();
+        }
+
+        // POST: Sociologist/Letters/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,TripBookingId,NoMersal,TypeLetter")] Letter letter)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(letter);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["TripBookingId"] = new SelectList(_context.TripBookings, "Id", "TripLocationName", letter.TripBookingId);
+            return View(letter);
+        }
+
+        // GET: Sociologist/Letters/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var letter = await _context.Letters
-                .Include(l => l.TripBooking)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var letter = await _context.Letters.FindAsync(id);
             if (letter == null)
             {
                 return NotFound();
             }
-
+            ViewData["TripBookingId"] = new SelectList(_context.TripBookings, "Id", "TripLocationName", letter.TripBookingId);
             return View(letter);
         }
-
-
-        
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ Route("Sociologist/Letters/Create")]
-
-        public async Task<IActionResult> Create(int TripBookingId,int TypeLetter,int tripDetailsId)
-        {
-            Letter letter = new Letter()
-            {
-                TripBookingId = TripBookingId,
-                TypeLetter= TypeLetter
-            };
-            _context.Add(letter);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("DetailsMore", "SchedulingTripDetails", new { id = tripDetailsId });
-
-
-        }
-
-    
 
         // POST: Sociologist/Letters/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("Sociologist/Letters/NoMersalUpdate")]
-
-        public async Task<IActionResult> NoMersalUpdate(int letterId,string NoMersal,int detailId)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TripBookingId,NoMersal,TypeLetter")] Letter letter)
         {
+            if (id != letter.Id)
+            {
+                return NotFound();
+            }
 
-           var letter = await _context.Letters.FindAsync(letterId);
-            letter.NoMersal = NoMersal;
-                _context.Update(letter);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("DetailsMore", "SchedulingTripDetails", new { id = detailId });
-
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(letter);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!LetterExists(letter.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["TripBookingId"] = new SelectList(_context.TripBookings, "Id", "TripLocationName", letter.TripBookingId);
+            return View(letter);
         }
 
         // GET: Sociologist/Letters/Delete/5

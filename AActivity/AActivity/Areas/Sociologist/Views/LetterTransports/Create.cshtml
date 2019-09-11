@@ -1,0 +1,69 @@
+﻿@model AActivity.Areas.Sociologist.ModelViews.LetterTRansportCreateModelView
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-plus"></i>
+        خطاب تأمين وسيلة نقل
+
+    </h5>
+    <div class="card-body">
+        <form asp-action="Create" asp-controller="">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group" hidden>
+                <label asp-for="UserId" class="control-label"></label>
+                <input asp-for="UserId" class="form-control">
+            </div>
+            <div class="form-group" hidden>
+                <label asp-for="BokingId" class="control-label"></label>
+                <input asp-for="BokingId" class="form-control">
+            </div>
+            <div class="form-group">
+                <label asp-for="EducationBody" class="control-label"></label>
+                <input readonly asp-for="EducationBody" class="form-control">
+            </div>
+            <div class="form-group">
+                <label asp-for="TripType" class="control-label"></label>
+                <input readonly asp-for="TripType" class="form-control">
+            </div>
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label>
+                <input readonly asp-for="FullName" class="form-control">
+            </div>
+            <div class="form-group">
+                <label asp-for="Mobile" class="control-label"></label>
+                <input readonly asp-for="Mobile" class="form-control">
+            </div>
+            <div class="form-group">
+                <label asp-for="QtyStudents" class="control-label"></label>
+                <input readonly asp-for="QtyStudents" class="form-control" />
+                <span asp-validation-for="QtyStudents" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QtyBuses" class="control-label"></label>
+                <input readonly asp-for="QtyBuses" class="form-control" />
+                <span asp-validation-for="QtyBuses" class="text-danger"></span>
+            </div>
+            <div class="form-group col-12 mt-5">
+
+                <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+                <a class="btn  btn-outline-primary btn-lg" asp-action="IndexByBoking" asp-controller="Letters" asp-route-bokingId="@Model.BokingId"> <i class="fas fa-share-square"></i> تراجع </a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+
+}

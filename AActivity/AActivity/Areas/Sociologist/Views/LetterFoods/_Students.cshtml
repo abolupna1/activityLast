@@ -1,0 +1,38 @@
+﻿@model AActivity.Areas.Sociologist.ModelViews.PrintTripFoodView
+
+<hr class="tbPrint" />
+<h5 class="text-center tbPrint m-5">الطلاب المشاركين في الرحلة</h5>
+<table class="table table-bordered tbPrint ar">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>رقم الطالب</th>
+            <th>اسم الطالب</th>         
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 1;}
+        @foreach (var student in Model.Students)
+        {
+        <tr>
+            <td>@i</td>
+            <td>@student.StudentNumber</td>
+            <td>
+                @student.StudentName
+            @if (i==Model.QtyStudents - 4)
+            {
+         
+                <span class="stamp">
+                  
+                    <img width="150" src="~/img/stamps/8587f7e1-77c8-4a1d-a5d5-781b4f57d6a6_sm_5aaa4ad77406e.png" />
+                </span>
+         
+        }
+            </td>
+        </tr>
+            i++;
+        }
+      
+       
+    </tbody>
+</table>

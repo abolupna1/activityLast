@@ -259,7 +259,7 @@ namespace AActivity.Areas.Sociologist.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeNumber,EmployeeName,JopName,TripBookingId")] TripDelegate tripDelegate)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeNumber,EmployeeName,EmployeMobile,JopName,TripBookingId")] TripDelegate tripDelegate)
         {
           
 

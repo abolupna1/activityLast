@@ -1,0 +1,13 @@
+﻿@model IEnumerable<AActivity.Models.Letter>
+
+
+@{
+    ViewData["Title"] = "الخطابات";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div></div>
+@await Html.PartialAsync("Speaches/_Transport.cshtml", Model)
+@await Html.PartialAsync("Speaches/_Foods.cshtml", Model)
+@await Html.PartialAsync("Speaches/_Delegates.cshtml", Model)
+

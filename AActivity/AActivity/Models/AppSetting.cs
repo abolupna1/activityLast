@@ -52,6 +52,14 @@ namespace AActivity.Models
 
         public float AmountOmrahCreditToTrip { get; set; }
 
+        [Display(Name = "مبلغ سلفة  رحلة زيارة   "), Required(ErrorMessage = "{0} مطلوب")]
+
+        public float AmountVisitCreditToTrip { get; set; }
+
+        [Display(Name = "ختم النشاط  "), Required(ErrorMessage = "{0} مطلوب")]
+
+        public string Stamp { get; set; }
+
 
     }
 }

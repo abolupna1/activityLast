@@ -72,6 +72,8 @@ namespace AActivity.Migrations
 
                     b.Property<float>("AmountOmrahCreditToTrip");
 
+                    b.Property<float>("AmountVisitCreditToTrip");
+
                     b.Property<int>("BookingTime");
 
                     b.Property<int>("QtyCollegesDelegates");
@@ -87,6 +89,9 @@ namespace AActivity.Migrations
                     b.Property<int>("QtyOmrahDaysTrip");
 
                     b.Property<int>("QtyPassengersInOneBus");
+
+                    b.Property<string>("Stamp")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -187,6 +192,9 @@ namespace AActivity.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<string>("Stamp")
+                        .IsRequired();
+
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
@@ -202,9 +210,7 @@ namespace AActivity.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("NoMersal");
-
-                    b.Property<bool>("Status");
+                    b.Property<int>("NoMersal");
 
                     b.Property<int>("TripBookingId");
 
@@ -215,6 +221,129 @@ namespace AActivity.Migrations
                     b.HasIndex("TripBookingId");
 
                     b.ToTable("Letters");
+                });
+
+            modelBuilder.Entity("AActivity.Models.LetterAdvancedDelegation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<float>("Amount");
+
+                    b.Property<float>("AmountAdditional");
+
+                    b.Property<int>("LetterId");
+
+                    b.Property<int>("TripDelegateId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LetterId");
+
+                    b.HasIndex("TripDelegateId");
+
+                    b.ToTable("LetterAdvancedDelegations");
+                });
+
+            modelBuilder.Entity("AActivity.Models.LetterAdvancedEducation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<float>("Amount");
+
+                    b.Property<float>("AmountAdditional");
+
+                    b.Property<int>("LetterId");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LetterId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LetterAdvancedEducations");
+                });
+
+            modelBuilder.Entity("AActivity.Models.LetterFood", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("FirstMealDate");
+
+                    b.Property<string>("FirstMealTime");
+
+                    b.Property<DateTime>("LastMealDate");
+
+                    b.Property<string>("LastMealTime");
+
+                    b.Property<int>("LetterId");
+
+                    b.Property<int>("QtyMeals");
+
+                    b.Property<int>("QtyStudents");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LetterId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LetterFoods");
+                });
+
+            modelBuilder.Entity("AActivity.Models.LetterSignutre", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsHeOwnerOfSignature");
+
+                    b.Property<int>("LetterId");
+
+                    b.Property<int>("SignatureId");
+
+                    b.Property<int>("WhoHasSignutre");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LetterId");
+
+                    b.HasIndex("SignatureId");
+
+                    b.ToTable("LetterSignutres");
+                });
+
+            modelBuilder.Entity("AActivity.Models.LetterTransport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("LetterId");
+
+                    b.Property<int>("QtyBuses");
+
+                    b.Property<int>("QtyStudents");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LetterId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LetterTransports");
                 });
 
             modelBuilder.Entity("AActivity.Models.SchedulingTripDetail", b =>
@@ -379,6 +508,11 @@ namespace AActivity.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Confirmed");
+
+                    b.Property<string>("EmployeMobile")
+                        .IsRequired();
+
                     b.Property<string>("EmployeeName")
                         .IsRequired();
 
@@ -396,74 +530,6 @@ namespace AActivity.Migrations
                     b.HasIndex("TripBookingId");
 
                     b.ToTable("TripDelegates");
-                });
-
-            modelBuilder.Entity("AActivity.Models.TripFood", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("FirstMeal");
-
-                    b.Property<string>("FirstMealText");
-
-                    b.Property<DateTime>("LastMeal");
-
-                    b.Property<string>("LastMealText");
-
-                    b.Property<int>("LetterId");
-
-                    b.Property<int>("QtyMeals");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LetterId")
-                        .IsUnique();
-
-                    b.ToTable("TripFoods");
-                });
-
-            modelBuilder.Entity("AActivity.Models.TripFoodsSignature", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("LetterId");
-
-                    b.Property<int>("SignatureId");
-
-                    b.Property<int>("WhoHasSignutre");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LetterId");
-
-                    b.HasIndex("SignatureId");
-
-                    b.ToTable("TripFoodsSignatures");
-                });
-
-            modelBuilder.Entity("AActivity.Models.TripTransportSignature", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("LetterId");
-
-                    b.Property<int>("SignatureId");
-
-                    b.Property<int>("StatusSignature");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LetterId");
-
-                    b.HasIndex("SignatureId");
-
-                    b.ToTable("TripTransportSignatures");
                 });
 
             modelBuilder.Entity("AActivity.Models.TripType", b =>
@@ -578,6 +644,71 @@ namespace AActivity.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("AActivity.Models.LetterAdvancedDelegation", b =>
+                {
+                    b.HasOne("AActivity.Models.Letter", "Letter")
+                        .WithMany("LetterAdvancedDelegations")
+                        .HasForeignKey("LetterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AActivity.Models.TripDelegate", "TripDelegate")
+                        .WithMany()
+                        .HasForeignKey("TripDelegateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AActivity.Models.LetterAdvancedEducation", b =>
+                {
+                    b.HasOne("AActivity.Models.Letter", "Letter")
+                        .WithMany("LetterAdvancedEducations")
+                        .HasForeignKey("LetterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AActivity.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AActivity.Models.LetterFood", b =>
+                {
+                    b.HasOne("AActivity.Models.Letter", "Letter")
+                        .WithMany("LetterFoods")
+                        .HasForeignKey("LetterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AActivity.Models.AppUser", "User")
+                        .WithMany("LetterFood")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AActivity.Models.LetterSignutre", b =>
+                {
+                    b.HasOne("AActivity.Models.Letter", "Letter")
+                        .WithMany("LetteSignutres")
+                        .HasForeignKey("LetterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AActivity.Models.Signature", "Signature")
+                        .WithMany()
+                        .HasForeignKey("SignatureId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AActivity.Models.LetterTransport", b =>
+                {
+                    b.HasOne("AActivity.Models.Letter", "Letter")
+                        .WithMany("LetterTransports")
+                        .HasForeignKey("LetterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AActivity.Models.AppUser", "User")
+                        .WithMany("LetterTransports")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("AActivity.Models.SchedulingTripDetail", b =>
                 {
                     b.HasOne("AActivity.Models.EducationalBody", "EducationalBody")
@@ -651,40 +782,6 @@ namespace AActivity.Migrations
                     b.HasOne("AActivity.Models.TripBooking", "TripBooking")
                         .WithMany("TripDelegates")
                         .HasForeignKey("TripBookingId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("AActivity.Models.TripFood", b =>
-                {
-                    b.HasOne("AActivity.Models.Letter", "Letter")
-                        .WithOne("TripFood")
-                        .HasForeignKey("AActivity.Models.TripFood", "LetterId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("AActivity.Models.TripFoodsSignature", b =>
-                {
-                    b.HasOne("AActivity.Models.Letter", "Letter")
-                        .WithMany("TripFoodsSignatures")
-                        .HasForeignKey("LetterId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("AActivity.Models.Signature", "Signature")
-                        .WithMany("TripFoodsSignatures")
-                        .HasForeignKey("SignatureId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("AActivity.Models.TripTransportSignature", b =>
-                {
-                    b.HasOne("AActivity.Models.Letter", "Letter")
-                        .WithMany("TripTransportSignatures")
-                        .HasForeignKey("LetterId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("AActivity.Models.Signature", "Signature")
-                        .WithMany("TripTransportSignatures")
-                        .HasForeignKey("SignatureId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

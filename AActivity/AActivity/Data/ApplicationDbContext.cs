@@ -39,12 +39,15 @@ namespace AActivity.Data
         public DbSet<Signature> Signatures { get; set; }
         public DbSet<SignutreDelegate> SignutreDelegates { get; set; }
         public DbSet<Letter> Letters { get; set; }
-        public DbSet<TripTransportSignature> TripTransportSignatures { get; set; }
-        public DbSet<TripFoodsSignature> TripFoodsSignatures { get; set; }
-        public DbSet<TripFood> TripFoods { get; set; }
-        
-     
-        
+        public DbSet<LetterTransport> LetterTransports { get; set; }       
+        public DbSet<LetterSignutre> LetterSignutres { get; set; }
+        public DbSet<LetterFood> LetterFoods { get; set; }
+        public DbSet<LetterAdvancedEducation> LetterAdvancedEducations { get; set; }
+        public DbSet<LetterAdvancedDelegation> LetterAdvancedDelegations { get; set; }
+
+
+
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

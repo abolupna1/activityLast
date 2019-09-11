@@ -4,91 +4,97 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
 @functions{
-    string TypeLetterName(int TypeLetter)
+    string  getTypeName(int typeInt)
     {
-        string TypeLetterString;
-        switch (TypeLetter)
+        string typeName;
+        switch (typeInt)
         {
             case 1:
-                TypeLetterString = "تأمين وسيلة نقل";
+                typeName= "تأمين وسيلة نقل";
                 break;
             case 2:
-                TypeLetterString = "تأمين تغذية";
-                break;
+            typeName= "تأمين تغذية ";
+            break;
             default:
-                TypeLetterString = "";
+                typeName="";
                 break;
-        }
-        return TypeLetterString;
+        };
+        return typeName;
     }
 
-}
-@functions{
-    string ContollerName(int TypeLetter)
+   string  getControllerName(int typeInt)
     {
-        string TypeLetterString;
-        switch (TypeLetter)
+          string typeName;
+        switch (typeInt)
         {
             case 1:
-                TypeLetterString = "TripTransportSignatures";
+                typeName= "LetterTransports";
                 break;
             case 2:
-                TypeLetterString = "تأمين تغذية";
+                typeName= "LetterFoods";
                 break;
             default:
-                TypeLetterString = "";
+                typeName="";
                 break;
-        }
-        return TypeLetterString;
+        };
+        return typeName;
+    
     }
-
 }
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+<div class="mt-5 mb-3">
+    <p class="d-inline text-secondary "> <i class="fas fa-envelope-open-text fa-2x"></i>
+    الخطابات
+    </p>
+
+</div>
+
+<table class="table table-bordered table-hover text-center">
+    <thead class=" bg-primary text-white">
         <tr>
-
-
-
+            <th>#</th>
             <th>
                 @Html.DisplayNameFor(model => model.TypeLetter)
             </th>
             <th>
-                الجهة التعليمية
+                @Html.DisplayNameFor(model => model.NoMersal)
             </th>
-            <th>
-                التاريخ
-            </th>
+
             <th></th>
         </tr>
     </thead>
     <tbody>
+        @{ int i = 1;}
         @foreach (var item in Model)
         {
             <tr>
-
-
+                <th>@i</th>
 
                 <td>
-                    @TypeLetterName(item.TypeLetter)
+                    @getTypeName(item.TypeLetter)
+                 
+                </td>
+
+                <td>
+                    @if (item.NoMersal == 0)
+                    {
+                        <span class="text-danger">انتظار التواقيع</span>
+                    }
+                    else
+                    { @item.NoMersal}
                 </td>
                 <td>
-                    @item.TripBooking.SchedulingTripDetail.EducationalBody.Name
-                </td>
-                <td>
-                    @item.TripBooking.SchedulingTripDetail.TripDate.ToString("dd - MM - yyyy")
 
-                </td>
-                <td>
-                    <a asp-controller="@ContollerName(item.TypeLetter)" asp-action="Details" asp-route-bokingId="@item.TripBookingId">الخطاب</a>
+                    <a asp-action="Details" asp-controller="@getControllerName(item.TypeLetter)" asp-route-letterId="@item.Id">
+                        <i class="fas fa-eye"></i>
+                    </a> 
 
                 </td>
             </tr>
+            i++;
         }
     </tbody>
 </table>

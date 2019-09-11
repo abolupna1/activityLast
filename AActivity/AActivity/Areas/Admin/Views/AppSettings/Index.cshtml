@@ -121,6 +121,21 @@
         </div>
     </li>
 
+
+    <li class="list-group-item text-warning">
+
+        <div class="row">
+            <i class="fa fa-credit-card fa-2x text-left  col-1"></i>
+            <h5 class="col-10 text-right"> @Html.DisplayNameFor(model => model.AmountVisitCreditToTrip)</h5>
+            <h4 class="col-1 text-right">
+                <span class="font-weight-bolder">
+                    @Html.DisplayFor(modelItem => item.AmountVisitCreditToTrip)
+                </span>
+            </h4>
+        </div>
+    </li>
+
+
     <li class="list-group-item text-dark">
 
         <div class="row">
@@ -147,6 +162,7 @@
         </div>
     </li>
 
+
     <li class="list-group-item">
 
         <div class="row">
@@ -159,6 +175,19 @@
             </h4>
         </div>
     </li>
+
+    <li class="list-group-item">
+
+        <div class="row">
+            <h5 class="col-10 text-right"> @Html.DisplayNameFor(model => model.Stamp)</h5>
+
+            <div class="col-3">
+                <img class="w-100" src="~/img/stamps/@Model.FirstOrDefault().Stamp" />
+
+            </div>
+        </div>
+    </li>
+
 
     <li class="list-group-item">
         <a class="btn  btn-outline-primary btn-lg" asp-action="Index" asp-controller="Home"> <i class="fas fa-share-square"></i> تراجع </a>

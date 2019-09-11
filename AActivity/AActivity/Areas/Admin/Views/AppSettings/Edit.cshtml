@@ -1,7 +1,8 @@
-﻿@model AActivity.Models.AppSetting
+﻿@model AActivity.Areas.Admin.ModelViews.AppSettingCreateModelView
+
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "تعديل";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,7 +12,7 @@
         ضبط الإعدادات
     </h5>
     <div class="card-body">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-row">
@@ -65,7 +66,7 @@
 
                 <div class="form-group   col-md-3 mb-4">
                     <label asp-for="AmountInternalCreditToTrip" class="control-label"></label>
-                    <input asp-for="AmountInternalCreditToTrip"  class="form-control form-control-lg" />
+                    <input asp-for="AmountInternalCreditToTrip" class="form-control form-control-lg" />
                     <span asp-validation-for="AmountInternalCreditToTrip" class="text-danger"></span>
                 </div>
                 <div class="form-group   col-md-3 mb-4">
@@ -73,6 +74,29 @@
                     <input asp-for="AmountOmrahCreditToTrip" class="form-control form-control-lg" />
                     <span asp-validation-for="AmountOmrahCreditToTrip" class="text-danger"></span>
                 </div>
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="AmountVisitCreditToTrip" class="control-label"></label>
+                    <input asp-for="AmountVisitCreditToTrip" class="form-control form-control-lg" />
+                    <span asp-validation-for="AmountVisitCreditToTrip" class="text-danger"></span>
+                </div>
+
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="StampFile" class="control-label"></label>
+                    <input asp-for="StampFile" onchange="FillImage(event);" class="form-control form-control-lg" />
+                    <span asp-validation-for="StampFile" class="text-danger"></span>
+                </div>
+
+                <div class="form-group   col-md-12 mb-4">
+                    <div class="row">
+
+                        <div class="col-3">
+                            <img id="image" asp-append-version="true" class="w-100 img-thumbnail" src="~/img/stamps/@Model.Stamp" alt="الصورة" />
+                            <input hidden asp-for="Stamp" />
+                        </div>
+                    </div>
+                </div>
+
+
 
                 <div class="form-group col-12 mt-5">
                     <a class="btn  btn-outline-primary btn-lg" asp-action="Index"> <i class="fas fa-share-square"></i> تراجع </a>
@@ -81,11 +105,26 @@
 
 
                 </div>
-                </div>
+            </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+
+
+      var FillImage = function (event) {
+
+
+          var ima = document.getElementById("image");
+          ima.src = URL.createObjectURL(event.target.files[0])
+
+
+
+      }
+    </script>
 }

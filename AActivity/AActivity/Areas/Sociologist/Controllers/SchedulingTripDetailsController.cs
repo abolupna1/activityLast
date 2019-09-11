@@ -54,18 +54,11 @@ namespace AActivity.Areas.Sociologist.Controllers
                       .Include(st => st.TripBookings)
                     .ThenInclude(td => td.TripDelegates)
                     .Include(l => l.TripBookings)
-                    .ThenInclude(l=>l.Letters)
 
-                     .Include(l => l.TripBookings)
-                    .ThenInclude(l => l.Letters)
-                    .ThenInclude(g=>g.TripTransportSignatures)
-
-                        .Include(l => l.TripBookings)
-                    .ThenInclude(l => l.Letters)
-                    .ThenInclude(g => g.TripFoodsSignatures)
+                    .Include(s => s.TripBookings).ThenInclude(l=>l.Letters)
 
                   .Include(t=>t.TripType)
-                   
+                 
 
                     //.Include(s => s.TripType)
                     .FirstOrDefaultAsync(e=>e.Id==id);

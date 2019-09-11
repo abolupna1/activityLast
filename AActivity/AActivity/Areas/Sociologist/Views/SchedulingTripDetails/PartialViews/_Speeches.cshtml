@@ -1,17 +1,13 @@
 ﻿<li>
     @model AActivity.Models.SchedulingTripDetail
-    @{ 
-       var NoMersal1 = Model.TripBookings.FirstOrDefault().Letters.Where(l=>l.TypeLetter==1).FirstOrDefault();
-       var NoMersal2 = Model.TripBookings.FirstOrDefault().Letters.Where(l=>l.TypeLetter==2).FirstOrDefault();
-       
-    }
+
     <i class="fa fa-file-pdf bg-blue"></i>
     <div class="timeline-item">
 
         <h3 class="timeline-header">
             <i class="fas fa-file-pdf"></i>
 
-          مرسال /  المخاطبات
+            مرسال /  المخاطبات
         </h3>
 
         <div class="timeline-body">
@@ -21,24 +17,29 @@
                     <div class="info-box">
                         <span class="info-box-icon bg-warning "><i class="fa fa-bus text-white"></i></span>
                         <div class="info-box-content text-center">
-                            <span class="info-box-text mb-4 ">تامين النقل </span>
+                            <span class="info-box-text mb-1 ">تامين النقل </span>
+                            <span class="info-box-text  mb-2 " style="font-size:11px">صادر مرسال  </span>
+
                             <span class="info-box-number font-weight-bolder ">
-                                @if (NoMersal1 != null)
+                                @if (Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 1).Any())
                                 {
-                                    if (NoMersal1.NoMersal != null)
+                                    if (Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 1).FirstOrDefault().NoMersal != 0)
                                     {
-                                        @NoMersal1.NoMersal
+                                        @Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 1).FirstOrDefault().NoMersal
+
                                     }
                                     else
-                                    { <em> مرسال</em>}
+                                    {
+                                        <span>انتظار</span>
+                                    }
+
                                 }
-                                else
-                                { <em> مرسال</em>}
+
                             </span>
                         </div>
                     </div>
-                    @await Html.PartialAsync("Speeches/_Transport.cshtml", Model)
-       
+
+
 
 
                 </div>
@@ -49,26 +50,27 @@
                     <div class="info-box">
                         <span class="info-box-icon bg-success "><i class="fa fa-bread-slice text-white"></i></span>
                         <div class="info-box-content text-center">
-                            <span class="info-box-text mb-4"> التغذية </span>
+                            <span class="info-box-text mb-1"> التغذية </span>
+                            <span class="info-box-text  mb-2 " style="font-size:11px">صادر مرسال  </span>
+
                             <span class="info-box-number font-weight-bolder ">
-                                @if (NoMersal2 != null)
+                                @if (Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 2).Any())
                                 {
-                                    if (NoMersal2.NoMersal != null)
+                                    if (Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 2).FirstOrDefault().NoMersal != 0)
                                     {
-                                        @NoMersal2.NoMersal
+                                        @Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 2).FirstOrDefault().NoMersal
+
                                     }
                                     else
-                                    { <em> مرسال</em>}
+                                    {
+                                        <span>انتظار</span>
+                                    }
+
                                 }
-                                else
-                                { <em> مرسال</em>}
                             </span>
-                            
+
                         </div>
                     </div>
-                    @await Html.PartialAsync("Speeches/_Foods.cshtml", Model)
-
-
 
 
                 </div>
@@ -81,14 +83,16 @@
                     <div class="info-box">
                         <span class="info-box-icon bg-primary "><i class="fa fa-users text-white"></i></span>
                         <div class="info-box-content text-center">
-                            <span class="info-box-text mb-4 "> الإنتداب </span>
+                            <span class="info-box-text mb-1 "> الإنتداب </span>
+                            <span class="info-box-text  mb-2 " style="font-size:11px">صادر مرسال  </span>
+
                             <span class="info-box-number font-weight-bolder ">
-                                @Model.TripBookings.FirstOrDefault().TripDelegates.Where(t => t.IsFromEducationBody == false).Count()
 
                             </span>
 
                         </div>
                     </div>
+
                 </div>
 
                 <div class="col-md-3">
@@ -106,11 +110,16 @@
 
                 </div>
 
-           
+
             </div>
+            <a class="btn  btn-primary btn-lg"
+               asp-action="IndexByBoking" asp-controller="Letters" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id">            
+                الخطابات
+            </a>
         </div>
-
+    
     </div>
-
+  
 </li>
+
 

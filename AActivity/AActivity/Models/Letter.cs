@@ -15,21 +15,20 @@ namespace AActivity.Models
         [Display(Name = " الحجز "), ForeignKey("TripBookingId")]
         public TripBooking TripBooking { get; set; }
 
-        [ Display(Name = "رقم مرسال ")]
+        [ Display(Name = "رقم صادر مرسال ")]
+        public int NoMersal { get; set; }
 
-        public string NoMersal { get; set; } = null;
+        [Display(Name = "نوع الخطاب")]
 
-        [ Display(Name = " حالة الخطاب ")]
+        public int TypeLetter { get; set; }//[transport, foods, delegations, advanced]
+        public IEnumerable<LetterTransport> LetterTransports { get; set; }
+        public IEnumerable<LetterSignutre> LetteSignutres { get; set; }
+        
+        public IEnumerable<LetterFood> LetterFoods { get; set; }
+        public IEnumerable<LetterAdvancedDelegation> LetterAdvancedDelegations { get; set; }
+        public IEnumerable<LetterAdvancedEducation> LetterAdvancedEducations { get; set; }
 
-        public bool Status { get; set; } = false;
+        
 
-        [Display(Name = " نوع الخطاب  ")]
-        public int TypeLetter { get; set; } // النقل=1 - التغذية=2 -الانتداب =3 - السلفة = 4 - الى من يهمه الأمر=5 - وثسقة اداء مهمة =6  - 
-
-
-        public IEnumerable<TripTransportSignature> TripTransportSignatures { get; set; }
-        public IEnumerable<TripFoodsSignature> TripFoodsSignatures { get; set; }
-        public TripFood TripFood { get; set; }
-    
     }
 }

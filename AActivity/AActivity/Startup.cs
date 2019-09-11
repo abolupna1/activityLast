@@ -20,6 +20,8 @@ using AutoMapper;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ReflectionIT.Mvc.Paging;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 
 namespace AActivity
 {
@@ -41,6 +43,7 @@ namespace AActivity
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(

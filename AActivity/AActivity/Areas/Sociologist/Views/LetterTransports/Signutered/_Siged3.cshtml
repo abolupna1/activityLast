@@ -1,0 +1,54 @@
+﻿@model AActivity.Areas.Sociologist.ModelViews.PrintLetterTransportModelView
+
+
+
+@functions{
+    string signutreRoleName(string role)
+    {
+        foreach (var sr in Model.Signatures)
+        {
+            if (sr.SignatureRole == role)
+            {
+                return $"{sr.Degree}  {sr.User.FullName}";
+            }
+        }
+        return string.Empty;
+
+    }
+}
+
+
+    <tbody >
+        <tr class="border-top">
+            <th colspan="4">
+                <p class="lead p-3">
+                    <span class="ml-5">مع التحية لسعادة المشرف على إدارة المدينة الجامعية           </span>
+                    <br />
+                    <span class="ml-5">       آمل من سعادتكم التكرم بالاطلاع والتوجيه .  </span>
+                </p>
+                <div class=" float-left text-center" style="width:30%">
+
+                    <p class="  lead ">
+                        <span class=" ">وكيل العمادة لشؤون النشاط</span>
+                    </p>
+
+
+                    @if (Model.WhoHasSignutre.Any(s => s.WhoHasSignutre == 3))
+                    {
+                        if (!Model.WhoHasSignutre.FirstOrDefault(s => s.WhoHasSignutre == 3).IsHeOwnerOfSignature)
+                        {
+                            @:عنه
+                        }
+                        <img   width="100" src="~/img/signatures/@Model.WhoHasSignutre.Where(h=>h.WhoHasSignutre==3).FirstOrDefault().Signature.SignaturePhoto" />
+
+                    }
+                    <p class="  lead ">
+                        <span class=" mr-5">
+                            @signutreRoleName("وكيل العمادة لشؤون النشاط")
+                        </span>
+                    </p>
+                </div>
+
+            </th>
+        </tr>
+</tbody>

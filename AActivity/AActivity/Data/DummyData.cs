@@ -141,26 +141,26 @@ namespace AActivity.Data
 
 
             ////====================================
-            if (context.StudentsParticipatingInTrip.ToList().Count < 400)
-            {
+            //if (context.StudentsParticipatingInTrip.ToList().Count < 400)
+            //{
 
-                var boking = await context.TripBookings.LastOrDefaultAsync();
-                for (int i = 0; i < 61; i++)
-                {
-                    StudentsParticipatingInTrip student = new StudentsParticipatingInTrip()
-                    {
-                        StudentName = "student" + i + "",
-                        StudentNumber = 111111 + i,
-                        TripBookingId = 12010,
-                    };
+            //    var boking = await context.TripBookings.LastOrDefaultAsync();
+            //    for (int i = 0; i < 150; i++)
+            //    {
+            //        StudentsParticipatingInTrip student = new StudentsParticipatingInTrip()
+            //        {
+            //            StudentName = "student" + i + "",
+            //            StudentNumber = 111111 + i,
+            //            TripBookingId = 1,
+            //        };
 
-                    context.Add(student);
-                    await context.SaveChangesAsync();
+            //        context.Add(student);
+            //        await context.SaveChangesAsync();
 
-                }
+            //    }
 
 
-            }
+            //}
             //// ======================
 
 

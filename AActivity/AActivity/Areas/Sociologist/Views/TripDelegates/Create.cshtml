@@ -32,6 +32,9 @@
                 <th>#</th>
                 <th>رقم الموظف</th>
                 <th>اسم الموظف</th>
+                <th>الجوال </th>
+
+                
                 <th>المسمى الوظيفي</th>
                 <th @ishidden()> الجهات التعليمية</th>
                 </thead>
@@ -39,59 +42,66 @@
                     @{int i = 1;}
                     @for (int j = 0; j < ViewBag.countbus; j++)
                     {
-                        <tr>
-                            <th>@i</th>
-                            <td>
+                    <tr>
+                        <th>@i</th>
+                        <td>
 
-                                <input type="text" asp-for="@Model[j].EmployeeNumber" class="form-control" />
-                                <span asp-validation-for="@Model[j].EmployeeNumber" class="text-danger"></span>
+                            <input type="text" asp-for="@Model[j].EmployeeNumber" class="form-control" />
+                            <span asp-validation-for="@Model[j].EmployeeNumber" class="text-danger"></span>
+                        </td>
+                        <td>
+                            <input asp-for="@Model[j].EmployeeName" class="form-control" />
+                            <span asp-validation-for="@Model[j].EmployeeName" class="text-danger"></span>
+                        </td>
+
+                        <td>
+                            <input asp-for="@Model[j].EmployeMobile" class="form-control" />
+                            <span asp-validation-for="@Model[j].EmployeMobile" class="text-danger"></span>
+                        </td>
+
+                        
+                        <td>
+                            <input asp-for="@Model[j].JopName" class="form-control" />
+                            <span asp-validation-for="@Model[j].JopName" class="text-danger"></span>
+                        </td>
+
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td class="text-center">
+                                <div class="form-group form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" asp-for="@Model[j].IsFromEducationBody" />
+                                    </label>
+                                </div>
                             </td>
-                            <td>
-                                <input asp-for="@Model[j].EmployeeName" class="form-control" />
-                                <span asp-validation-for="@Model[j].EmployeeName" class="text-danger"></span>
-                            </td>
-                            <td>
-                                <input asp-for="@Model[j].JopName" class="form-control" />
-                                <span asp-validation-for="@Model[j].JopName" class="text-danger"></span>
-                            </td>
+                        }
 
-
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <td class="text-center">
-                                    <div class="form-group form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" asp-for="@Model[j].IsFromEducationBody" />
-                                        </label>
-                                    </div>
-                                </td>
-                            }
-
-                            else if (User.IsInRole("Supervisor"))
-                            {
-                                <td hidden>
-                                    <div class="form-group form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" checked asp-for="@Model[j].IsFromEducationBody" />
-                                        </label>
-                                    </div>
-                                </td>
-                            }
-                            else
-                            {
-                                <td hidden>
-                                    <div class="form-group form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" asp-for="@Model[j].IsFromEducationBody" />
-                                        </label>
-                                    </div>
-                                </td>
-                            }
-
+                        else if (User.IsInRole("Supervisor"))
+                        {
                             <td hidden>
-                                <input asp-for="@Model[j].TripBookingId" value="@ViewBag.TripBookingId" class="form-control" asp-items="ViewBag.TripBookingId" />
+                                <div class="form-group form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" checked asp-for="@Model[j].IsFromEducationBody" />
+                                    </label>
+                                </div>
                             </td>
-                        </tr>
+                        }
+                        else
+                        {
+                            <td hidden>
+                                <div class="form-group form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" asp-for="@Model[j].IsFromEducationBody" />
+                                    </label>
+                                </div>
+                            </td>
+                        }
+
+                        <td hidden>
+                            <input asp-for="@Model[j].TripBookingId" value="@ViewBag.TripBookingId" class="form-control" asp-items="ViewBag.TripBookingId" />
+                        </td>
+                    </tr>
                         i++;
                     }
                 </tbody>

@@ -31,10 +31,9 @@ namespace AActivity.Models
         [Display(Name = "حالة التوقيع"), Required(ErrorMessage = "{0} مطلوب")]
         public bool Status { get; set; }
 
-        public IEnumerable<TripTransportSignature> TripTransportSignatures { get; set; }
         public IEnumerable<SignutreDelegate> SignutreDelegates { get; set; }
 
-        public IEnumerable<TripFoodsSignature> TripFoodsSignatures { get; set; }
+     
 
     }
 }

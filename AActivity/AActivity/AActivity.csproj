@@ -14,9 +14,15 @@
     <Compile Remove="Migrations\20190802082803_QtyDaysPerCity.cs" />
     <Compile Remove="Migrations\20190803085340_StudentsParticipatingInTrip.cs" />
     <Compile Remove="Migrations\20190806111738_TripDelegate.cs" />
+    <Compile Remove="Migrations\20190811152433_Letters.cs" />
+    <Compile Remove="Migrations\20190811152433_Letters.Designer.cs" />
+    <Compile Remove="Migrations\20190811152528_TripTransportSignature.cs" />
+    <Compile Remove="Migrations\20190811152528_TripTransportSignature.Designer.cs" />
     <Compile Remove="Migrations\20190815183507_SignutreDelegate.cs" />
     <Compile Remove="Migrations\20190815183724_SignutreDelegate.cs" />
     <Compile Remove="Migrations\20190816035041_TimeStamp.cs" />
+    <Compile Remove="Migrations\20190817032100_SignutreDelegates.cs" />
+    <Compile Remove="Migrations\20190817032100_SignutreDelegates.Designer.cs" />
     <Compile Remove="Migrations\20190818043132_NotificationsLetter.cs" />
     <Compile Remove="Migrations\20190818043254_NotificationsLetter.cs" />
     <Compile Remove="Migrations\20190818043254_NotificationsLetter.Designer.cs" />
@@ -34,8 +40,28 @@
     <Compile Remove="Migrations\20190822072320_TripFood.Designer.cs" />
     <Compile Remove="Migrations\20190822072706_TripFood.cs" />
     <Compile Remove="Migrations\20190822072706_TripFood.Designer.cs" />
+    <Compile Remove="Migrations\20190822073310_TripFood.cs" />
+    <Compile Remove="Migrations\20190822073310_TripFood.Designer.cs" />
     <Compile Remove="Migrations\20190822073853_TripFoodsSignature.cs" />
     <Compile Remove="Migrations\20190822073853_TripFoodsSignature.Designer.cs" />
+    <Compile Remove="Migrations\20190822074748_TripFoodsSignature.cs" />
+    <Compile Remove="Migrations\20190822074748_TripFoodsSignature.Designer.cs" />
+    <Compile Remove="Migrations\20190824075944_TripDelegationSignutre.cs" />
+    <Compile Remove="Migrations\20190824075944_TripDelegationSignutre.Designer.cs" />
+    <Compile Remove="Migrations\20190824080155_TripDelegationSignutre.cs" />
+    <Compile Remove="Migrations\20190824080155_TripDelegationSignutre.Designer.cs" />
+    <Compile Remove="Migrations\20190824092043_ConfirmedToDelegateTrip.cs" />
+    <Compile Remove="Migrations\20190824092043_ConfirmedToDelegateTrip.Designer.cs" />
+    <Compile Remove="Migrations\20190904221506_LetterAdvanceds.cs" />
+    <Compile Remove="Migrations\20190904221506_LetterAdvanceds.Designer.cs" />
+    <Compile Remove="Migrations\20190904222052_LetterAdvanceds.cs" />
+    <Compile Remove="Migrations\20190904222052_LetterAdvanceds.Designer.cs" />
+    <Compile Remove="Migrations\20190904230412_EmployeMobile.cs" />
+    <Compile Remove="Migrations\20190904230412_EmployeMobile.Designer.cs" />
+    <Compile Remove="Migrations\20190904232548_AmountVisitCreditToTrip.cs" />
+    <Compile Remove="Migrations\20190904232548_AmountVisitCreditToTrip.Designer.cs" />
+    <Compile Remove="Migrations\20190905220733_Letters.cs" />
+    <Compile Remove="Migrations\20190905220733_Letters.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,6 +99,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
     <PackageReference Include="Core.Flash" Version="1.0.0" />
+    <PackageReference Include="DinkToPdf" Version="1.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
@@ -82,7 +109,8 @@
 
 
   <ItemGroup>
-    <Folder Include="Data\Repository\" />
+    <Folder Include="Areas\Sociologist\Views\SchedulingTripDetails\PartialViews\Speeches\" />
+    <Folder Include="wwwroot\img\stamps\" />
     <Folder Include="wwwroot\img\signatures\" />
   </ItemGroup>
 

@@ -9,6 +9,8 @@ using AActivity.Data;
 using AActivity.Models;
 using Microsoft.AspNetCore.Authorization;
 using AActivity.Areas.Admin.ModelViews;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace AActivity.Areas.Admin.Controllers
 {
@@ -18,10 +20,12 @@ namespace AActivity.Areas.Admin.Controllers
     public class AppSettingsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment _ihostingEnvironment;
 
-        public AppSettingsController(ApplicationDbContext context)
+        public AppSettingsController(ApplicationDbContext context, IHostingEnvironment ihostingEnvironment)
         {
             _context = context;
+            _ihostingEnvironment = ihostingEnvironment;
         }
 
         // GET: Admin/AppSettings
@@ -43,11 +47,50 @@ namespace AActivity.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BookingTime,QtyDeanshipDelegates,QtyInstitutesDelegates,QtyCollegesDelegates,QtyPassengersInOneBus,QtyOmrahDaysTrip,QtyInternalDaysTrip,QtyExternalDaysTrip,AmountExternalCreditToTrip,AmountInternalCreditToTrip,AmountOmrahCreditToTrip")] AppSetting appSetting)
+        public async Task<IActionResult> Create(AppSettingCreateModelView appSetting)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(appSetting);
+                string uniqFileName = null;
+                if (appSetting.StampFile != null && appSetting.StampFile.Length>0)
+                {
+                    if (IsFileValidate(appSetting.StampFile.FileName))
+                    {
+                        string uplouadsFolder = Path.Combine(_ihostingEnvironment.WebRootPath, "img/stamps");
+                        uniqFileName = Guid.NewGuid().ToString() + "_" + appSetting.StampFile.FileName;
+                        string filePath = Path.Combine(uplouadsFolder, uniqFileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            appSetting.StampFile.CopyTo(fileStream);
+                        }
+
+
+                    }
+                    else
+                    {
+                        ViewBag.msg = "الصور المسموح بها يجب ان تكون بمتداد : " + "png , jpeg , jpg , gif , bmp ";
+
+                        return View(appSetting);
+                    }
+                }
+                var settengSave = new AppSetting()
+                {
+                    AmountExternalCreditToTrip=appSetting.AmountExternalCreditToTrip,
+                    Stamp= uniqFileName,BookingTime= appSetting.BookingTime,
+                    AmountInternalCreditToTrip= appSetting.AmountInternalCreditToTrip,
+                    AmountOmrahCreditToTrip= appSetting.AmountOmrahCreditToTrip,
+                    AmountVisitCreditToTrip= appSetting.AmountVisitCreditToTrip,
+                    QtyCollegesDelegates= appSetting.QtyCollegesDelegates,
+                    QtyDeanshipDelegates= appSetting.QtyDeanshipDelegates,
+                    QtyExternalDaysTrip= appSetting.QtyExternalDaysTrip,
+                    QtyInstitutesDelegates = appSetting.QtyInstitutesDelegates,
+                    QtyInternalDaysTrip= appSetting.QtyInternalDaysTrip,
+                    QtyOmrahDaysTrip= appSetting.QtyOmrahDaysTrip,
+                    QtyPassengersInOneBus= appSetting.QtyPassengersInOneBus,
+                    
+                };
+                _context.Add(settengSave);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -69,7 +112,24 @@ namespace AActivity.Areas.Admin.Controllers
                 Response.StatusCode = 404;
                 return View("AppSettingsNotFound");
             }
-            return View(appSetting);
+            var appSettingEdit = new AppSettingCreateModelView()
+            {
+                AmountExternalCreditToTrip = appSetting.AmountExternalCreditToTrip,
+                Stamp = appSetting.Stamp,
+                Id =appSetting.Id,
+                BookingTime = appSetting.BookingTime,
+                AmountInternalCreditToTrip = appSetting.AmountInternalCreditToTrip,
+                AmountOmrahCreditToTrip = appSetting.AmountOmrahCreditToTrip,
+                AmountVisitCreditToTrip = appSetting.AmountVisitCreditToTrip,
+                QtyCollegesDelegates = appSetting.QtyCollegesDelegates,
+                QtyDeanshipDelegates = appSetting.QtyDeanshipDelegates,
+                QtyExternalDaysTrip = appSetting.QtyExternalDaysTrip,
+                QtyInstitutesDelegates = appSetting.QtyInstitutesDelegates,
+                QtyInternalDaysTrip = appSetting.QtyInternalDaysTrip,
+                QtyOmrahDaysTrip = appSetting.QtyOmrahDaysTrip,
+                QtyPassengersInOneBus = appSetting.QtyPassengersInOneBus,
+            };
+            return View(appSettingEdit);
         }
 
         // POST: Admin/AppSettings/Edit/5
@@ -77,7 +137,7 @@ namespace AActivity.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BookingTime,QtyDeanshipDelegates,QtyInstitutesDelegates,QtyCollegesDelegates,QtyPassengersInOneBus,QtyOmrahDaysTrip,QtyInternalDaysTrip,QtyExternalDaysTrip,AmountExternalCreditToTrip,AmountInternalCreditToTrip,AmountOmrahCreditToTrip")] AppSetting appSetting)
+        public async Task<IActionResult> Edit(int id, AppSettingCreateModelView appSetting)
         {
             if (id != appSetting.Id)
             {
@@ -87,31 +147,70 @@ namespace AActivity.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                string filenameForEdit = null;
+                string uniqFileName = null;
+                if (appSetting.StampFile != null && appSetting.StampFile.Length > 0)
                 {
-                    _context.Update(appSetting);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AppSettingExists(appSetting.Id))
+                    string filePathForDelete = Path.Combine(_ihostingEnvironment.WebRootPath,
+              "img/stamps", appSetting.Stamp);
+                    System.IO.File.Delete(filePathForDelete);
+                    if (IsFileValidate(appSetting.StampFile.FileName))
                     {
-                        Response.StatusCode = 404;
-                        return View("AppSettingsNotFound");
+                        string uplouadsFolder = Path.Combine(_ihostingEnvironment.WebRootPath, "img/stamps");
+                        uniqFileName = Guid.NewGuid().ToString() + "_" + appSetting.StampFile.FileName;
+                        string filePath = Path.Combine(uplouadsFolder, uniqFileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            appSetting.StampFile.CopyTo(fileStream);
+                        }
+
+
                     }
                     else
                     {
-                        Response.StatusCode = 404;
-                        return View("AppSettingsNotFound");
+                        ViewBag.msg = "الصور المسموح بها يجب ان تكون بمتداد : " + "png , jpeg , jpg , gif , bmp ";
+
+                        return View(appSetting);
                     }
                 }
+                filenameForEdit = uniqFileName == null ? appSetting.Stamp : uniqFileName;
+                var settengUpdate = new AppSetting()
+                {
+                    AmountExternalCreditToTrip = appSetting.AmountExternalCreditToTrip,
+                    Stamp = filenameForEdit,Id=appSetting.Id,
+                    BookingTime = appSetting.BookingTime,
+                    AmountInternalCreditToTrip = appSetting.AmountInternalCreditToTrip,
+                    AmountOmrahCreditToTrip = appSetting.AmountOmrahCreditToTrip,
+                    AmountVisitCreditToTrip = appSetting.AmountVisitCreditToTrip,
+                    QtyCollegesDelegates = appSetting.QtyCollegesDelegates,
+                    QtyDeanshipDelegates = appSetting.QtyDeanshipDelegates,
+                    QtyExternalDaysTrip = appSetting.QtyExternalDaysTrip,
+                    QtyInstitutesDelegates = appSetting.QtyInstitutesDelegates,
+                    QtyInternalDaysTrip = appSetting.QtyInternalDaysTrip,
+                    QtyOmrahDaysTrip = appSetting.QtyOmrahDaysTrip,
+                    QtyPassengersInOneBus = appSetting.QtyPassengersInOneBus,
+
+                };
+                _context.Update(settengUpdate);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(appSetting);
         }
 
 
- 
+        private bool IsFileValidate(string filename)
+        {
+            string extintion = Path.GetExtension(filename);
+            if (extintion.Contains(".png")) { return true; }
+            if (extintion.Contains(".PNG")) { return true; }
+            if (extintion.Contains(".jpeg")) { return true; }
+            if (extintion.Contains(".jpg")) { return true; }
+            if (extintion.Contains(".gif")) { return true; }
+            if (extintion.Contains(".bmp")) { return true; }
+            return false;
+        }
 
         private bool AppSettingExists(int id)
         {

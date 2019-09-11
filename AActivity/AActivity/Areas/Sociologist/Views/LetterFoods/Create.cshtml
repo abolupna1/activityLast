@@ -1,0 +1,125 @@
+﻿@model AActivity.Areas.Sociologist.ModelViews.LetterFoodCreateViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-plus"></i>
+        خطاب تأمين  تغذية
+
+    </h5>
+    <div class="card-body">
+        <form asp-action="Create" asp-controller="">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-row">
+                <div class="form-group col-md-12" hidden>
+                    <label asp-for="UserId" class="control-label"></label>
+                    <input asp-for="UserId" class="form-control">
+                </div>
+                <div class="form-group col-md-12" hidden>
+                    <label asp-for="BokingId" class="control-label"></label>
+                    <input asp-for="BokingId" class="form-control">
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="EducationBody" class="control-label"></label>
+                    <input asp-for="EducationBody" class="form-control" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="EducationBodySupervisor" class="control-label"></label>
+                    <input asp-for="EducationBodySupervisor" class="form-control" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="EducationBodySupervisorMobile" class="control-label"></label>
+                    <input asp-for="EducationBodySupervisorMobile" class="form-control" readonly>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label asp-for="TripType" class="control-label"></label>
+                    <input type="text" asp-for="TripType" class="form-control" readonly>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="QtyStudents" class="control-label"></label>
+                    <input type="text" asp-for="QtyStudents" class="form-control" readonly>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="TripDate" class="control-label"></label>
+                    <input type="text" asp-for="TripDate" readonly value="@Model.TripDate.ToString("yyyy-MM-dd")" class="form-control">
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="QtyMeals" class="control-label"></label>
+                    <input type="text" asp-for="QtyMeals" value="" class="form-control">
+                    <span asp-validation-for="QtyMeals" class="text-danger"></span>
+
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label asp-for="FirstMealDate" class="control-label"></label>
+                    <input asp-for="FirstMealDate" value="" type="text" id="FirstMealDate" class="form-control">
+                    <span asp-validation-for="FirstMealDate" class="text-danger"></span>
+
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="FirstMealTime" class="control-label"></label>
+                    <select asp-for="FirstMealTime" class="form-control">
+                        <option value="">الرجاء الإختيار</option>
+                        <option value="فطور">فطور</option>
+                        <option value="غداء">غداء</option>
+                        <option value="عشاء">عشاء</option>
+                    </select>
+                    <span asp-validation-for="FirstMealTime" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="LastMealDate" class="control-label"></label>
+                    <input asp-for="LastMealDate" id="LastMealDate" value="" type="text" class="form-control">
+                    <span asp-validation-for="LastMealDate" class="text-danger"></span>
+
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="LastMealTime" class="control-label"></label>
+                    <select asp-for="LastMealTime" class="form-control">
+                        <option value="">الرجاء الإختيار</option>
+                        <option value="فطور">فطور</option>
+                        <option value="غداء">غداء</option>
+                        <option value="عشاء">عشاء</option>
+                    </select>
+                    <span asp-validation-for="LastMealTime" class="text-danger"></span>
+                </div>
+            </div>
+
+
+
+            <div class="form-group col-12 mt-5">
+
+                <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+                <a class="btn  btn-outline-primary btn-lg" asp-action="IndexByBoking" asp-controller="Letters" asp-route-bokingId="@Model.BokingId"> <i class="fas fa-share-square"></i> تراجع </a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        $(document).ready(function () {
+
+               $("#FirstMealDate").datepicker({ minDate: new Date("@Model.TripDate"), maxDate: new Date("@Model.TripBackDate") });
+               $("#LastMealDate").datepicker({ minDate: new Date("@Model.TripDate"), maxDate: new Date("@Model.TripBackDate") });
+         
+        
+
+        });
+
+
+    </script>
+
+}

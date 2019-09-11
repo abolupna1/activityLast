@@ -1,4 +1,4 @@
-﻿@model AActivity.Models.AppSetting
+﻿@model AActivity.Areas.Admin.ModelViews.AppSettingCreateModelView
 
 @{
     ViewData["Title"] = "ضبط الإعدادات";
@@ -12,7 +12,12 @@
     </h5>
     <div class="card-body">
 
-        <form asp-action="Create">
+        @if(ViewBag.msg != null)
+        {
+           <div class="alert alert-danger">@ViewBag.msg</div>
+        }
+
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-row">
                 <div class="form-group col-md-3 mb-4">
@@ -73,6 +78,20 @@
                     <input asp-for="AmountOmrahCreditToTrip" class="form-control form-control-lg" />
                     <span asp-validation-for="AmountOmrahCreditToTrip" class="text-danger"></span>
                 </div>
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="AmountVisitCreditToTrip" class="control-label"></label>
+                    <input asp-for="AmountVisitCreditToTrip" class="form-control form-control-lg" />
+                    <span asp-validation-for="AmountVisitCreditToTrip" class="text-danger"></span>
+                </div>
+
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="StampFile" class="control-label"></label>
+                    <input  asp-for="StampFile" class="form-control form-control-lg" />
+                    <span asp-validation-for="StampFile" class="text-danger"></span>
+                </div>
+
+
+
 
                 <div class="form-group col-12 mt-5">
                     <a class="btn  btn-outline-primary btn-lg" asp-action="Index"> <i class="fas fa-share-square"></i> تراجع </a>

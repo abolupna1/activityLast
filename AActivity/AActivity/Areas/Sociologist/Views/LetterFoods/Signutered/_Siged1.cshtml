@@ -1,0 +1,97 @@
+﻿@model AActivity.Areas.Sociologist.ModelViews.PrintTripFoodView
+
+
+
+@functions{
+    string signutreRoleName(string role)
+    {
+        foreach (var sr in Model.Signatures)
+        {
+            if (sr.SignatureRole == role)
+            {
+                return $"{sr.Degree}  {sr.User.FullName}";
+            }
+        }
+        return string.Empty;
+
+    }
+}
+
+<style>
+    span.stamp {
+       position: absolute;
+    right: 300px;
+    margin-top: -50px;
+    z-index: 99999;
+}
+</style>
+<tbody class="border-bottom ">
+    <tr>
+        <th colspan="4">
+            <p class="pt-3 lead">
+                <span class="ml-5 ">  سعادة مدير إدارة النشاط</span>
+                <br />
+                <span class="ml-5">السلام عليكم ورحمة الله وبركاته </span>  <span class="ml-5">وبعد.</span>
+                <br />
+                <span class="ml-5">
+                    بناء على خطة النشاط المعتمدة من مجلس الجامعة للعام الدراسي .
+                    <em>
+                        @Model.Academicyear
+                    </em>
+                </span>
+                <br />
+
+                <span class="ml-5">
+                    آمل التكرم بالموافقة على تأمين التغذية لطلاب الجهة التعليمية المذكورة أعلاه وفق اللوائح والأنظمة.
+                </span>
+                <br />
+                <span class="ml-5"> وفق الله الجميع؛؛؛ </span>
+                <br />
+                <span class="ml-5"> </span>
+                <span class="ml-5"> </span>
+                <span class="ml-5"> </span>
+                <span class="ml-5">والسلام عليكم ورحمة الله وبركاته </span>
+
+
+
+            </p>
+
+            @if (Model.NoMersal > 0)
+            {
+                <span class="stamp">
+                    <p class="float-right ml-5">
+                        الختم
+                        <img width="150" src="~/img/stamps/@Model.Stamp" />
+                    </p>
+                </span>
+            }
+
+
+
+
+            <div class=" float-left text-center" style="width:30%">
+
+                <p class="  lead ">
+                    <span class=" ">رئيس قسم النشاط الاجتماعي</span>
+                </p>
+
+                @if (Model.WhoHasSignutre.Any(s => s.WhoHasSignutre == 1))
+                {
+
+                    if (!Model.WhoHasSignutre.FirstOrDefault(s => s.WhoHasSignutre == 1).IsHeOwnerOfSignature)
+                    {
+                        @:عنه
+                    }
+                    <img width="100" src="~/img/signatures/@Model.WhoHasSignutre.Where(h=>h.WhoHasSignutre==1).FirstOrDefault().Signature.SignaturePhoto" />
+
+                }
+                <p class="  lead ">
+                    <span class=" mr-5">
+                        @signutreRoleName("رئيس قسم النشاط الاجتماعي")
+                    </span>
+                </p>
+            </div>
+
+        </th>
+    </tr>
+</tbody>

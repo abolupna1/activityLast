@@ -21,6 +21,9 @@ namespace AActivity.Models
         [Required(ErrorMessage = "{0} مطلوب"), Display(Name = "المسمى الوظيفي ")]
         public string JopName { get; set; }
 
+        [Required(ErrorMessage = "{0} مطلوب"), Display(Name = " رقم الجوال ")]
+        public string EmployeMobile { get; set; }
+
         [Required(ErrorMessage = "{0} مطلوب"), Display(Name = "رقم الحجز ")]
         public int TripBookingId { get; set; }
         [Display(Name = " الحجز "), ForeignKey("TripBookingId")]
@@ -28,6 +31,8 @@ namespace AActivity.Models
 
         [Required(ErrorMessage = "{0} مطلوب"), Display(Name = " منتدب من  ")]
         public bool IsFromEducationBody { get; set; } // هل المنتدب من الجهة التعليمية = 1 من العمادة 0
+        public bool Confirmed { get; set; } = false; // تاكيد الإنتداب 
+
 
     }
 }
