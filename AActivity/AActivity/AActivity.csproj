@@ -62,6 +62,10 @@
     <Compile Remove="Migrations\20190904232548_AmountVisitCreditToTrip.Designer.cs" />
     <Compile Remove="Migrations\20190905220733_Letters.cs" />
     <Compile Remove="Migrations\20190905220733_Letters.Designer.cs" />
+    <Compile Remove="Migrations\20190912055814_EducationBody.cs" />
+    <Compile Remove="Migrations\20190912055814_EducationBody.Designer.cs" />
+    <Compile Remove="Migrations\20190913225317_LetterAdvancedDelegationUpdate.cs" />
+    <Compile Remove="Migrations\20190913225317_LetterAdvancedDelegationUpdate.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

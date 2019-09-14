@@ -1,4 +1,4 @@
-﻿@model AActivity.Models.EducationalBody
+﻿@model AActivity.Areas.Admin.ModelViews.EducationBodyEditViewModel
 
 @{
     ViewData["Title"] = "تعديل";
@@ -12,7 +12,7 @@
     </h5>
     <div class="card-body">
 
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -31,6 +31,29 @@
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
 
+
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <select asp-for="City" class="form-control form-control-lg">
+                    <option value="المدينة المنورة">المدينة المنورة</option>
+                    <option value="مكة المكرمة"> مكة المكرمة</option>
+                </select>
+                <span asp-validation-for="City" class="text-danger"></span>
+
+            </div>
+
+
+            <div class="form-group row">
+                <label asp-for="StampFile" class="col-sm-12 control-label"></label>
+                <div class="col-sm-12">
+                    <input type="file" asp-for="StampFile" onchange="FillImage(event);" accept=".png,.gif,.jpeg,.jpg,.bmp" class="form-control form-control-lg" />
+                    <span asp-validation-for="StampFile" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <img id="image" src="~/img/stamps/@Model.Stamp" alt="" class="img-thumbnail">
+            </div>
+
             <div class="form-group col-12 mt-5">
 
                 <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
@@ -44,4 +67,19 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+
+
+        var FillImage = function (event) {
+
+
+            var ima = document.getElementById("image");
+            ima.src = URL.createObjectURL(event.target.files[0])
+
+
+
+        }
+    </script>
 }

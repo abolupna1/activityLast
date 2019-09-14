@@ -1,0 +1,116 @@
+﻿@model AActivity.Areas.Sociologist.ModelViews.PrintLetterDelegationsModelView
+
+@{
+    ViewData["Title"] = "طباعة";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@functions{
+    string signutreRoleName(string role)
+    {
+        foreach (var sr in Model.Signatures)
+        {
+            if (sr.SignatureRole == role)
+            {
+                return $"{sr.Degree}  {sr.User.FullName}";
+            }
+        }
+        return string.Empty;
+
+    }
+}
+
+<style>
+    .lead {
+    font-size: 1rem;
+    font-weight: 200;
+
+}
+    .fa-2x {
+    font-size: 1em;
+}
+</style>
+<button id="print" class="btn btn-outline-gold"><i class="fa fa-print fa-3x"></i></button>
+<hr />
+<div class="row">
+    <div class="col-12">
+        <table id="table" class="ar">
+            <tr>
+                <th colspan="4">
+                    <img src="~/img/letter/letterHeade.PNG" class="w-100 h-50" />
+                </th>
+
+            </tr>
+            <tr class="text-center">
+                <th class="pt-4" colspan="4">
+                    <h5>طلب انتداب جماعي لمهمة رسمية لفعاليات النشاط الاجتماعي</h5>
+                </th>
+            </tr>
+
+            <tbody class="text-center table table-bordered">
+                <tr>
+                    <th>#</th>
+                    <th>اسم الموظف </th>
+                    <th>رقمه الوظيفي</th>
+                    <th>المسمى الوظيفي</th>
+                </tr>
+                @{ int i = 1;}
+                @foreach (var emp in Model.Employees)
+                {
+                    <tr>
+                        <th>@i</th>
+                        <td>@emp.EmployeeName</td>
+                        <td>@emp.EmployeeNumber</td>
+                        <td>@emp.JopName</td>
+                    </tr>
+                    i++;
+                }
+
+            </tbody>
+            @await Html.PartialAsync("Signutered/_Siged1.cshtml", Model)
+            @await Html.PartialAsync("Signutered/_Siged2.cshtml", Model)
+            @await Html.PartialAsync("Signutered/_Siged3.cshtml", Model)
+            @await Html.PartialAsync("Signutered/_Siged4.cshtml", Model)
+
+        </table>
+
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+    <script src="~/lib/printThis/printThis.js"></script>
+
+    <script>
+        $('#print').click(function () {
+            $('.clorSuccess').addClass(" text-success")
+            $("#table").printThis({
+                debug: false,               // show the iframe for debugging
+                importCSS: true,            // import parent page css
+                importStyle: true,         // import style tags
+                printContainer: true,       // print outer container/$.selector
+                loadCSS: "",                // path to additional css file - use an array [] for multiple
+                pageTitle: "",              // add title to print page
+                removeInline: false,        // remove inline styles from print elements
+                removeInlineSelector: "*",  // custom selectors to filter inline styles. removeInline must be true
+                printDelay: 333,            // variable print delay
+                header: null,               // prefix to html
+                footer: null,               // postfix to html
+                base: false,                // preserve the BASE tag or accept a string for the URL
+                formValues: true,           // preserve input/form values
+                canvas: false,              // copy canvas content
+                doctypeString: '...',       // enter a different doctype for older markup
+                removeScripts: false,       // remove script tags from print content
+                copyTagClasses: false,      // copy classes from the html & body tag
+                beforePrintEvent: null,     // function for printEvent in iframe
+                beforePrint: null,          // function called before iframe is filled
+                afterPrint: null            // function called before iframe is removed
+            });
+
+        });
+
+
+    </script>
+}

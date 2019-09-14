@@ -52,6 +52,7 @@ namespace AActivity.Areas.Sociologist.Controllers
             var Letters = await _context.Letters
                 .Where(b => b.TripBookingId == bokingId)
                .Include(t => t.LetterTransports)
+               .Include(t => t.TripBooking.TripDelegates)
                .Include(t => t.LetterTransports).ThenInclude(u=>u.User)
                .Include(b=>b.TripBooking.StudentsParticipatingInTrips)
                .Include(t => t.LetteSignutres)

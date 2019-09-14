@@ -42,7 +42,7 @@ namespace AActivity.Data
         public DbSet<LetterTransport> LetterTransports { get; set; }       
         public DbSet<LetterSignutre> LetterSignutres { get; set; }
         public DbSet<LetterFood> LetterFoods { get; set; }
-        public DbSet<LetterAdvancedEducation> LetterAdvancedEducations { get; set; }
+      //  public DbSet<LetterAdvancedEducation> LetterAdvancedEducations { get; set; }
         public DbSet<LetterAdvancedDelegation> LetterAdvancedDelegations { get; set; }
 
 

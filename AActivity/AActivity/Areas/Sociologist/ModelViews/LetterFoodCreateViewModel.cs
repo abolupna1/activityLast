@@ -54,7 +54,7 @@ namespace AActivity.Areas.Sociologist.ModelViews
         DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime TripDate { get; set; }
 
-
+     
 
         [Display(Name = "  تاريخ الرجوع      "), DataType(DataType.Date, ErrorMessage = "المدخل يجب ان يكون تاريخ"),
         DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]

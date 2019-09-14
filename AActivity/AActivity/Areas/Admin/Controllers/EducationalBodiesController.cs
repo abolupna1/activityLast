@@ -10,6 +10,9 @@ using AActivity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Core.Flash;
 using AActivity.Areas.Admin.Helpers;
+using AActivity.Areas.Admin.ModelViews;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace AActivity.Areas.Admin.Controllers
 {
@@ -19,9 +22,12 @@ namespace AActivity.Areas.Admin.Controllers
     {
         private readonly ApplicationDbContext _context;
         private IFlasher _f;
-        public EducationalBodiesController(ApplicationDbContext context, IFlasher f)
+        private readonly IHostingEnvironment _ihostingEnvironment;
+        public EducationalBodiesController(ApplicationDbContext context, IFlasher f, 
+            IHostingEnvironment ihostingEnvironment)
         {
             _context = context;
+            _ihostingEnvironment = ihostingEnvironment;
             _f = f;
         }
 
@@ -74,17 +80,53 @@ namespace AActivity.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,UserId,EntityType")] EducationalBody educationalBody)
+        public async Task<IActionResult> Create( EducationBodyCreateViewModel bodyEdu)
         {
             if (ModelState.IsValid)
             {
+                string uniqFileName = null;
+                if (bodyEdu.StampFile != null && bodyEdu.StampFile.Length > 0)
+                {
+                    if (IsFileValidate(bodyEdu.StampFile.FileName))
+                    {
+                        string uplouadsFolder = Path.Combine(_ihostingEnvironment.WebRootPath, "img/stamps");
+                        uniqFileName = Guid.NewGuid().ToString() + "_" + bodyEdu.StampFile.FileName;
+                        string filePath = Path.Combine(uplouadsFolder, uniqFileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            bodyEdu.StampFile.CopyTo(fileStream);
+                        }
+
+
+                    }
+                    else
+                    {
+                        ViewBag.msg = "الصور المسموح بها يجب ان تكون بمتداد : " + "png , jpeg , jpg , gif , bmp ";
+
+                        return View(bodyEdu);
+                    }
+                }
+                var educationalBody = new EducationalBody()
+                {
+                    Name= bodyEdu.Name,City= bodyEdu.City,
+                    EntityType= bodyEdu.EntityType,UserId= bodyEdu.UserId,Stamp=uniqFileName
+                };
                 _context.Add(educationalBody);
                 await _context.SaveChangesAsync();
                 _f.Flash("success", "تم الحفظ بنجاح");
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users.Include(u => u.UserRoles).Where(r => r.UserRoles.Any(a => a.Role.Name == "Supervisor")), "Id", "FullName", educationalBody.UserId);
-            return View(educationalBody);
+            var type = new List<EntityTypeForEducation>();
+
+            var Institutes = new EntityTypeForEducation() { Name = "المعاهد والدور" };
+            type.Add(Institutes);
+            var Colleges = new EntityTypeForEducation() { Name = "الكليات" };
+            type.Add(Colleges);
+
+            ViewData["type"] = new SelectList(type, "Name", "Name",bodyEdu.EntityType);
+            ViewData["UserId"] = new SelectList(_context.Users.Include(u => u.UserRoles).Where(r => r.UserRoles.Any(a => a.Role.Name == "Supervisor")), "Id", "FullName", bodyEdu.UserId);
+            return View(bodyEdu);
         }
 
         // GET: Admin/EducationalBodies/Edit/5
@@ -102,6 +144,15 @@ namespace AActivity.Areas.Admin.Controllers
                 Response.StatusCode = 404;
                 return View("EducationalNotFound");
             }
+
+            var budyEdu = new EducationBodyEditViewModel()
+            {
+                    City= educationalBody.City,EntityType= educationalBody.EntityType,
+                    Id= educationalBody.Id,Name= educationalBody.Name,Stamp= educationalBody.Stamp,
+                    UserId= educationalBody.UserId
+
+            };
+
             var type = new List<EntityTypeForEducation>();
 
             var Institutes = new EntityTypeForEducation() { Name = "المعاهد والدور" };
@@ -111,7 +162,9 @@ namespace AActivity.Areas.Admin.Controllers
             ViewData["type"] = new SelectList(type, "Name", "Name", educationalBody.EntityType);
 
             ViewData["UserId"] = new SelectList(_context.Users.Include(u => u.UserRoles).Where(r => r.UserRoles.Any(a => a.Role.Name == "Supervisor")), "Id", "FullName", educationalBody.UserId);
-            return View(educationalBody);
+
+
+            return View(budyEdu);
         }
 
         // POST: Admin/EducationalBodies/Edit/5
@@ -119,9 +172,9 @@ namespace AActivity.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,UserId,EntityType")] EducationalBody educationalBody)
+        public async Task<IActionResult> Edit(int id, EducationBodyEditViewModel bodyEdu)
         {
-            if (id != educationalBody.Id)
+            if (id != bodyEdu.Id)
             {
                 Response.StatusCode = 404;
                 return View("EducationalNotFound");
@@ -129,22 +182,61 @@ namespace AActivity.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Update(educationalBody);
+                string uniqFileName = null;
+                string filenameForEdit = null;
+                if (bodyEdu.StampFile != null && bodyEdu.StampFile.Length > 0)
+                {
+                    if (bodyEdu.Stamp != null)
+                    {
+                        string filePathForDelete = Path.Combine(_ihostingEnvironment.WebRootPath,
+                         "img/stamps", bodyEdu.Stamp);
+                        System.IO.File.Delete(filePathForDelete);
+                    }
+                    if (IsFileValidate(bodyEdu.StampFile.FileName))
+                    {
+                        string uplouadsFolder = Path.Combine(_ihostingEnvironment.WebRootPath, "img/stamps");
+                        uniqFileName = Guid.NewGuid().ToString() + "_" + bodyEdu.StampFile.FileName;
+                        string filePath = Path.Combine(uplouadsFolder, uniqFileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            bodyEdu.StampFile.CopyTo(fileStream);
+                        }
+
+
+                    }
+                    else
+                    {
+                        ViewBag.msg = "الصور المسموح بها يجب ان تكون بمتداد : " + "png , jpeg , jpg , gif , bmp ";
+
+                        return View(bodyEdu);
+                    }
+                }
+                filenameForEdit = uniqFileName == null ? bodyEdu.Stamp : uniqFileName;
+                var eduEdit = new EducationalBody()
+                {
+                    City=bodyEdu.City,Stamp= filenameForEdit,
+                    UserId=bodyEdu.UserId,EntityType=bodyEdu.EntityType,
+                    Id=bodyEdu.Id,Name=bodyEdu.Name
+                };
+                _context.Update(eduEdit);
                 _f.Flash("success", "تم التعديل بنجاح");
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
+
+
             var type = new List<EntityTypeForEducation>();
 
             var Institutes = new EntityTypeForEducation() { Name = "المعاهد والدور" };
             type.Add(Institutes);
             var Colleges = new EntityTypeForEducation() { Name = "الكليات" };
             type.Add(Colleges);
-            ViewData["type"] = new SelectList(type, "Name", "Name", educationalBody.EntityType);
+            ViewData["type"] = new SelectList(type, "Name", "Name", bodyEdu.EntityType);
 
-            ViewData["UserId"] = new SelectList(_context.Users.Include(u => u.UserRoles).Where(r => r.UserRoles.Any(a => a.Role.Name == "Supervisor")), "Id", "FullName", educationalBody.UserId);
-            return View(educationalBody);
+            ViewData["UserId"] = new SelectList(_context.Users.Include(u => u.UserRoles).Where(r => r.UserRoles.Any(a => a.Role.Name == "Supervisor")), "Id", "FullName", bodyEdu.UserId);
+            return View(bodyEdu);
         }
 
         // GET: Admin/EducationalBodies/Delete/5
@@ -175,6 +267,12 @@ namespace AActivity.Areas.Admin.Controllers
         {
             var educationalBody = await _context.EducationalBodies.FindAsync(id);
             _context.EducationalBodies.Remove(educationalBody);
+            if (educationalBody.Stamp != null)
+            {
+                string filePathForDelete = Path.Combine(_ihostingEnvironment.WebRootPath,
+                 "img/stamps", educationalBody.Stamp);
+                System.IO.File.Delete(filePathForDelete);
+            }
             await _context.SaveChangesAsync();
             _f.Flash("success", "تم الحذف بنجاح");
             return RedirectToAction(nameof(Index));
@@ -183,6 +281,18 @@ namespace AActivity.Areas.Admin.Controllers
         private bool EducationalBodyExists(int id)
         {
             return _context.EducationalBodies.Any(e => e.Id == id);
+        }
+
+        private bool IsFileValidate(string filename)
+        {
+            string extintion = Path.GetExtension(filename);
+            if (extintion.Contains(".png")) { return true; }
+            if (extintion.Contains(".PNG")) { return true; }
+            if (extintion.Contains(".jpeg")) { return true; }
+            if (extintion.Contains(".jpg")) { return true; }
+            if (extintion.Contains(".gif")) { return true; }
+            if (extintion.Contains(".bmp")) { return true; }
+            return false;
         }
     }
 }

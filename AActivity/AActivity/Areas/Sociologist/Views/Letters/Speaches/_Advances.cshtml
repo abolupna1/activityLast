@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<AActivity.Models.Letter>
 
 @{
-    var foods = Model.FirstOrDefault(t => t.TypeLetter == 3);
+    var advances = Model.FirstOrDefault(t => t.TypeLetter == 4);
 
 }
 
@@ -22,13 +22,13 @@
 <div class="card mt-5">
     <div class="card-header bg-primary text-white">
         <i class="fas fa-users"></i>
-        طلب انتداب جماعي لمهمة رسمية لفعاليات النشاط الاجتماعي
+         طلب سلفة من صندوق الطالب لفعاليات النشاط الاجتماعي
     </div>
     <div class="card-body">
-        @if (foods != null)
+        @if (advances != null)
         {
 
-            <h6>المنتدبين</h6>
+            <h6>المديونين</h6>
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -40,16 +40,7 @@
                 </thead>
                 <tbody>
                     @{ int i = 1;}
-                    @foreach (var emp in Model.FirstOrDefault(e=>e.TypeLetter==3).TripBooking.TripDelegates.Where(e=>e.Confirmed==true).ToList())
-                    {
-                        <tr>
-                            <th>@i</th>
-                            <td>@emp.EmployeeName</td>
-                            <td>@emp.EmployeeNumber</td>
-                            <td>@emp.JopName</td>
-                        </tr>
-                        i++;
-                    }
+                
 
                 </tbody>
             </table>
@@ -60,7 +51,7 @@
             <div class="row mt-3">
                 <h6 class="text-muted col-12 mb-3">حالات التوقيع</h6>
                 <div class="col-md-3 ">
-                    @if (foods.LetteSignutres.Where(s => s.WhoHasSignutre == 1).Count() == 0)
+                    @if (advances.LetteSignutres.Where(s => s.WhoHasSignutre == 1).Count() == 0)
                     {
                         <div class="alert alert-danger" role="alert">
                             <i class="fas fa-user-times"></i>
@@ -79,7 +70,7 @@
                 </div>
                 <div class="col-md-3">
 
-                    @if (foods.LetteSignutres.Where(s => s.WhoHasSignutre == 2).Count() == 0)
+                    @if (advances.LetteSignutres.Where(s => s.WhoHasSignutre == 2).Count() == 0)
                     {
                         <div class="alert alert-danger" role="alert">
                             <i class="fas fa-user-times"></i>
@@ -98,7 +89,7 @@
                 </div>
                 <div class="col-md-3">
 
-                    @if (foods.LetteSignutres.Where(s => s.WhoHasSignutre == 3).Count() == 0)
+                    @if (advances.LetteSignutres.Where(s => s.WhoHasSignutre == 3).Count() == 0)
                     {
                         <div class="alert alert-danger" role="alert">
                             <i class="fas fa-user-times"></i>
@@ -116,7 +107,7 @@
 
                 <div class="col-md-3">
 
-                    @if (foods.LetteSignutres.Where(s => s.WhoHasSignutre == 4).Count() == 0)
+                    @if (advances.LetteSignutres.Where(s => s.WhoHasSignutre == 4).Count() == 0)
                     {
                         <div class="alert alert-danger" role="alert">
                             <i class="fas fa-user-times"></i>
@@ -133,10 +124,10 @@
                 </div>
                 <div class="col-md-3">
 
-                    @if (foods.LetteSignutres.Count() == 4)
+                    @if (advances.LetteSignutres.Count() == 4)
                     {
 
-                        @if (foods.NoMersal == 0)
+                        @if (advances.NoMersal == 0)
                         {<div class="alert alert-danger" role="alert">
                                 <i class="fas fa-mail-bulk"></i>
                                 صادر مرسال: لايوجد
@@ -149,7 +140,7 @@
                             <div class="alert alert-info" role="alert">
                                 <i class="fas fa-mail-bulk"></i>
                                 صادر مرسال :
-                                @foods.NoMersal
+                                @advances.NoMersal
                             </div>
                         }
                     }
@@ -163,20 +154,22 @@
             <i class="fas fa-angle-right"></i>
             تراجع
         </a>
-        @if (foods == null)
+        @if (advances == null)
         {
-            <a asp-controller="LetterDelegations" asp-action="Create" asp-route-bokingId="@ViewBag.bokingId" class="btn btn-primary">اضافة خطاب</a>
+            <a asp-controller="LetterAdvancedDelegations" asp-action="IndexByBokingId" asp-route-bokingId="@ViewBag.bokingId" class="btn btn-primary">اضافة خطاب</a>
         }
         else
         {
-            <button type="button" class="btn btn-success " data-toggle="modal" data-target="#Delegates">
+            <button type="button" class="btn btn-success " data-toggle="modal" data-target="#advances">
                 <i class="fas fa-mail-bulk"></i>
                 صادر مرسال
             </button>
-            <a class="btn  btn-primary  text-white " target="_blank" asp-route-LetterId="@foods.Id" asp-controller="LetterDelegations" asp-action="Print">
+            @*<a class="btn  btn-primary  text-white " target="_blank" asp-route-LetterId="@advances.Id" asp-controller="LetterDelegations" asp-action="Print">
                 <i class="fas fa-eye"></i>
                 عرض الخطاب
-            </a>
+            </a>*@
+            <a asp-controller="LetterAdvancedDelegations" asp-action="IndexByBokingId" asp-route-bokingId="@ViewBag.bokingId" class="btn btn-primary">الخطابات</a>
+
 
         }
     </div>
@@ -184,12 +177,12 @@
 
 
 
-@if (foods != null)
+@if (advances != null)
 {
 
 
     <!-- Modal -->
-    <div class="modal fade" id="Delegates" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal fade" id="advances" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -203,14 +196,14 @@
 
                             <div class="form-group" hidden>
                                 <label class="control-label"> رقم مرسال  </label>
-                                <input type="text" value="@foods.Id" name="letterId" class="form-control" />
+                                <input type="text" value="@advances.Id" name="letterId" class="form-control" />
                             </div>
 
 
 
                             <div class="form-group">
                                 <label class="control-label"> صادر مرسال </label>
-                                <input type="text" value="@foods.NoMersal" name="NoMersal" class="form-control" />
+                                <input type="text" value="@advances.NoMersal" name="NoMersal" class="form-control" />
                             </div>
 
 

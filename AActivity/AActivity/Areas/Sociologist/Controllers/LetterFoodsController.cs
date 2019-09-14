@@ -151,7 +151,8 @@ namespace AActivity.Areas.Sociologist.Controllers
                 EducationBodySupervisorMobile=foods.LetterFoods.FirstOrDefault().User.PhoneNumber,
                 Academicyear=foods.TripBooking.SchedulingTripDetail.SchedulingTripHead.AcademicYear,
                 Stamp= appSettings.FirstOrDefault().Stamp,
-                Signatures= signutres,
+                StampEducationBody=foods.TripBooking.SchedulingTripDetail.EducationalBody.Stamp,
+                Signatures = signutres,
                 Students=foods.TripBooking.StudentsParticipatingInTrips.ToList(),
                 WhoHasSignutre=foods.LetteSignutres.ToList(),
                 NoMersal=foods.NoMersal

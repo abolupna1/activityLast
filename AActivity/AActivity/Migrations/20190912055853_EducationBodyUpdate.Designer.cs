@@ -4,14 +4,16 @@ using AActivity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AActivity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190912055853_EducationBodyUpdate")]
+    partial class EducationBodyUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,21 +238,15 @@ namespace AActivity.Migrations
 
                     b.Property<float>("AmountAdditional");
 
-                    b.Property<string>("CreditToEMployee");
-
-                    b.Property<string>("EmployeeMobile");
-
                     b.Property<int>("LetterId");
 
-                    b.Property<string>("Notes");
-
-                    b.Property<int>("QtyStudents");
-
-                    b.Property<string>("Statatus");
+                    b.Property<int>("TripDelegateId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LetterId");
+
+                    b.HasIndex("TripDelegateId");
 
                     b.ToTable("LetterAdvancedDelegations");
                 });
@@ -275,7 +271,7 @@ namespace AActivity.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("LetterAdvancedEducation");
+                    b.ToTable("LetterAdvancedEducations");
                 });
 
             modelBuilder.Entity("AActivity.Models.LetterFood", b =>
@@ -658,6 +654,11 @@ namespace AActivity.Migrations
                     b.HasOne("AActivity.Models.Letter", "Letter")
                         .WithMany("LetterAdvancedDelegations")
                         .HasForeignKey("LetterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AActivity.Models.TripDelegate", "TripDelegate")
+                        .WithMany()
+                        .HasForeignKey("TripDelegateId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -1,0 +1,55 @@
+﻿@model AActivity.Areas.Sociologist.ModelViews.LetterAdvanceCreateModelView
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div></div>
+<div class="card mt-5">
+    <div class="card-header bg-primary-bold">
+        طلب سلفة من صندوق الطالب لفعاليات النشاط الاجتماعي
+    </div>
+    <div class="card-body">
+
+        <form asp-action="Create" asp-controller="LetterDelegations">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label asp-for="@Model.Amount" class="control-label"></label>
+                    <input asp-for="@Model.Amount" class="form-control" readonly />
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="@Model.AmountAdditional" class="control-label"></label>
+                    <input asp-for="@Model.AmountAdditional" class="form-control" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="@Model.QtyStudents" class="control-label"></label>
+                    <input asp-for="@Model.QtyStudents" class="form-control" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="@Model.CreditToEMployee" class="control-label"></label>
+                    <input asp-for="@Model.CreditToEMployee" class="form-control" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="@Model.EmployeeMobile" class="control-label"></label>
+                    <input asp-for="@Model.EmployeeMobile" class="form-control" />
+                </div>
+            </div>
+              
+
+
+
+            <div class="form-group col-12 mt-5">
+
+                <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+                <a class="btn  btn-outline-primary btn-lg" asp-action="IndexByBoking" asp-route-bokingId="" asp-controller="Letters"> <i class="fas fa-share-square"></i> تراجع </a>
+
+            </div>
+        </form>
+
+
+    </div>
+</div>
+

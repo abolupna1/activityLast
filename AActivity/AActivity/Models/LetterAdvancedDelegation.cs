@@ -15,16 +15,21 @@ namespace AActivity.Models
         [ ForeignKey("LetterId")]
         public Letter Letter { get; set; }
 
-        public int TripDelegateId { get; set; }
-        [ ForeignKey("TripDelegateId")]
-        public TripDelegate TripDelegate { get; set; }
 
         [Required(ErrorMessage = "{0} مطلوب"), Display(Name = "مبلغ الرحلة الأساسي")]
         public float Amount { get; set; }
         [Required(ErrorMessage = "{0} مطلوب"), Display(Name = "مبلغ الرحلة الأضافي")]
         public float AmountAdditional { get; set; }
 
+        public int QtyStudents { get; set; }
+        public string CreditToEMployee { get; set; } //السلفة باسم الموظف
+        public string EmployeeMobile { get; set; } 
+        public string Statatus { get; set; } = null;
+        public string Notes { get; set; } = null;
+
+
         
+
 
     }
 }

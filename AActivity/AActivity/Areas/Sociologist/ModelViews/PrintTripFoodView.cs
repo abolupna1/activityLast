@@ -62,6 +62,7 @@ namespace AActivity.Areas.Sociologist.ModelViews
 
         [Display(Name = " الختم")]
         public String Stamp { get; set; }
+        public String StampEducationBody { get; set; }
         public String Academicyear { get; set; }
 
         //  public IEnumerable<TripFoodsSignature> WhoHasSignutre { get; set; }

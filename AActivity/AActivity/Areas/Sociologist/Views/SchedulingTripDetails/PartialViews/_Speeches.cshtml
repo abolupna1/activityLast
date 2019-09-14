@@ -87,7 +87,19 @@
                             <span class="info-box-text  mb-2 " style="font-size:11px">صادر مرسال  </span>
 
                             <span class="info-box-number font-weight-bolder ">
+                                @if (Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 3).Any())
+                                {
+                                    if (Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter ==3).FirstOrDefault().NoMersal != 0)
+                                    {
+                                        @Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 3).FirstOrDefault().NoMersal
 
+                                    }
+                                    else
+                                    {
+                                        <span>انتظار</span>
+                                    }
+
+                                }
                             </span>
 
                         </div>
