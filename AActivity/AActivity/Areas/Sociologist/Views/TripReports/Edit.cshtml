@@ -1,0 +1,103 @@
+﻿@model AActivity.Areas.Sociologist.ModelViews.TripReportEditModelView
+
+@{
+    ViewData["Title"] = "تعديل";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    .nicEdit-main {
+        background-color: #fff;
+        padding: 10px;
+        min-height: 200px !important;
+    }
+
+    .nicEdit-panel div {
+        float: right !important;
+    }
+
+    .nicEdit-pane {
+        width: 150px !important;
+        padding: 0px 10px !important;
+    }
+</style>
+<div class="card mt-5 mb-3">
+    <div class="card-header bg-primary-bold ">
+        <i class="fas fa-plus"></i>
+        اضافة تقرير لرحلة
+    </div>
+    <div class="card-body">
+        @if (ViewBag.msg != null)
+        {
+            <div class="alert alert-danger">@ViewBag.msg</div>
+
+        }
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" class="form-control" hidden>
+
+            <div class="form-group" hidden>
+                <label asp-for="TripBookingId" class="control-label"></label>
+                <input asp-for="TripBookingId" class="form-control">
+                <span asp-validation-for="TripBookingId" class="text-danger"></span>
+            </div>
+            <div class="form-group ar">
+                <label asp-for="TextBody" class="control-label"></label>
+                <textarea asp-for="TextBody"  id="editor" class="form-control " cols="10" rows="400"></textarea>
+
+                <span asp-validation-for="TextBody" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Photos"></label>
+                <input multiple asp-for="Photos" class="form-control-file">
+                <span asp-validation-for="Photos" class="text-danger"></span>
+
+            </div>
+
+            <div class="row">
+                @{ int i = 0;}
+                @foreach (var img in Model.Images)
+                {
+                    <div class="col-2 text-center">
+                        <img src="~/img/reports/400/@img.ImagePath" width="200" height="200" alt="صورة" class="img-thumbnail">
+                    </div>
+                    i++;
+                }
+
+            </div>
+
+            <div class="form-group col-12 mt-5">
+
+                <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+                <a class="btn  btn-outline-primary btn-lg" asp-controller="SchedulingTripDetails" asp-route-id="@Model.DitailId" asp-action="DetailsMore"> <i class="fas fa-share-square"></i> تراجع </a>
+
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'), {
+               toolbar: [ 'heading','|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ],
+            language: 'ar'
+        })
+        .then(editor => {
+            window.editor = editor;
+        })
+        .catch(err => {
+            console.error(err.stack);
+        });
+</script>
+
+}

@@ -89,7 +89,7 @@
                             <span class="info-box-number font-weight-bolder ">
                                 @if (Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 3).Any())
                                 {
-                                    if (Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter ==3).FirstOrDefault().NoMersal != 0)
+                                    if (Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 3).FirstOrDefault().NoMersal != 0)
                                     {
                                         @Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 3).FirstOrDefault().NoMersal
 
@@ -113,8 +113,19 @@
                         <div class="info-box-content text-center">
                             <span class="info-box-text mb-4 ">السلفة  </span>
                             <span class="info-box-number font-weight-bolder ">
-                                @Model.TripBookings.FirstOrDefault().TripDelegates.Where(t => t.IsFromEducationBody == false).Count()
+                                @if (Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 4).Any())
+                                {
+                                    if (Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 4).FirstOrDefault().NoMersal != 0)
+                                    {
+                                        @Model.TripBookings.FirstOrDefault().Letters.Where(l => l.TypeLetter == 4).FirstOrDefault().NoMersal
 
+                                    }
+                                    else
+                                    {
+                                        <span>انتظار</span>
+                                    }
+
+                                }
                             </span>
 
                         </div>
@@ -124,14 +135,65 @@
 
 
             </div>
-            <a class="btn  btn-primary btn-lg"
-               asp-action="IndexByBoking" asp-controller="Letters" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id">            
-                الخطابات
-            </a>
+            @if (User.IsInRole("DirectorOfSocialActivity") || User.IsInRole("SocialActivityOfficer") || User.IsInRole("Admin"))
+            {
+                <a class="btn  btn-primary btn-lg"
+                   asp-action="IndexByBoking" asp-controller="Letters" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id">
+                    الخطابات
+                </a>
+
+            }
+
+
+
+
         </div>
-    
+
+        <ul class="list-group  text-white">
+            <li class="list-group-item">
+                @if (Model.TripBookings.FirstOrDefault().TripStatus == 1)
+                {
+                    @if (User.IsInRole("DirectorOfSocialActivity") || User.IsInRole("SocialActivityOfficer") || User.IsInRole("Admin"))
+                    {
+                        <form asp-action="BookingConfirmed" asp-controller="TripBookings" asp-route-id="@Model.TripBookings.FirstOrDefault().Id">
+
+                            <input name="TripStatus" value="2" hidden />
+                            <span id="confirmDeleteSpan_@Model.TripBookings.FirstOrDefault().Id" style="display:none">
+                                <span class="text-center text-danger font-weight-bold">هل انت متاكد من تأكيد الحجز ؟</span>
+                                <button type="submit" class="btn btn-danger btn-lg">نعم</button>
+                                <a href="#" class="btn btn-primary btn-lg" onclick="confirmDelete('@Model.TripBookings.FirstOrDefault().Id',false)">لا</a>
+                            </span>
+                            <span id="deleteSpan_@Model.TripBookings.FirstOrDefault().Id">
+                                <a class="btn  btn-danger btn-lg " onclick="confirmDelete('@Model.TripBookings.FirstOrDefault().Id',true)">
+                                    <i class="fas fa-question-circle"></i>
+                                    تأكيد الحجز
+                                </a>
+                            </span>
+                        </form>
+
+                    }
+                    else
+                    {
+                        <span class="text-center text-danger font-weight-bold">
+                            انتظار تاكيد الحجز من قبل مشرف النشاط الإجتماعي
+                        </span>
+                    }
+                }
+                else
+                {
+                    <span class="text-center text-success font-weight-bold">
+                         الحجز مؤكد من قبل مشرف النشاط الإجتماعي
+                    </span>
+                }
+
+
+
+            </li>
+        </ul>
     </div>
-  
+
+
+
 </li>
 
 

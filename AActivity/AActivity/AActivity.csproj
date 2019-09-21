@@ -66,9 +66,13 @@
     <Compile Remove="Migrations\20190912055814_EducationBody.Designer.cs" />
     <Compile Remove="Migrations\20190913225317_LetterAdvancedDelegationUpdate.cs" />
     <Compile Remove="Migrations\20190913225317_LetterAdvancedDelegationUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20190919051838_TripReportsNote.cs" />
+    <Compile Remove="Migrations\20190919051838_TripReportsNote.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\lib\ckeditor5\ckeditor.js" />
+    <None Include="wwwroot\lib\ckeditor5\ckeditor.js.map" />
     <None Include="wwwroot\lib\datatable\DataTables-1.10.18\js\dataTables.bootstrap.js" />
     <None Include="wwwroot\lib\datatable\DataTables-1.10.18\js\dataTables.bootstrap.min.js" />
     <None Include="wwwroot\lib\datatable\DataTables-1.10.18\js\dataTables.bootstrap4.js" />
@@ -108,12 +112,14 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="ReflectionIT.Mvc.Paging" Version="3.5.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
     <PackageReference Include="Vereyon.Web.FlashMessageCore" Version="1.0.0" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <Folder Include="Areas\Sociologist\Views\SchedulingTripDetails\PartialViews\Speeches\" />
+    <Folder Include="wwwroot\img\reports\400\" />
+    <Folder Include="wwwroot\img\reports\Original\" />
     <Folder Include="wwwroot\img\stamps\" />
     <Folder Include="wwwroot\img\signatures\" />
   </ItemGroup>

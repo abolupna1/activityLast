@@ -141,17 +141,17 @@ namespace AActivity.Data
 
 
             ////====================================
-            //if (context.StudentsParticipatingInTrip.ToList().Count < 400)
+            //if (context.StudentsParticipatingInTrip.ToList().Count < 1000)
             //{
 
             //    var boking = await context.TripBookings.LastOrDefaultAsync();
-            //    for (int i = 0; i < 150; i++)
+            //    for (int i = 0; i < 70; i++)
             //    {
             //        StudentsParticipatingInTrip student = new StudentsParticipatingInTrip()
             //        {
             //            StudentName = "student" + i + "",
             //            StudentNumber = 111111 + i,
-            //            TripBookingId = 1,
+            //            TripBookingId = 4002,
             //        };
 
             //        context.Add(student);

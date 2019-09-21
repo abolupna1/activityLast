@@ -1,0 +1,91 @@
+﻿<li>
+    @model AActivity.Models.SchedulingTripDetail
+
+    <i class="fa fa-photo-video bg-blue"></i>
+    <div class="timeline-item">
+
+        <h3 class="timeline-header">
+            <i class="fas fa-photo-video"></i>
+
+            تقرير الرحلة
+        </h3>
+
+        <div class="timeline-body">
+            <div class="row">
+
+
+                @if (Model.TripBookings.FirstOrDefault().TripReports.Any())
+                {
+                    <div class="col-12">
+                        <p class="font-weight-lighter">
+                            @Html.Raw(Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().TextBody)
+                        </p>
+                    </div>
+                    <hr />
+                    if (Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().TripReportImages.Any())
+                    {
+                        foreach (var img in Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().TripReportImages)
+                        {
+
+                            <div class="col-3 text-center">
+                                <img src="~/img/reports/400/@img.ImagePath" alt="صورة" class="img-thumbnail">
+
+                            </div>
+
+                        }
+                    }
+
+                }
+
+            </div>
+
+
+        </div>
+
+
+        <ul class="list-group  text-white">
+            <li class="list-group-item">
+                @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))
+                {
+                    if (Model.TripBookings.FirstOrDefault().TripReports.Any())
+                    {
+                        if (!Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().Status)
+                        {
+                            <a class="btn  btn-primary btn-lg"
+                               asp-action="Edit" asp-controller="TripReports" asp-route-reportId="@Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().Id">
+                                تعديل التقرير
+                            </a>
+                        }
+                        else
+                        {
+                            <span>تم قبول التقرير</span>
+                        }
+
+                    }
+                    else
+                    {
+                        <a class="btn  btn-primary btn-lg"
+                           asp-action="Create" asp-controller="TripReports" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id">
+                            اضافة تقرير
+                        </a>
+                    }
+
+                }
+
+
+                @if (Model.TripBookings.FirstOrDefault().TripReports.Any())
+                {
+
+                    <a class="btn  btn-primary btn-lg"
+                       asp-action="Create" asp-controller="TripReportsNotes" asp-route-reportId="@Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().Id">
+                        ملاحظات على التقرير
+                    </a>
+
+                }
+
+            </li>
+        </ul>
+    </div>
+</li>
+
+

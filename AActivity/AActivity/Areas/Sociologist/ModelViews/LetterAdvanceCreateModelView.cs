@@ -11,22 +11,37 @@ namespace AActivity.Areas.Sociologist.ModelViews
         public int Id { get; set; }
         public int LetterId { get; set; }
       
-        [Required(ErrorMessage = "{0} مطلوب"), Display(Name = "المبلغ المالي المخصص  للرحلة")]
+        [ Display(Name = "المبلغ المالي المخصص  للرحلة")]
         public float Amount { get; set; }
 
-        [Required(ErrorMessage = "{0} مطلوب"), Display(Name = "مبلغ الرحلة الأضافي")]
+        [ Display(Name = "مبلغ الرحلة الأضافي")]
         public float AmountAdditional { get; set; }
 
 
-        [Required(ErrorMessage = "{0} مطلوب"), Display(Name = "عدد الطلاب")]
+        [ Display(Name = "عدد الطلاب")]
         public int QtyStudents { get; set; }
 
-        [Required(ErrorMessage = "{0} مطلوب"), Display(Name = " السلفة باسم")]
-
+        [ Display(Name = " السلفة باسم")]
         public string CreditToEMployee { get; set; } //السلفة باسم الموظف
-        [Required(ErrorMessage = "{0} مطلوب"), Display(Name = "  رقم جوال الموظف")]
 
+        [ Display(Name = "  رقم جوال الموظف")]
         public string EmployeeMobile { get; set; }
-      
+
+        [ Display(Name = "  نوع الرحلة  ")]
+        public string TripType { get; set; }
+
+        [ Display(Name = "  الجهة التعليمية   ")]
+        public string EducationName { get; set; }
+
+        [ Display(Name = "    الرحلة الى   ")]
+        public string TripLocationName { get; set; }
+
+        [ Display(Name = "     التاريخ   ")]
+        public DateTime TripDate { get; set; }
+
+        public int bokingId { get; set; }
+        public string EmployeeNomber { get; set; }
+
+
     }
 }

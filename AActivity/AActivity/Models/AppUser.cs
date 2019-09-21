@@ -16,6 +16,8 @@ namespace AActivity.Models
         public IEnumerable<SignutreDelegate> SignutreDelegates { get; set; }
         public IEnumerable<LetterTransport> LetterTransports { get; set; }
         public IEnumerable<LetterFood> LetterFood { get; set; }
+        public IEnumerable<TripReportsNote> TripReportsNotes { get; set; }
+
 
 
     }

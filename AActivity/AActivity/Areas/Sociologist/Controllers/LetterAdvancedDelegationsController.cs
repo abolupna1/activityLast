@@ -21,13 +21,88 @@ namespace AActivity.Areas.Sociologist.Controllers
             _context = context;
         }
 
+
+        
+        private bool LetterExists(int id)
+        {
+            return _context.Letters.Any(e => e.Id == id);
+        }
+
+        [Route("Sociologist/LetterAdvancedDelegations/Print/{LetterAdvancedId:int}")]
+        public async Task<IActionResult> Print(int LetterAdvancedId)
+        {
+            
+            return View(await getForPrint( LetterAdvancedId));
+        }
+
+
+        [Route("Sociologist/LetterAdvancedDelegations/PrintAll/{LetterId:int}")]
+        public async Task<IActionResult> PrintAll(int LetterId)
+        {
+            var model = new List<PrintLetterAdvancedDelegation>();
+            var letterAdvance = await _context.LetterAdvancedDelegations.Where(l => l.LetterId == LetterId).ToListAsync();
+            foreach (var ad in letterAdvance)
+            {
+                model.Add(await getForPrint(ad.Id));  
+            }
+            return View(model);
+        }
+
+        private async Task<PrintLetterAdvancedDelegation> getForPrint(int LetterAdvancedId)
+        {
+            var adv = await _context.LetterAdvancedDelegations
+                .Include(l => l.Letter)
+                .Include(l => l.LetterSignutreForAdvances)
+                .Include(l => l.Letter.TripBooking.SchedulingTripDetail.EducationalBody)
+                .Include(l => l.Letter.TripBooking.SchedulingTripDetail)
+                .Include(l => l.Letter.TripBooking.SchedulingTripDetail.TripType)
+                .Include(l => l.Letter.TripBooking.City)
+                .Include(l => l.Letter.TripBooking)
+                .FirstOrDefaultAsync(i=>i.Id == LetterAdvancedId);
+            var print = new PrintLetterAdvancedDelegation
+            {
+                AdvanceForEmp=adv.CreditToEMployee,
+                Amount=adv.Amount + adv.AmountAdditional,
+                EduName=adv.Letter.TripBooking.SchedulingTripDetail.EducationalBody.Name,
+                EmpMobile=adv.EmployeeMobile,
+                QtyStudent=adv.QtyStudents,
+                TripDate=adv.Letter.TripBooking.SchedulingTripDetail.TripDate,
+                TripTo=adv.Letter.TripBooking.City.LocationName,
+                TripType=adv.Letter.TripBooking.SchedulingTripDetail.TripType.Name,
+                WhoHasSignutre=adv.LetterSignutreForAdvances.ToList(),
+                Signatures=await _context.Signatures.Include(u=>u.User).ToListAsync()
+            };
+
+            return print;
+        }
+
+        [Route("Sociologist/LetterAdvancedDelegations/Details/{letterId:int}")]
+        public async Task<IActionResult> Details(int letterId)
+        {
+
+            if (!LetterExists(letterId))
+            {
+                Response.StatusCode = 404;
+                return View("LetterFoodsNotFound");
+            }
+            var letter = await _context.Letters
+                .Include(e => e.TripBooking)
+                .Include(e => e.TripBooking.SchedulingTripDetail)
+                .Include(e => e.TripBooking.SchedulingTripDetail.EducationalBody)
+                .Include(e => e.TripBooking.SchedulingTripDetail.TripType)
+                .Include(a=>a.LetterAdvancedDelegations)
+                .ThenInclude(l=>l.LetterSignutreForAdvances)
+                .FirstOrDefaultAsync(l => l.Id == letterId);
+            ViewBag.signutre = await _context.Signatures.Include(d => d.SignutreDelegates).ToListAsync();
+            return View(letter);
+        }
         [Route("Sociologist/LetterAdvancedDelegations/IndexByBokingId/{bokingId:int}")]
         public async Task<IActionResult> IndexByBokingId(int bokingId)
         {
             var boking = await _context.TripBookings
                 .Include(e=>e.SchedulingTripDetail.EducationalBody.User)
                 .Include(e=>e.TripDelegates)
-                .Include(e=>e.Letters)
+                .Include(e=>e.Letters).ThenInclude(t=>t.LetterAdvancedDelegations)
                 .FirstOrDefaultAsync(b=>b.Id == bokingId);
             if (boking == null)
             {
@@ -43,66 +118,13 @@ namespace AActivity.Areas.Sociologist.Controllers
       
             return View(boking);
         }
-        // GET: Sociologist/LetterAdvancedDelegations
-        public async Task<IActionResult> Index()
-        {
-            var applicationDbContext = _context.LetterAdvancedDelegations.Include(l => l.Letter);
-            return View(await applicationDbContext.ToListAsync());
-        }
 
-        // GET: Sociologist/LetterAdvancedDelegations/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var letterAdvancedDelegation = await _context.LetterAdvancedDelegations
-                .Include(l => l.Letter)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (letterAdvancedDelegation == null)
-            {
-                return NotFound();
-            }
-
-            return View(letterAdvancedDelegation);
-        }
-
-        // GET: Sociologist/LetterAdvancedDelegations/Create
+     
         [Route("Sociologist/LetterAdvancedDelegations/Create/{letterId:int}/{delegateId:int}")]
-
         public async Task<IActionResult> Create(int letterId,int delegateId)
         {
-            var letter = await _context.Letters
-                .Include(b => b.TripBooking.SchedulingTripDetail.TripType)
-                .Include(b => b.TripBooking.StudentsParticipatingInTrips)
-                .Include(b => b.TripBooking.TripDelegates)
-                .Include(b => b.TripBooking.SchedulingTripDetail.EducationalBody.User)
-                .FirstOrDefaultAsync(l=>l.Id== letterId);
-            string empName;
-            int empMobile;
-            if (delegateId==0)
-            {
-                empName = letter.TripBooking.SchedulingTripDetail.EducationalBody.User.FullName;
-                empMobile =Int32.Parse(letter.TripBooking.SchedulingTripDetail.EducationalBody.User.PhoneNumber);
-
-            }
-            else
-            {
-                empName = letter.TripBooking.TripDelegates.FirstOrDefault(e=>e.Id== delegateId).EmployeeName;
-                empMobile =letter.TripBooking.TripDelegates.FirstOrDefault(e => e.Id == delegateId).EmployeeNumber;
-            }
-            var advanc = new LetterAdvanceCreateModelView()
-            {
-                Amount = TripType(letter.TripBooking.SchedulingTripDetail.TripType.Name),
-                QtyStudents=letter.TripBooking.StudentsParticipatingInTrips.Count(),
-                CreditToEMployee= empName,
-                EmployeeMobile= empMobile.ToString(),
-                LetterId=letter.Id
-
-            };
-            return View(advanc);
+           
+            return View(getDataForCreate( letterId,  delegateId).Result);
         }
 
         private float TripType(string tripType)
@@ -130,104 +152,89 @@ namespace AActivity.Areas.Sociologist.Controllers
             return amount;
         }
 
-        // POST: Sociologist/LetterAdvancedDelegations/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,LetterId,Amount,AmountAdditional,QtyStudents,CreditToEMployee,EmployeeMobile,Statatus,Notes")] LetterAdvancedDelegation letterAdvancedDelegation)
+        [Route("Sociologist/LetterAdvancedDelegations/Create/{letterId:int}/{delegateId:int}")]
+        public async Task<IActionResult> Create(int letterId, int delegateId,
+            LetterAdvanceCreateModelView letter)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(letterAdvancedDelegation);
+                var advanced = new LetterAdvancedDelegation()
+                {
+                    Amount =letter.Amount,
+                    AmountAdditional=letter.AmountAdditional,
+                    CreditToEMployee=letter.CreditToEMployee,
+                    EmployeeMobile=letter.EmployeeMobile,
+                    LetterId=letter.LetterId,
+                    QtyStudents=letter.QtyStudents,
+                    EmployeeNomber=letter.EmployeeNomber
+                };
+                _context.Add(advanced);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(IndexByBokingId),new { bokingId=letter.bokingId });
             }
-            ViewData["LetterId"] = new SelectList(_context.Letters, "Id", "Id", letterAdvancedDelegation.LetterId);
-            return View(letterAdvancedDelegation);
+
+            return View(getDataForCreate( letterId,  delegateId).Result);
+       
         }
 
-        // GET: Sociologist/LetterAdvancedDelegations/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        private async Task<LetterAdvanceCreateModelView> getDataForCreate(int letterId, int delegateId)
         {
-            if (id == null)
+            var letter = await _context.Letters
+               .Include(b => b.TripBooking)
+               .Include(b => b.TripBooking.SchedulingTripDetail.TripType)
+               .Include(b => b.TripBooking.StudentsParticipatingInTrips)
+               .Include(b => b.TripBooking.TripDelegates)
+               .Include(b => b.TripBooking.SchedulingTripDetail.EducationalBody.User)
+               .Include(b => b.TripBooking.SchedulingTripDetail.EducationalBody)
+               .Include(b => b.TripBooking.SchedulingTripDetail.TripType)
+               .FirstOrDefaultAsync(l => l.Id == letterId);
+            string empName;
+            string empMobile;
+            string EmployeeNomber;
+            if (delegateId == 0)
             {
-                return NotFound();
+                empName = letter.TripBooking.SchedulingTripDetail.EducationalBody.User.FullName;
+                empMobile =letter.TripBooking.SchedulingTripDetail.EducationalBody.User.PhoneNumber;
+                EmployeeNomber= letter.TripBooking.SchedulingTripDetail.EducationalBody.User.UserName;
             }
+            else
+            {
+                empName = letter.TripBooking.TripDelegates.FirstOrDefault(e => e.Id == delegateId).EmployeeName;
+                empMobile = letter.TripBooking.TripDelegates.FirstOrDefault(e => e.Id == delegateId).EmployeMobile;
+                EmployeeNomber = letter.TripBooking.TripDelegates.FirstOrDefault(e => e.Id == delegateId).EmployeeNumber.ToString();
+            }
+            var advanc = new LetterAdvanceCreateModelView()
+            {
+                Amount = TripType(letter.TripBooking.SchedulingTripDetail.TripType.Name),
+                QtyStudents = letter.TripBooking.StudentsParticipatingInTrips.Count(),
+                CreditToEMployee = empName,
+                EmployeeMobile = empMobile.ToString(),
+                LetterId = letter.Id,
+                TripType = letter.TripBooking.SchedulingTripDetail.TripType.Name,
+                EducationName = letter.TripBooking.SchedulingTripDetail.EducationalBody.Name,
+                TripLocationName = letter.TripBooking.TripLocationName,
+                TripDate = letter.TripBooking.SchedulingTripDetail.TripDate,
+                bokingId=letter.TripBookingId,
+                EmployeeNomber= EmployeeNomber
 
-            var letterAdvancedDelegation = await _context.LetterAdvancedDelegations.FindAsync(id);
-            if (letterAdvancedDelegation == null)
-            {
-                return NotFound();
-            }
-            ViewData["LetterId"] = new SelectList(_context.Letters, "Id", "Id", letterAdvancedDelegation.LetterId);
-            return View(letterAdvancedDelegation);
+            };
+            return advanc;
         }
-
-        // POST: Sociologist/LetterAdvancedDelegations/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+   
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,LetterId,Amount,AmountAdditional,QtyStudents,CreditToEMployee,EmployeeMobile,Statatus,Notes")] LetterAdvancedDelegation letterAdvancedDelegation)
+        [Route("Sociologist/LetterAdvancedDelegations/Delete")]
+        public async Task<IActionResult> Delete(int letterId,string EmployeeNumber)
         {
-            if (id != letterAdvancedDelegation.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(letterAdvancedDelegation);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LetterAdvancedDelegationExists(letterAdvancedDelegation.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["LetterId"] = new SelectList(_context.Letters, "Id", "Id", letterAdvancedDelegation.LetterId);
-            return View(letterAdvancedDelegation);
-        }
-
-        // GET: Sociologist/LetterAdvancedDelegations/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
             var letterAdvancedDelegation = await _context.LetterAdvancedDelegations
-                .Include(l => l.Letter)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (letterAdvancedDelegation == null)
-            {
-                return NotFound();
-            }
-
-            return View(letterAdvancedDelegation);
-        }
-
-        // POST: Sociologist/LetterAdvancedDelegations/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var letterAdvancedDelegation = await _context.LetterAdvancedDelegations.FindAsync(id);
+                .Include(l=>l.Letter)
+                .FirstOrDefaultAsync(d=>d.LetterId== letterId && d.EmployeeNomber == EmployeeNumber);
             _context.LetterAdvancedDelegations.Remove(letterAdvancedDelegation);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(IndexByBokingId),new { bokingId = letterAdvancedDelegation.Letter.TripBookingId });
         }
 
         private bool LetterAdvancedDelegationExists(int id)

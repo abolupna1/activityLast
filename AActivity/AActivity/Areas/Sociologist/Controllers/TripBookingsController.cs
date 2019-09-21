@@ -220,11 +220,11 @@ namespace AActivity.Areas.Sociologist.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BookingConfirmed(int id)
+        public async Task<IActionResult> BookingConfirmed(int id ,int TripStatus)
         {
 
             var tripBooking = await _context.TripBookings.FindAsync(id);
-            tripBooking.TripStatus = 1;
+            tripBooking.TripStatus = TripStatus;
             _context.TripBookings.Update(tripBooking);
             await _context.SaveChangesAsync();
             return RedirectToAction("DetailsMore", "SchedulingTripDetails", new { id = tripBooking.SchedulingTripDetailId });

@@ -1,0 +1,114 @@
+﻿@model AActivity.Areas.Sociologist.ModelViews.PrintLetterAdvancedDelegation
+
+
+
+@functions{
+    string signutreRoleName(string role)
+    {
+        foreach (var sr in Model.Signatures)
+        {
+            if (sr.SignatureRole == role)
+            {
+                return $"{sr.Degree}  {sr.User.FullName}";
+            }
+        }
+        return string.Empty;
+
+    }
+}
+
+<style>
+    .lead {
+        font-size: 1rem;
+        font-weight: 200;
+    }
+
+    .fa-2x {
+        font-size: 1em;
+    }
+</style>
+
+
+<div class="row mt-3 mb-3 table">
+    <div class="col-12">
+        <table  class="ar " style="direction:rtl">
+            <tr>
+                <th colspan="4">
+                    <img src="~/img/letter/letterHeade.PNG" class="w-100 h-50" />
+                </th>
+
+            </tr>
+            <tr class="text-center">
+                <th class="pt-4" colspan="4">
+                    <h5>نموذج طلب سلفة من صندوق الطالب لفعاليات النشاط الاجتماعي</h5>
+                </th>
+            </tr>
+            <tr>
+                <th colspan="4">
+                    <p class="pt-3 lead">
+                        <span class="ml-5 ">  سعادة مدير إدارة النشاط</span>
+                        <br />
+                        <span class="ml-5">السلام عليكم ورحمة الله وبركاته </span>  <span class="ml-5">وبعد.</span>
+                        <br />
+                        <span class="ml-5">
+                            نظرا لإقامة وكالة النشاط ممثلة في قسم النشاط الاجتماعي فعالية:
+                        </span>
+                    </p>
+                </th>
+            </tr>
+            <tr class="text-center  table-bordered " style="direction:rtl" >
+                <td class="font-weight-bold  w-25">
+                    @if (Model.TripType == "عمرة")
+                    {
+
+                        <i class="far fa-check-circle text-success fa-2x"></i>
+
+                    }
+
+                    رحلة عمرة
+                </td>
+                <td class="font-weight-bold  w-25">
+                    @if (Model.TripType == "داخلية")
+                    {
+                        <span class="badge badge-pill p-2 ">
+                            <i class="far fa-check-circle text-success fa-2x"></i>
+                        </span>
+                    }
+                    رحلة داخلية
+                </td>
+                <th class=" w-25">
+                    @if (Model.TripType == "خارجية")
+                    {
+                        <span class="badge badge-pill p-2 ">
+                            <i class="far fa-check-circle text-success fa-2x"></i>
+                        </span>
+                    }
+                    رحلة خارجية
+
+
+                </th>
+                <th class="  w-25">
+                    @if (Model.TripType == "زيارة")
+                    {
+                        <span class="badge badge-pill p-2 fa-2x">
+                            <i class="far fa-check-circle text-success "></i>
+                        </span>
+                    }
+                    زيارة
+                </th>
+            </tr>
+
+
+            @await Html.PartialAsync("Signutered/_Siged1.cshtml", Model)
+            @await Html.PartialAsync("Signutered/_Siged2.cshtml", Model)
+             @await Html.PartialAsync("Signutered/_Siged3.cshtml", Model)
+        @await Html.PartialAsync("Signutered/_Siged4.cshtml", Model)
+
+        </table>
+
+    </div>
+</div>
+
+<div style="clear:both"></div>
+
+

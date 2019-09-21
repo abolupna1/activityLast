@@ -26,9 +26,9 @@ namespace AActivity.Models
         
         public IEnumerable<LetterFood> LetterFoods { get; set; }
         public IEnumerable<LetterAdvancedDelegation> LetterAdvancedDelegations { get; set; }
-        public IEnumerable<LetterAdvancedEducation> LetterAdvancedEducations { get; set; }
+       // public IEnumerable<LetterAdvancedEducation> LetterAdvancedEducations { get; set; }
 
-        
+
 
     }
 }

@@ -32,8 +32,10 @@ namespace AActivity.Models
         public bool Status { get; set; }
 
         public IEnumerable<SignutreDelegate> SignutreDelegates { get; set; }
+        public IEnumerable<LetterSignutreForAdvance> LetterSignutreForAdvances { get; set; }
+        public IEnumerable<LetterSignutre> LetterSignutres { get; set; }
 
-     
+
 
     }
 }

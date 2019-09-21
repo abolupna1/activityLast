@@ -122,13 +122,21 @@
 
     @if (Model.TripBookings.Any())
     {
-        if (Model.TripBookings.First().TripStatus == 1)
+        if (Model.TripBookings.First().TripStatus >= 1)
         {
             @await Html.PartialAsync("PartialViews/_Speeches.cshtml", Model)
 
         }
 
+        if (Model.TripBookings.First().TripStatus >= 2)
+        {
+            @await Html.PartialAsync("PartialViews/_Reports.cshtml", Model)
+
+        }
+
     }
+
+
 
     <li class="time-label">
         <span class="bg-red">

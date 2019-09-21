@@ -24,11 +24,15 @@ namespace AActivity.Models
         public int QtyStudents { get; set; }
         public string CreditToEMployee { get; set; } //السلفة باسم الموظف
         public string EmployeeMobile { get; set; } 
+        public string EmployeeNomber { get; set; }
         public string Statatus { get; set; } = null;
         public string Notes { get; set; } = null;
 
 
-        
+
+        public IEnumerable<LetterSignutreForAdvance> LetterSignutreForAdvances { get; set; }
+
+
 
 
     }

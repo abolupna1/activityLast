@@ -65,12 +65,24 @@
                     </div>
                 </div>
 
-                <div class="col-12 m-2">
-                    <a class="btn btn-primary btn-lg" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id" asp-controller="StudentsParticipatingInTrips" asp-action="index">الطلاب</a>
+                @if (User.IsInRole("Supervisor") && Model.TripBookings.FirstOrDefault().TripStatus == 0)
+                {
+                    <div class="col-12 m-2">
+                        <a class="btn btn-primary btn-lg" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id" asp-controller="StudentsParticipatingInTrips" asp-action="index">الطلاب</a>
 
-                    <a class="btn btn-success btn-lg" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id" asp-controller="TripDelegates" asp-action="index">المنتدبين</a>
+                        <a class="btn btn-success btn-lg" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id" asp-controller="TripDelegates" asp-action="index">المنتدبين</a>
 
-                </div>
+                    </div>
+                }
+                else if (!User.IsInRole("Supervisor") && Model.TripBookings.FirstOrDefault().TripStatus > 0)
+                {
+                    <div class="col-12 m-2">
+                      
+                        <a class="btn btn-success btn-lg" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id" asp-controller="TripDelegates" asp-action="index">المنتدبين</a>
+
+                    </div>
+                }
+
             </div>
         </div>
         <ul class="list-group  text-white">
@@ -88,21 +100,21 @@
                 {
                     @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))
                     {
-                        <form asp-action="BookingConfirmed" asp-controller="TripBookings" asp-route-id="@Model.TripBookings.FirstOrDefault().Id">
+            <form asp-action="BookingConfirmed" asp-controller="TripBookings" asp-route-id="@Model.TripBookings.FirstOrDefault().Id">
 
-
-                            <span id="confirmDeleteSpan_@Model.TripBookings.FirstOrDefault().Id" style="display:none">
-                                <span class="text-center text-danger font-weight-bold">هل انت متاكد من تأكيد الحجز ؟</span>
-                                <button type="submit" class="btn btn-danger btn-lg">نعم</button>
-                                <a href="#" class="btn btn-primary btn-lg" onclick="confirmDelete('@Model.TripBookings.FirstOrDefault().Id',false)">لا</a>
-                            </span>
-                            <span id="deleteSpan_@Model.TripBookings.FirstOrDefault().Id">
-                                <a class="btn  btn-danger btn-lg " onclick="confirmDelete('@Model.TripBookings.FirstOrDefault().Id',true)">
-                                    <i class="fas fa-question-circle"></i>
-                                    تأكيد الحجز
-                                </a>
-                            </span>
-                        </form>
+                <input name="TripStatus" value="1" hidden />
+                <span id="confirmDeleteSpan_@Model.TripBookings.FirstOrDefault().Id" style="display:none">
+                    <span class="text-center text-danger font-weight-bold">هل انت متاكد من تأكيد الحجز لا يمكن اضافة طلاب ومنتدبين بعد التاكيد؟</span>
+                    <button type="submit" class="btn btn-danger btn-lg">نعم</button>
+                    <a href="#" class="btn btn-primary btn-lg" onclick="confirmDelete('@Model.TripBookings.FirstOrDefault().Id',false)">لا</a>
+                </span>
+                <span id="deleteSpan_@Model.TripBookings.FirstOrDefault().Id">
+                    <a class="btn  btn-danger btn-lg " onclick="confirmDelete('@Model.TripBookings.FirstOrDefault().Id',true)">
+                        <i class="fas fa-question-circle"></i>
+                        تأكيد الحجز
+                    </a>
+                </span>
+            </form>
                     }
                     @if (User.IsInRole("DirectorOfSocialActivity") || User.IsInRole("SocialActivityOfficer"))
                     {

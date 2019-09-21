@@ -3,10 +3,11 @@
     ViewData["Title"] = "انشاء";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var letter = Model.Letters.FirstOrDefault(e=>e.TypeLetter==4);
+    var supervisor = letter.TripBooking.SchedulingTripDetail.EducationalBody.User;
 }
 
-<table class="table table-bordered">
-    <thead>
+<table class="table table-bordered  mt-5">
+    <thead class="bg-primary-bold text-center">
         <tr>
             <th>#</th>
             <th>اسم الموظف</th>
@@ -22,17 +23,44 @@
             <th>@i</th>
             <td>@emp.EmployeeName</td>
             <td>منتدب</td>
+            @if (letter!=null) {
             <td>
-                <a asp-action="Create" asp-route-letterId="@letter.Id" asp-route-delegateId="@emp.Id" asp class="btn btn-primary btn-sm text-white">
-                    <i class="fas fa-plus"></i>
-                </a>
-                <a asp-action="Create" asp-route-letterId="@letter.Id" asp-route-delegateId="@emp.Id" asp class="btn btn-danger btn-sm text-white">
-                    <i class="fas fa-minus"></i>
-                </a>
-                <a asp-action="Create" asp-route-letterId="@letter.Id" asp-route-delegateId="@emp.Id" asp class="btn btn-success btn-sm text-white">
-                    <i class="fas fa-eye"></i>
-                </a>
+
+                @if (!letter.LetterAdvancedDelegations.Any(e => e.EmployeeNomber == emp.EmployeeNumber.ToString()))
+                {
+                    <a asp-action="Create" asp-route-letterId="@letter.Id" asp-route-delegateId="@emp.Id" asp class="btn btn-primary btn-sm text-white">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                }
+                else
+                {
+            <form asp-action="Delete">
+               
+
+                <input name="letterId" value="@letter.Id" hidden />
+                <input name="EmployeeNumber" value="@emp.EmployeeNumber" hidden/>
+                <span id="confirmDeleteSpan_@emp.Id" style="display:none">
+                    <span class="text-center text-danger font-weight-bold">هل تريد الحذف ؟</span>
+                    <button type="submit" class="btn btn-danger btn-sm">نعم</button>
+                    <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@emp.Id',false)">لا</a>
+                </span>
+                <span id="deleteSpan_@emp.Id">
+
+
+                    <a class="btn  btn-danger btn-sm text-white " onclick="confirmDelete('@emp.Id',true)">
+                        <i class="fas fa-minus"></i>
+
+                    </a>
+
+                </span>
+            </form>
+                 
+                }
+
+
+
             </td>
+             }
         </tr>
             i++;
         }
@@ -41,15 +69,36 @@
         <td>@Model.SchedulingTripDetail.EducationalBody.User.FullName</td>
         <td>مشرف جهة تعليمية </td>
         <td>
-            <a asp-action="Create" asp-route-letterId="@letter.Id" asp-route-delegateId="0" asp class="btn btn-primary btn-sm text-white">
-                <i class="fas fa-plus"></i>
-            </a>
-            <a asp-action="Create" asp-route-letterId="@letter.Id" asp-route-delegateId="0" asp class="btn btn-danger btn-sm text-white">
-                <i class="fas fa-minus"></i>
-            </a>
-            <a asp-action="Create" asp-route-letterId="@letter.Id" asp-route-delegateId="0" asp class="btn btn-success btn-sm text-white">
-                <i class="fas fa-eye"></i>
-            </a>
+            @if (!letter.LetterAdvancedDelegations.Any(e => e.EmployeeNomber == letter.TripBooking.SchedulingTripDetail.EducationalBody.User.UserName))
+            {
+                <a asp-action="Create" asp-route-letterId="@letter.Id" asp-route-delegateId="0" asp class="btn btn-primary btn-sm text-white">
+                    <i class="fas fa-plus"></i>
+                </a>
+            }
+            else
+            {
+                <form asp-action="Delete">
+
+                    
+                    <input name="letterId" value="@letter.Id" hidden />
+                    <input name="EmployeeNumber" value="@supervisor.UserName" hidden />
+                    <span id="confirmDeleteSpan_@supervisor.UserName" style="display:none">
+                        <span class="text-center text-danger font-weight-bold">هل تريد الحذف ؟</span>
+                        <button type="submit" class="btn btn-danger btn-sm">نعم</button>
+                        <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@supervisor.UserName',false)">لا</a>
+                    </span>
+                    <span id="deleteSpan_@supervisor.UserName">
+
+
+                        <a class="btn  btn-danger btn-sm text-white " onclick="confirmDelete('@supervisor.UserName',true)">
+                            <i class="fas fa-minus"></i>
+
+                        </a>
+
+                    </span>
+                </form>
+            }
+
 
         </td>
     </tr>

@@ -240,6 +240,8 @@ namespace AActivity.Migrations
 
                     b.Property<string>("EmployeeMobile");
 
+                    b.Property<string>("EmployeeNomber");
+
                     b.Property<int>("LetterId");
 
                     b.Property<string>("Notes");
@@ -253,29 +255,6 @@ namespace AActivity.Migrations
                     b.HasIndex("LetterId");
 
                     b.ToTable("LetterAdvancedDelegations");
-                });
-
-            modelBuilder.Entity("AActivity.Models.LetterAdvancedEducation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<float>("Amount");
-
-                    b.Property<float>("AmountAdditional");
-
-                    b.Property<int>("LetterId");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LetterId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("LetterAdvancedEducation");
                 });
 
             modelBuilder.Entity("AActivity.Models.LetterFood", b =>
@@ -330,6 +309,29 @@ namespace AActivity.Migrations
                     b.HasIndex("SignatureId");
 
                     b.ToTable("LetterSignutres");
+                });
+
+            modelBuilder.Entity("AActivity.Models.LetterSignutreForAdvance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsHeOwnerOfSignature");
+
+                    b.Property<int>("LetterAdvancedDelegationId");
+
+                    b.Property<int>("SignatureId");
+
+                    b.Property<int>("WhoHasSignutre");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LetterAdvancedDelegationId");
+
+                    b.HasIndex("SignatureId");
+
+                    b.ToTable("LetterSignutreForAdvances");
                 });
 
             modelBuilder.Entity("AActivity.Models.LetterTransport", b =>
@@ -541,6 +543,68 @@ namespace AActivity.Migrations
                     b.ToTable("TripDelegates");
                 });
 
+            modelBuilder.Entity("AActivity.Models.TripReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Status");
+
+                    b.Property<string>("TextBody")
+                        .IsRequired();
+
+                    b.Property<int>("TripBookingId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TripBookingId");
+
+                    b.ToTable("TripReports");
+                });
+
+            modelBuilder.Entity("AActivity.Models.TripReportImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImagePath");
+
+                    b.Property<int>("TripReportId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TripReportId");
+
+                    b.ToTable("TripReportImages");
+                });
+
+            modelBuilder.Entity("AActivity.Models.TripReportsNote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateNotes");
+
+                    b.Property<string>("Note");
+
+                    b.Property<int>("TripReportId");
+
+                    b.Property<int>("UserId");
+
+                    b.Property<bool>("WhoIsWriteNote");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TripReportId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TripReportsNotes");
+                });
+
             modelBuilder.Entity("AActivity.Models.TripType", b =>
                 {
                     b.Property<int>("Id")
@@ -661,19 +725,6 @@ namespace AActivity.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("AActivity.Models.LetterAdvancedEducation", b =>
-                {
-                    b.HasOne("AActivity.Models.Letter", "Letter")
-                        .WithMany("LetterAdvancedEducations")
-                        .HasForeignKey("LetterId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("AActivity.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("AActivity.Models.LetterFood", b =>
                 {
                     b.HasOne("AActivity.Models.Letter", "Letter")
@@ -695,7 +746,20 @@ namespace AActivity.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AActivity.Models.Signature", "Signature")
-                        .WithMany()
+                        .WithMany("LetterSignutres")
+                        .HasForeignKey("SignatureId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AActivity.Models.LetterSignutreForAdvance", b =>
+                {
+                    b.HasOne("AActivity.Models.LetterAdvancedDelegation", "Letter")
+                        .WithMany("LetterSignutreForAdvances")
+                        .HasForeignKey("LetterAdvancedDelegationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AActivity.Models.Signature", "Signature")
+                        .WithMany("LetterSignutreForAdvances")
                         .HasForeignKey("SignatureId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -786,6 +850,35 @@ namespace AActivity.Migrations
                     b.HasOne("AActivity.Models.TripBooking", "TripBooking")
                         .WithMany("TripDelegates")
                         .HasForeignKey("TripBookingId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AActivity.Models.TripReport", b =>
+                {
+                    b.HasOne("AActivity.Models.TripBooking", "TripBooking")
+                        .WithMany("TripReports")
+                        .HasForeignKey("TripBookingId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AActivity.Models.TripReportImage", b =>
+                {
+                    b.HasOne("AActivity.Models.TripReport", "TripReport")
+                        .WithMany("TripReportImages")
+                        .HasForeignKey("TripReportId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AActivity.Models.TripReportsNote", b =>
+                {
+                    b.HasOne("AActivity.Models.TripReport", "TripReport")
+                        .WithMany("TripReportsNotes")
+                        .HasForeignKey("TripReportId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AActivity.Models.AppUser", "User")
+                        .WithMany("TripReportsNotes")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
