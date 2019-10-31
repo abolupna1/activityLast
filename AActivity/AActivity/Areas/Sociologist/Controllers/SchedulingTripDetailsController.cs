@@ -9,6 +9,7 @@ using AActivity.Data;
 using AActivity.Models;
 using AActivity.Areas.Sociologist.ModelViews;
 using System.Globalization;
+using System.Security.Claims;
 
 namespace AActivity.Areas.Sociologist.Controllers
 {
@@ -22,11 +23,58 @@ namespace AActivity.Areas.Sociologist.Controllers
             _context = context;
         }
 
+        private void updateStatus(int EducationalBodyId)
+        {
+           
+            var model = new List<TripBooking>();
+            var trips =  _context.TripBookings.Where(e => e.SchedulingTripDetail
+                                                             .EducationalBodyId == EducationalBodyId
+                                                             && e.SchedulingTripDetail.TripDate <= DateTime.Now
+                                                             && e.TripStatus == 2)
+                                                             .Include(s=>s.SchedulingTripDetail)
+                                                             .ToList();
+            foreach (var trip in trips)
+            {
+                trip.TripStatus = 3;
+                model.Add(trip);
+            }
+            _context.UpdateRange(model);
+            _context.SaveChanges();
+           
+        }
         // GET: Sociologist/SchedulingTripDetails
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.SchedulingTripDetails.Include(s => s.EducationalBody).Include(s => s.SchedulingTripHead).Include(s => s.TripType);
-            return View(await applicationDbContext.Where(t=>t.SchedulingTripHead.Status==true).ToListAsync());
+
+
+            if (User.IsInRole("Admin"))
+            {
+                var applicationDbContext = _context.SchedulingTripDetails
+                    
+                    .Include(s => s.EducationalBody)
+                    .Include(s => s.TripBookings)
+                    .Include(s => s.SchedulingTripHead)
+                    .Include(s => s.TripType);
+                return View(await applicationDbContext.Where(t => t.SchedulingTripHead.Status == true).ToListAsync());
+            }
+            else
+            {
+
+                int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var edu = await _context.EducationalBodies.FirstOrDefaultAsync(e => e.UserId == userId);
+                int eduId = edu != null ? edu.Id : 0;
+                updateStatus(eduId);
+                var applicationDbContext = _context.SchedulingTripDetails                   
+                    .Include(s => s.EducationalBody)
+                    .Include(s => s.TripBookings)
+                    .Include(s => s.SchedulingTripHead)
+                    .Include(s => s.TripType);
+               
+                return View(await applicationDbContext
+                    .Where(t => t.SchedulingTripHead.Status == true && t.EducationalBodyId== eduId)
+                    .ToListAsync());
+
+            }
         }
 
         public IActionResult CreateTripsCount(int id,int EducationalBodyId,int tripCount)
@@ -57,9 +105,7 @@ namespace AActivity.Areas.Sociologist.Controllers
                     .Include(l => l.TripBookings)
                     .ThenInclude(r=>r.TripReports)
                     .ThenInclude(i=>i.TripReportImages)
-                    .Include(l => l.TripBookings)
-                    .ThenInclude(r => r.TripReports)
-                    .ThenInclude(i => i.TripReportsNotes)
+                  
                     .Include(s => s.TripBookings).ThenInclude(l=>l.Letters)
 
                   .Include(t=>t.TripType)
@@ -115,7 +161,7 @@ namespace AActivity.Areas.Sociologist.Controllers
          
             ViewData["EducationalBodies"] = eduBody;
             ViewData["SchedulingTripHeadId"] =tripHead;
-            ViewData["TripTypeId"] = new SelectList(_context.TripTypes.Where(t=>t.Id != 4), "Id", "Name");
+            ViewData["TripTypeId"] = new SelectList(_context.TripTypes, "Id", "Name");
             ViewData["tripCount"] = tripCount;
         
             return View();
@@ -138,11 +184,11 @@ namespace AActivity.Areas.Sociologist.Controllers
                     await _context.SaveChangesAsync();
                 }
                
-                return RedirectToAction(nameof(Details), "SchedulingTripHeads", new {id=id });
+                return RedirectToAction(nameof(Details), new {id= schedulingTripDetail.FirstOrDefault().EducationalBodyId });
             }
             ViewData["EducationalBodies"] = await _context.EducationalBodies.FindAsync(EducationalBodyId);
             ViewData["SchedulingTripHeadId"] = await _context.SchedulingTripHead.FindAsync(id);
-            ViewData["TripTypeId"] = new SelectList(_context.TripTypes.Where(t => t.Id != 4), "Id", "Name");
+            ViewData["TripTypeId"] = new SelectList(_context.TripTypes, "Id", "Name");
             ViewData["tripCount"] = tripCount;
             return View(schedulingTripDetail);
         }
@@ -165,7 +211,7 @@ namespace AActivity.Areas.Sociologist.Controllers
             }
             ViewData["EducationalBodies"] = await _context.EducationalBodies.FindAsync(id);
             ViewData["SchedulingTripHeadId"] = await _context.SchedulingTripHead.FindAsync(schedulingTripDetail.FirstOrDefault().SchedulingTripHeadId);
-            ViewData["TripTypeId"] = new SelectList(_context.TripTypes.Where(t => t.Id != 4), "Id", "Name");
+            ViewData["TripTypeId"] = new SelectList(_context.TripTypes, "Id", "Name");
             ViewData["tripCount"] = schedulingTripDetail.Count();
             return View(schedulingTripDetail);
         }
@@ -183,7 +229,8 @@ namespace AActivity.Areas.Sociologist.Controllers
             {
                 _context.UpdateRange(schedulingTripDetail);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = schedulingTripDetail.FirstOrDefault().EducationalBodyId });
+               
             }
             var schedulingTripDetails = await _context.SchedulingTripDetails
                      .Where(e => e.EducationalBodyId == id).ToListAsync();
@@ -194,7 +241,7 @@ namespace AActivity.Areas.Sociologist.Controllers
             }
             ViewData["EducationalBodies"] = await _context.EducationalBodies.FindAsync(id);
             ViewData["SchedulingTripHeadId"] = await _context.SchedulingTripHead.FindAsync(schedulingTripDetails.FirstOrDefault().SchedulingTripHeadId);
-            ViewData["TripTypeId"] = new SelectList(_context.TripTypes.Where(t => t.Id != 4), "Id", "Name");
+            ViewData["TripTypeId"] = new SelectList(_context.TripTypes, "Id", "Name");
             ViewData["tripCount"] = schedulingTripDetails.Count();
             return View(schedulingTripDetail);
         }
@@ -221,7 +268,7 @@ namespace AActivity.Areas.Sociologist.Controllers
 
             ViewData["EducationalBodies"] = await _context.EducationalBodies.FindAsync(id);
             ViewData["SchedulingTripHeadId"] = await _context.SchedulingTripHead.FindAsync(schedulingTripDetail.FirstOrDefault().SchedulingTripHeadId);
-            ViewData["TripTypeId"] = new SelectList(_context.TripTypes.Where(t => t.Id != 4), "Id", "Name");
+            ViewData["TripTypeId"] = new SelectList(_context.TripTypes, "Id", "Name");
             ViewData["tripCount"] = schedulingTripDetail.Count();
 
             return View(schedulingTripDetail);
@@ -237,7 +284,7 @@ namespace AActivity.Areas.Sociologist.Controllers
                 .Where(e => checkForDelete.Contains(e.Id)).ToListAsync();
             _context.SchedulingTripDetails.RemoveRange(schedulingTripDetail);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Details), "SchedulingTripHeads",new { id=id});
+            return RedirectToAction(nameof(Details), "SchedulingTripHeads", new { id= id });
         }
 
         private bool SchedulingTripDetailExists(int id)

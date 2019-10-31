@@ -6,7 +6,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div></div>
+
+<nav aria-label="breadcrumb ">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-area="Sociologist" asp-controller="Home" asp-action="Index">الرئيسية</a></li>
+        <li class="breadcrumb-item">
+            <a asp-area="Sociologist" asp-controller="SchedulingTripDetails"
+               asp-action="DetailsMore" asp-route-id="@ViewBag.detailId">الرحلة</a>
+        </li>
+    
+        <li class="breadcrumb-item active" aria-current="page"> الخطابات</li>
+    </ol>
+</nav>
+
 @await Html.PartialAsync("Speaches/_Transport.cshtml", Model)
 @await Html.PartialAsync("Speaches/_Foods.cshtml", Model)
 @await Html.PartialAsync("Speaches/_Delegates.cshtml", Model)

@@ -7,7 +7,7 @@
     {
         foreach (var sr in Model.Signatures)
         {
-            if (sr.SignatureRole == role)
+            if (sr.JobsSignatorie.Name == role)
             {
                 return $"{sr.Degree}  {sr.User.FullName}";
             }

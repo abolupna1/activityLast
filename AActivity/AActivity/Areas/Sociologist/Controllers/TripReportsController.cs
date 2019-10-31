@@ -376,5 +376,26 @@ namespace AActivity.Areas.Sociologist.Controllers
         {
             return _context.TripReports.Any(e => e.Id == id);
         }
+
+        [Route("Sociologist/TripReports/StatusUpdate")]
+        [HttpPost]
+        public async Task<IActionResult> StatusUpdate(int reportId,int Status, int bookingId)
+        {
+            if (Status > 0)
+            {
+                var report = await _context.TripReports.FindAsync(reportId);
+                report.Status = Status;
+                _context.Update(report);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                ViewBag.StatusMessage = "يجب اختيار حالة للتقرير";
+            }
+        
+            return RedirectToAction("DetailsMore", "SchedulingTripDetails", new { id = bookingId });
+
+        }
+
     }
 }

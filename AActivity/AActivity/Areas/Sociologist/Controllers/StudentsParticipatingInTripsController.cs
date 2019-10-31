@@ -15,11 +15,12 @@ namespace AActivity.Areas.Sociologist.Controllers
     public class StudentsParticipatingInTripsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+      
         public StudentsParticipatingInTripsController(ApplicationDbContext context)
         {
             _context = context;
-        }
+         
+    }
         //[HttpPost]
    
         [HttpGet()]
@@ -36,15 +37,14 @@ namespace AActivity.Areas.Sociologist.Controllers
             ViewData["TripBoking"] = TripBoking;
             var items = _context.StudentsParticipatingInTrip.Where(t => t.TripBookingId == bokingId).AsNoTracking().OrderBy(p=>p.Id);
 
+            QtyStudens(bokingId, out int Required, out int Registered, out int Remainder);
 
+            ViewData["Required"] = Required;
+            ViewData["Registered"] = Registered;
+            ViewData["Remainder"] = Remainder;
             return View(await items.ToListAsync());
         }
 
-
-
-     
-        
-       
         public IActionResult Adapter(int bokingId, int count)
         {
          
@@ -60,10 +60,28 @@ namespace AActivity.Areas.Sociologist.Controllers
                 Response.StatusCode = 404;
                 return View("StudentsNotFound");
             }
-            ViewData["StudentCount"] = count;
+
+
+            QtyStudens(bokingId, out int Required, out int Registered, out int Remainder);
+
+            ViewData["Required"] = Required;
+            ViewData["Registered"] = Registered;
+            ViewData["Remainder"] = Remainder;
+            if(Remainder > count)
+            {
+                ViewData["StudentCount"] = count;
+
+            }
+            else
+            {
+                ViewData["StudentCount"] = Remainder;
+
+            }
             ViewData["TripBookingId"] = bokingId;
             return View();
         }
+
+    
 
         // POST: Sociologist/StudentsParticipatingInTrips/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -262,5 +280,106 @@ namespace AActivity.Areas.Sociologist.Controllers
             }
             return 0;
         }
+
+
+
+        private void QtyStudens(int bokingId, out int Required, out int Registered, out int Remainder)
+        {
+            var booking = _context.TripBookings
+                   .Include(s => s.StudentsParticipatingInTrips)
+                   .Include(e => e.SchedulingTripDetail.EducationalBody)
+                   .FirstOrDefaultAsync(i => i.Id == bokingId);
+
+            var boking = booking.Result;
+            var appSettings = _context.AppSettings.FirstOrDefaultAsync();
+            var appSetting = appSettings.Result;
+
+            if (boking.TripTypeName == "عمرة")
+            {
+
+                if (boking.SchedulingTripDetail.EducationalBody.EntityType == "المعاهد والدور")
+                {
+                    Required = appSetting.QtyUmrahBuses * 46;
+                    Registered = boking.StudentsParticipatingInTrips.Count();
+                    Remainder = Required - Registered;
+                }
+                else
+                {
+                    Required = appSetting.QtyUmrahBuses * 47;
+                    Registered = boking.StudentsParticipatingInTrips.Count();
+                    Remainder = Required - Registered;
+                }
+            }
+            else if (boking.TripTypeName == "داخلية")
+            {
+                if (boking.SchedulingTripDetail.EducationalBody.EntityType == "المعاهد والدور")
+                {
+                    Required = appSetting.QtyIntirnalBuses * 47;
+                    Registered = boking.StudentsParticipatingInTrips.Count();
+                    Remainder = Required - Registered;
+                }
+                else
+                {
+                    Required = appSetting.QtyIntirnalBuses * 48;
+                    Registered = boking.StudentsParticipatingInTrips.Count();
+                    Remainder = Required - Registered;
+                }
+            }
+            else if (boking.TripTypeName == "خارجية")
+            {
+                if (boking.SchedulingTripDetail.EducationalBody.EntityType == "المعاهد والدور")
+                {
+                    Required = appSetting.QtyExtirnalBuses * 46;
+                    Registered = boking.StudentsParticipatingInTrips.Count();
+                    Remainder = Required - Registered;
+                }
+                else
+                {
+                    Required = appSetting.QtyExtirnalBuses * 47;
+                    Registered = boking.StudentsParticipatingInTrips.Count();
+                    Remainder = Required - Registered;
+                }
+            }
+            else if (boking.TripTypeName == "زيارة داخلية")
+            {
+                if (boking.SchedulingTripDetail.EducationalBody.EntityType == "المعاهد والدور")
+                {
+                    Required = appSetting.QtyVisitIntirnalBuses * 47;
+                    Registered = boking.StudentsParticipatingInTrips.Count();
+                    Remainder = Required - Registered;
+                }
+                else
+                {
+                    Required = appSetting.QtyVisitIntirnalBuses * 48;
+                    Registered = boking.StudentsParticipatingInTrips.Count();
+                    Remainder = Required - Registered;
+                }
+            }
+            else if (boking.TripTypeName == "زيارة خارجية")
+            {
+                if (boking.SchedulingTripDetail.EducationalBody.EntityType == "المعاهد والدور")
+                {
+                    Required = appSetting.QtyExtirnalBuses * 46;
+                    Registered = boking.StudentsParticipatingInTrips.Count();
+                    Remainder = Required - Registered;
+                }
+                else
+                {
+                    Required = appSetting.QtyExtirnalBuses * 47;
+                    Registered = boking.StudentsParticipatingInTrips.Count();
+                    Remainder = Required - Registered;
+                }
+            }
+            else
+            {
+                Required = 0;
+                Registered = 0;
+                Remainder = 0;
+            }
+
+        }
+
+
+
     }
 }

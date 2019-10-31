@@ -129,10 +129,7 @@
 
     </div>
     <div class="card-footer text-white">
-        <a class="btn  btn-primary  text-white  " asp-route-id="@ViewBag.detailId" asp-controller="SchedulingTripDetails" asp-action="DetailsMore">
-            <i class="fas fa-angle-right"></i>
-             تراجع
-        </a>
+      
         @if (transport == null)
         {
             <a asp-controller="LetterTransports" asp-action="Create" asp-route-bokingId="@ViewBag.bokingId" class="btn btn-primary">اضافة خطاب</a>

@@ -16,6 +16,12 @@ namespace AActivity.Models
         [ForeignKey("UserId"),Display(Name = "صاحب التوقيع   ")]
         public AppUser User { get; set; }
 
+
+        public int JobsSignatorieId { get; set; }
+        [ForeignKey("JobsSignatorieId"), Display(Name = "الوظيفة")]
+        public JobsSignatorie JobsSignatorie { get; set; }
+
+
         [Display(Name = "التوقيع   "), Required(ErrorMessage = "{0} مطلوب")]
 
         public string SignaturePhoto { get; set; }
@@ -25,15 +31,19 @@ namespace AActivity.Models
 
         
 
-   [Display(Name = "الوظيفة"), Required(ErrorMessage = "{0} مطلوب")]
-        public string SignatureRole { get; set; }
+  
 
         [Display(Name = "حالة التوقيع"), Required(ErrorMessage = "{0} مطلوب")]
         public bool Status { get; set; }
-
-        public IEnumerable<SignutreDelegate> SignutreDelegates { get; set; }
+        public IEnumerable<NotificationLetter> NotificationLetters { get; set; }
+        public IEnumerable<TypesOfLettersAndSignature> TypesOfLettersAndSignatures { get; set; }
         public IEnumerable<LetterSignutreForAdvance> LetterSignutreForAdvances { get; set; }
         public IEnumerable<LetterSignutre> LetterSignutres { get; set; }
+
+        public IEnumerable<DelegateToSignutre> DelegateToSignutres { get; set; }
+        public IEnumerable<DelegateToSignutre> WonerSignutres { get; set; }
+
+
 
 
 

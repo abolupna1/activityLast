@@ -1,0 +1,90 @@
+﻿@model IEnumerable<AActivity.Models.DelegateToSignutre>
+
+@{
+    ViewData["Title"] = "المفوضين بتوقيعي";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <nav aria-label="breadcrumb ">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-area="Sociologist" asp-controller="Home" asp-action="Index">الرئيسية</a></li>
+            <li class="breadcrumb-item"><a asp-area="Sociologist" asp-controller="DelegateToSignutres" 
+                                           asp-action="Details" asp-route-userId="@ViewBag.userId">التوقيع</a></li>
+            <li class="breadcrumb-item active" aria-current="page"> المفوضين بتوقيعي</li>
+        </ol>
+    </nav>
+
+
+<table class="table table-bordered table-hover table-striped text-center" >
+    <thead class="bg-primary text-white">
+        <tr>
+            <th>
+               #
+            </th>
+       
+            <th>
+                @Html.DisplayNameFor(model => model.DelegatedToSignutre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateDelegate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                <a asp-action="Create" asp-route-signutreId="@ViewBag.signutreId">
+                    <i class="fa fa-plus-circle text-white"></i>
+                </a>
+
+               
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+            @if (Model.Any())
+            {
+
+
+                     int i = 1; 
+            @foreach (var item in Model.OrderByDescending(l=>l.Id)) {
+                    <tr>
+                        <td>
+                           @i
+                        </td>
+       
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DelegatedToSignutre.User.FullName)
+                        </td>
+                        <td>
+                           @item.DateDelegate.ToString("yyyy-MM-dd")
+                        </td>
+                        <td>
+                            @if (item.Status)
+                            {
+                                <span class="text-success">نشط</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">ملغي</span>
+
+                            }
+                        </td>
+                        <td>
+                            @if (item.Status)
+                            {
+                                <a asp-action="DelegateCancled" asp-route-id="@item.Id">
+                                    <i class="fa fa-minus-circle text-danger"></i>
+                                </a>
+                            }
+
+                        </td>
+                    </tr>
+                i++;
+            }
+            }
+            else
+            {
+<tr><th colspan="5">لايوجد مفوضين </th></tr>
+            }
+    </tbody>
+</table>

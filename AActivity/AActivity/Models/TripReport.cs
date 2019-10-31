@@ -20,10 +20,12 @@ namespace AActivity.Models
 
         [ Display(Name = "حالة التقرير  ")]
 
-        public bool Status { get; set; } = false;
+        public int Status { get; set; }  // 0 / 1 / 2
+        //0 انتظار
+        //1 مقبول /
+        //يجب التعديل 
 
         public IEnumerable<TripReportImage> TripReportImages { get; set; }
-        public IEnumerable<TripReportsNote> TripReportsNotes { get; set; }
 
     }
 }

@@ -7,7 +7,7 @@
     {
         foreach (var sr in Model.Signatures)
         {
-            if (sr.SignatureRole == role)
+            if (sr.JobsSignatorie.Name == role)
             {
                 return $"{sr.Degree}  {sr.User.FullName}";
             }
@@ -21,8 +21,8 @@
     span.stamp {
        position: absolute;
     right: 300px;
-    margin-top: -50px;
     z-index: 99999;
+       
 }
 </style>
 <tbody class="border-bottom ">
@@ -69,28 +69,29 @@
 
 
 
-            <div class=" float-left text-center" style="width:30%">
+        <div class=" float-left text-center" style="width:30%">
 
-                <p class="  lead ">
-                    <span class=" ">رئيس قسم النشاط الاجتماعي</span>
-                </p>
+            <p class="  lead ">
+                <span class=" ">رئيس قسم النشاط الاجتماعي</span>
+            </p>
 
-                @if (Model.WhoHasSignutre.Any(s => s.WhoHasSignutre == 1))
+            @if (Model.WhoHasSignutre.Any(s => s.WhoHasSignutre == 1))
+            {
+
+                if (!Model.WhoHasSignutre.FirstOrDefault(s => s.WhoHasSignutre == 1).IsHeOwnerOfSignature)
                 {
-
-                    if (!Model.WhoHasSignutre.FirstOrDefault(s => s.WhoHasSignutre == 1).IsHeOwnerOfSignature)
-                    {
-                        @:عنه
-                    }
-                    <img width="100" src="~/img/signatures/@Model.WhoHasSignutre.Where(h=>h.WhoHasSignutre==1).FirstOrDefault().Signature.SignaturePhoto" />
-
+                    @:عنه
                 }
-                <p class="  lead ">
-                    <span class=" mr-5">
-                        @signutreRoleName("رئيس قسم النشاط الاجتماعي")
-                    </span>
-                </p>
-            </div>
+                <img width="100" src="~/img/signatures/@Model.WhoHasSignutre.Where(h=>h.WhoHasSignutre==2).FirstOrDefault().Signature.SignaturePhoto" />
+
+
+            }
+            <p class="  lead ">
+                <span class=" mr-5">
+                    @signutreRoleName("رئيس قسم النشاط الاجتماعي")
+                </span>
+            </p>
+        </div>
 
         </th>
     </tr>

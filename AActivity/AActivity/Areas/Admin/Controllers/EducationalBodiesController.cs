@@ -69,7 +69,8 @@ namespace AActivity.Areas.Admin.Controllers
             var Colleges = new EntityTypeForEducation(){ Name = "الكليات"};
             type.Add(Colleges);
 
-            ViewData["UserId"] = new SelectList(_context.Users.Include(u=>u.UserRoles).Where(r=>r.UserRoles.Any(a=>a.Role.Name == "Supervisor")), "Id", "FullName");
+            ViewData["UserId"] = new SelectList(_context.Users.Include(u=>u.UserRoles)
+                .Where(r=>r.UserRoles.Any(a=>a.Role.Name == "Supervisor")), "Id", "FullName");
             ViewData["type"] = new SelectList(type, "Name", "Name");
        
             return View();

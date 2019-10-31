@@ -152,7 +152,7 @@ namespace AActivity.Areas.Sociologist.Controllers
                 .Include(t => t.TripBooking.StudentsParticipatingInTrips)
                 .Include(t => t.TripBooking.SchedulingTripDetail.EducationalBody)
                 .FirstOrDefaultAsync(l => l.Id == letterId);
-            ViewBag.signutre = await _context.Signatures.Include(d => d.SignutreDelegates).ToListAsync();
+          //  ViewBag.signutre = await _context.Signatures.Include(d => d.SignutreDelegates).ToListAsync();
             return View(letter);
         }
 
@@ -194,7 +194,7 @@ namespace AActivity.Areas.Sociologist.Controllers
                 EducationBody =letter.TripBooking.SchedulingTripDetail.EducationalBody.Name,
                 WhoHasSignutre =letter.LetteSignutres,
                 TripDate=letter.TripBooking.SchedulingTripDetail.TripDate,
-                Signatures=await _context.Signatures.Include(d=>d.SignutreDelegates).Include(u=>u.User).ToListAsync()
+               // Signatures=await _context.Signatures.Include(d=>d.SignutreDelegates).Include(u=>u.User).ToListAsync()
             };
             return View(print);
 

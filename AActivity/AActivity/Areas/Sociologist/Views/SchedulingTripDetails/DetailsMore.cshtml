@@ -94,7 +94,17 @@
     }
 </style>
 
-<a class="btn  btn-primary btn-lg" asp-action="Index" asp-controller="SchedulingTripDetails"> <i class="fas fa-share-square"></i> رجوع  </a>
+@if (!User.IsInRole("Supervisor"))
+{
+    <a class="btn  btn-primary btn-lg" asp-route-id="@Model.SchedulingTripHead.Id" asp-action="Details" asp-controller="SchedulingTripHeads"> <i class="fas fa-share-square"></i> الرحلات  </a>
+
+}
+else
+{
+<a class="btn  btn-primary btn-lg" asp-action="Index" asp-controller="SchedulingTripDetails"> <i class="fas fa-share-square"></i> الرحلات  </a>
+
+}
+
 <ul class="list-group list-group-horizontal mt-5 mb-4">
     <li class="list-group-item bg-primary text-white">الجهة التعليمية</li>
     <li class="list-group-item">@Model.EducationalBody.Name</li>

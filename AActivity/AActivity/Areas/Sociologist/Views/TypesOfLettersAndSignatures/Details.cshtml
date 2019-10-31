@@ -1,0 +1,107 @@
+﻿@model AActivity.Models.Signature
+
+@{
+    ViewData["Title"] = "التوقيع";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <nav aria-label="breadcrumb ">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-area="Sociologist" asp-controller="Home" asp-action="Index">الرئيسية</a></li>
+            <li class="breadcrumb-item active" aria-current="page"> التوقيع</li>
+        </ol>
+    </nav>
+
+    <div class="card mb-2">
+        <div class="card-header bg-primary text-white">
+           التوقيع
+        </div>
+        <div class="row no-gutters">
+            <div class="col-md-4 align-content-center">
+                <img src="~/img/signatures/@Model.SignaturePhoto" class="card-img w-50 img-thumbnail" alt="التوقيع">
+            </div>
+            <div class="col-md-8 ">
+                <div class="card-body">
+                    <div class="row">
+                        <p class="card-text col-6">
+                            <strong> توقيع :</strong> @Model.User.FullName
+                        </p>
+                        <p class="card-text col-6">
+                            <strong>الوظيفة :</strong> @Model.JobsSignatorie.Name
+                        </p>
+                        <p class="card-text col-12">
+                            <strong>حالة التوقيع  :</strong>
+                            @if (Model.Status)
+                            {
+                                <span class="badge badge-success">صالح</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">غير صالح</span>
+
+                            }
+                        </p>
+                        <div class="col-12">
+                            <h5 class="">صلاحيات التوقيع:</h5>
+                            <div class="row">
+                                <div class="col-4 alert alert-info">تغذية</div>
+                                <div class="col-4 alert alert-info">نقل</div>
+                                <div class="col-4 alert alert-info">الى من يهمه الامر</div>
+                           
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+<div class="card mt-3 mb-3">
+    <div class="card-header bg-primary text-white">مفوض بالتوقيع عن </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>الاسم</th>
+                    <th>الوظيفة</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>1</th>
+                    <td>محمد علي</td>
+                    <td>منسق</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="card ">
+    <div class="card-header bg-primary text-white">المفوضين بتوقيعي   </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>الاسم</th>
+                    <th>الوظيفة</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>1</th>
+                    <td>محمد علي</td>
+                    <td>منسق</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

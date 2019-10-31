@@ -28,9 +28,14 @@ namespace AActivity.Areas.Admin.ModelViews
         public int QtyPassengersInOneBus { get; set; }
 
 
-        [Display(Name = "عدد ايام رحلة العمرة "), Required(ErrorMessage = "{0} مطلوب")]
+        [Display(Name = "عدد ايام رحلة العمرة / مكة المكرمة "), Required(ErrorMessage = "{0} مطلوب")]
 
-        public int QtyOmrahDaysTrip { get; set; }
+        public int QtyOmrahMakkahDaysTrip { get; set; }
+
+
+        [Display(Name = "عدد ايام رحلة العمرة / المدينة المنورة "), Required(ErrorMessage = "{0} مطلوب")]
+
+        public int QtyOmrahMedinaDaysTrip { get; set; }
 
         [Display(Name = "عدد ايام الرحلة الداخلية  "), Required(ErrorMessage = "{0} مطلوب")]
 
@@ -39,6 +44,14 @@ namespace AActivity.Areas.Admin.ModelViews
         [Display(Name = "عدد ايام الرحلة الخارجية  "), Required(ErrorMessage = "{0} مطلوب")]
 
         public int QtyExternalDaysTrip { get; set; }
+
+        [Display(Name = "عدد ايام رحلة الزيارة الخارجية  "), Required(ErrorMessage = "{0} مطلوب")]
+
+        public int QtyDaysVisitInternal { get; set; }
+
+        [Display(Name = "عدد ايام رحلة الزيارة الداخلية  "), Required(ErrorMessage = "{0} مطلوب")]
+
+        public int QtyDaysVisitEternal { get; set; }
 
 
         [Display(Name = "مبلغ سلفة  الرحلة الخارجية  "), Required(ErrorMessage = "{0} مطلوب")]
@@ -62,6 +75,28 @@ namespace AActivity.Areas.Admin.ModelViews
         [Display(Name = "ختم النشاط  "), Required(ErrorMessage = "{0} مطلوب")]
 
         public IFormFile StampFile { get; set; }
+
+
+        [Display(Name = "عدد الباصات لرحلة عمرة   "), Required(ErrorMessage = "{0} مطلوب")]
+
+        public int QtyUmrahBuses { get; set; }
+
+        [Display(Name = "عدد الباصات لرحلة الزيارة الداخلية   "), Required(ErrorMessage = "{0} مطلوب")]
+
+        public int QtyVisitIntirnalBuses { get; set; }
+
+        [Display(Name = "عدد الباصات لرحلة الزيارة الخارجية   "), Required(ErrorMessage = "{0} مطلوب")]
+
+        public int QtyVisitExtirnalBuses { get; set; }
+
+        [Display(Name = "عدد الباصات لرحلة الخارجية   "), Required(ErrorMessage = "{0} مطلوب")]
+
+        public int QtyExtirnalBuses { get; set; }
+
+        [Display(Name = "عدد الباصات لرحلة الداخلية   "), Required(ErrorMessage = "{0} مطلوب")]
+
+        public int QtyIntirnalBuses { get; set; }
+
 
     }
 }

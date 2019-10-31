@@ -68,9 +68,56 @@
     <Compile Remove="Migrations\20190913225317_LetterAdvancedDelegationUpdate.Designer.cs" />
     <Compile Remove="Migrations\20190919051838_TripReportsNote.cs" />
     <Compile Remove="Migrations\20190919051838_TripReportsNote.Designer.cs" />
+    <Compile Remove="Migrations\20190919051944_TripReportsNote.cs" />
+    <Compile Remove="Migrations\20190919051944_TripReportsNote.Designer.cs" />
+    <Compile Remove="Migrations\20190919053954_TripReportsNoteUpdateRelation.cs" />
+    <Compile Remove="Migrations\20190919053954_TripReportsNoteUpdateRelation.Designer.cs" />
+    <Compile Remove="Migrations\20190926082000_FinishWork.cs" />
+    <Compile Remove="Migrations\20190926082000_FinishWork.Designer.cs" />
+    <Compile Remove="Migrations\20190926082131_FinishWork.cs" />
+    <Compile Remove="Migrations\20190926082131_FinishWork.Designer.cs" />
+    <Compile Remove="Migrations\20190926160045_FinishWorkTripBookingsrRelation.cs" />
+    <Compile Remove="Migrations\20190926160045_FinishWorkTripBookingsrRelation.Designer.cs" />
+    <Compile Remove="Migrations\20191017054755_JobsSignatorie.cs" />
+    <Compile Remove="Migrations\20191017054755_JobsSignatorie.Designer.cs" />
+    <Compile Remove="Migrations\20191021231618_TypesOfLettersAndSignature.cs" />
+    <Compile Remove="Migrations\20191021231618_TypesOfLettersAndSignature.Designer.cs" />
+    <Compile Remove="Migrations\20191021234147_IEnumerableTypeOf.cs" />
+    <Compile Remove="Migrations\20191021234147_IEnumerableTypeOf.Designer.cs" />
+    <Compile Remove="Migrations\20191024062353_DelegateToSignutre.cs" />
+    <Compile Remove="Migrations\20191024062353_DelegateToSignutre.Designer.cs" />
+    <Compile Remove="Migrations\20191024101055_DelegateToSignutreUpdate.cs" />
+    <Compile Remove="Migrations\20191024101055_DelegateToSignutreUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20191024101533_DelegateToSignutreUpdateId.cs" />
+    <Compile Remove="Migrations\20191024101533_DelegateToSignutreUpdateId.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Areas\Sociologist\Views\LetterFoods\Create.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterFoods\LetterFoodsNotFound.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterFoods\Signutered\_Siged1.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterFoods\Signutered\_Siged2.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterFoods\Signutered\_Siged3.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterFoods\Signutered\_Siged4.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterFoods\Signutered\_Siged5.cshtml" />
+    <None Include="Areas\Sociologist\Views\Letters\Create.cshtml" />
+    <None Include="Areas\Sociologist\Views\Letters\Delete.cshtml" />
+    <None Include="Areas\Sociologist\Views\Letters\Details.cshtml" />
+    <None Include="Areas\Sociologist\Views\Letters\Edit.cshtml" />
+    <None Include="Areas\Sociologist\Views\Letters\Index.cshtml" />
+    <None Include="Areas\Sociologist\Views\Letters\IndexByBoking.cshtml" />
+    <None Include="Areas\Sociologist\Views\Letters\Speaches\_Advances.cshtml" />
+    <None Include="Areas\Sociologist\Views\Letters\Speaches\_Delegates.cshtml" />
+    <None Include="Areas\Sociologist\Views\Letters\Speaches\_Foods.cshtml" />
+    <None Include="Areas\Sociologist\Views\Letters\Speaches\_ListAdvances.cshtml" />
+    <None Include="Areas\Sociologist\Views\Letters\Speaches\_Transport.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterTransports\Create.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterTransports\Details.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterTransports\LetterTransportsNotFound.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterTransports\Signutered\_Siged1.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterTransports\Signutered\_Siged2.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterTransports\Signutered\_Siged3.cshtml" />
+    <None Include="Areas\Sociologist\Views\LetterTransports\Signutres\_Sig.cshtml" />
     <None Include="wwwroot\lib\ckeditor5\ckeditor.js" />
     <None Include="wwwroot\lib\ckeditor5\ckeditor.js.map" />
     <None Include="wwwroot\lib\datatable\DataTables-1.10.18\js\dataTables.bootstrap.js" />
@@ -110,7 +157,7 @@
     <PackageReference Include="DinkToPdf" Version="1.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
     <PackageReference Include="ReflectionIT.Mvc.Paging" Version="3.5.0" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
     <PackageReference Include="Vereyon.Web.FlashMessageCore" Version="1.0.0" />

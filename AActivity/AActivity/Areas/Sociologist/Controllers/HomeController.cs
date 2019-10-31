@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using AActivity.Data;
 using AActivity.Areas.Sociologist.Helpers;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace AActivity.Controllers
 {
@@ -32,26 +33,29 @@ namespace AActivity.Controllers
         {
 
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var DoesHeHaveSignature = await _context.Signatures.AnyAsync(u => u.UserId == userId);
+            ViewBag.userId= userId;
+            ViewBag.DoesHeHaveSignature= DoesHeHaveSignature;
 
-            var sd = SignutreOfUserHelper.getUserSignutre(userId, _context);
-            ViewBag.Signutre = sd;
-            
-            var sig = _context.Signatures.FindAsync(sd);
-            if (sig.Result != null)
-            {
-                if (sig.Result.SignatureRole == "مفوض")
-                {
-                    ViewBag.SignutreName = false;
+            //var sd = SignutreOfUserHelper.getUserSignutre(userId, _context);
+            //ViewBag.Signutre = sd;
 
-                }
-                else
-                {
-                    ViewBag.SignutreName = true;
+            //var sig = _context.Signatures.FindAsync(sd);
+            //if (sig.Result != null)
+            //{
+            //    if (sig.Result.SignatureRole == "مفوض")
+            //    {
+            //        ViewBag.SignutreName = false;
 
-                }
+            //    }
+            //    else
+            //    {
+            //        ViewBag.SignutreName = true;
+
+            //    }
 
 
-            }
+            //}
 
             return View();
         }

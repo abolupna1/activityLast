@@ -33,6 +33,6 @@ namespace AActivity.Models
         public bool IsFromEducationBody { get; set; } // هل المنتدب من الجهة التعليمية = 1 من العمادة 0
         public bool Confirmed { get; set; } = false; // تاكيد الإنتداب 
 
-
+        public ICollection<FinishWork> FinishWorks { get; set; }
     }
 }

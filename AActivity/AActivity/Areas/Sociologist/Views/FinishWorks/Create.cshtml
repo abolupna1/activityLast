@@ -1,0 +1,150 @@
+﻿@model AActivity.Areas.Sociologist.ModelViews.FinishWorkCreateModelView
+
+@{
+    ViewData["Title"] = "انشاء";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card mt-5 mb-3">
+    <h5 class="card-header bg-primary-bold ">
+        <i class="fas fa-plus"></i>
+        وثيقة اداء مهمة
+
+    </h5>
+    <div class="card-body">
+        <form asp-action="Create" asp-controller="FinishWorks">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="TripDelegateId" class="form-control" hidden>
+            <input asp-for="TripBookingId" class="form-control" hidden>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label asp-for="EmployeeName" class="control-label"></label>
+                    <input asp-for="EmployeeName" class="form-control" readonly>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="EmployeeNumber" class="control-label"></label>
+                    <input asp-for="EmployeeNumber" class="form-control" readonly>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="JopName" class="control-label"></label>
+                    <input asp-for="JopName" class="form-control" readonly>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="JopDegree" class="control-label"></label>
+                    <input asp-for="JopDegree" class="form-control">
+                    <span asp-validation-for="JopDegree" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="DelegationNumber" class="control-label"></label>
+                    <input type="text" value="" asp-for="DelegationNumber" class="form-control">
+                    <span asp-validation-for="DelegationNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="DateDelgation" class="control-label"></label>
+                    <input type="text" value="" id="DateDelgation" asp-for="DateDelgation" class="form-control">
+                    <span asp-validation-for="DateDelgation" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="EndWorkDuration" class="control-label"></label>
+                    <input type="text" asp-for="EndWorkDuration" class="form-control" readonly>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="FromDateDelgation" class="control-label"></label>
+                    <input type="text" asp-for="FromDateDelgation" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label asp-for="TransportBuy" class="control-label"></label>
+                    <select asp-for="TransportBuy" class="form-control">
+                        <option value="false"> الجهة</option>
+                        <option value="true">الموظف</option>
+
+                    </select>
+                    <span asp-validation-for="TransportBuy" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="TransportToToWorkBuy" class="control-label"></label>
+                    <select asp-for="TransportToToWorkBuy" class="form-control">
+                        <option value="false"> الجهة</option>
+                        <option value="true">الموظف</option>
+
+                    </select>
+                    <span asp-validation-for="TransportToToWorkBuy" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="FoodsBuy" class="control-label"></label>
+                    <select asp-for="FoodsBuy" class="form-control">
+                        <option value="false"> الجهة</option>
+                        <option value="true">الموظف</option>
+
+                    </select>
+                    <span asp-validation-for="FoodsBuy" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="CashAdvance" class="control-label"></label>
+                    <select id="CashAdvance" asp-for="CashAdvance" class="form-control">
+                        <option value="false">لا</option>
+                        <option value="true"> نعم</option>
+                    </select>
+                    <span asp-validation-for="CashAdvance" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="CashAdvanceAmont" class="control-label"></label>
+                    <input id="CashAdvanceAmont" type="text" asp-for="CashAdvanceAmont" class="form-control" readonly>
+                    <span asp-validation-for="CashAdvanceAmont" class="text-danger"></span>
+
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label asp-for="DelegationBudy" class="control-label"></label>
+                    <input  asp-for="DelegationBudy" class="form-control" readonly>
+                </div>
+            </div>
+
+
+
+            <div class="form-group col-12 mt-5">
+
+                <a class="btn  btn-outline-primary btn-lg" asp-action="IndexByBoking" asp-controller="FinishWorks" asp-route-bokingId="@Model.TripBookingId"> <i class="fas fa-share-square"></i> تراجع </a>
+                <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script>
+
+        $(document).ready(function () {
+
+
+                $("#DateDelgation").datepicker();
+
+            $("#CashAdvance").on('change', function () {
+                var status = $(this).val();
+                if (status == "true") {
+                    $("#CashAdvanceAmont").prop("readonly", false);
+                     $("#CashAdvanceAmont").val('');
+
+                } else {
+                    $("#CashAdvanceAmont").prop("readonly", true);
+                     $("#CashAdvanceAmont").val(0);
+                   
+
+
+                }
+            })
+
+        });
+
+
+    </script>
+}

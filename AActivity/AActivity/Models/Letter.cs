@@ -18,17 +18,26 @@ namespace AActivity.Models
         [ Display(Name = "رقم صادر مرسال ")]
         public int NoMersal { get; set; }
 
-        [Display(Name = "نوع الخطاب")]
+       // [Display(Name = "نوع الخطاب")]
 
-        public int TypeLetter { get; set; }//[transport, foods, delegations, advanced]
+       // public int TypeLetter { get; set; }//[transport, foods, delegations, advanced]
+
+
+        [Required(ErrorMessage = "{0} مطلوب"), Display(Name = "نوع الخطاب")]
+        public int TypeLetter { get; set; }
+        [Display(Name = " نوع الخطاب "), ForeignKey("TypeLetter")]
+        public TypesOfletter TypesOfletter { get; set; }
+
+
+
         public IEnumerable<LetterTransport> LetterTransports { get; set; }
         public IEnumerable<LetterSignutre> LetteSignutres { get; set; }
         
         public IEnumerable<LetterFood> LetterFoods { get; set; }
         public IEnumerable<LetterAdvancedDelegation> LetterAdvancedDelegations { get; set; }
-       // public IEnumerable<LetterAdvancedEducation> LetterAdvancedEducations { get; set; }
+        // public IEnumerable<LetterAdvancedEducation> LetterAdvancedEducations { get; set; }
 
-
+        public IEnumerable<NotificationLetter> NotificationLetters { get; set; }
 
     }
 }

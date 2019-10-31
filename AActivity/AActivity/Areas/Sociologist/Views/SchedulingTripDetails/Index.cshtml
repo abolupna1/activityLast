@@ -4,6 +4,45 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@functions{
+    void statausTrip(int statusBuking,out string  status,out string alert)
+    {
+
+        switch (statusBuking)
+        {
+            case 0:
+                status= "انتظار اضافة الطلاب وتاكيد الحجز ";
+                alert = " badge  badge-warning";
+                break;
+            case 1:
+                status= "	انتظار الاعتمادمن مشرف النشاط ";
+                  alert = " badge  badge-info";
+                break;
+             case 2:
+                status= "الرحلة جاهزة للإنطلاق  ";
+                  alert = " badge  badge-primary";
+                break;
+             case 3:
+                status= "انتظار  التقرير  ";
+                  alert = " badge  badge-success";
+                break;
+            case 4:
+                status= "  الرحلة منتهية  ";
+                  alert = " badge  badge-success";
+                break;
+             case 5:
+                status= "  تم الغاء الرحلة  ";
+                  alert = " badge  badge-danger";
+                break;
+            default:
+                status= "احجز الآن";
+                  alert = " badge  badge-danger";
+                break;
+        }
+
+    }
+}
+
 @if (Model.Any())
 {
     <ul class="list-group list-group-horizontal mt-5 mb-4 text-center ">
@@ -45,7 +84,22 @@
                             <div class="card-title">تاريخ الرحلة : @s.TripDate.ToString("dd - MM - yyyy")</div>
                             <div class="card-title">
                                 الحالة :
-                                جاهزة / غير جاهزة / مستمرة / منتهية/لايمكن الطلب
+                                @*جاهزة / غير جاهزة / مستمرة / منتهية/لايمكن الطلب*@
+
+                                @if (s.TripBookings.Any())
+                                {
+                                    statausTrip(s.TripBookings.FirstOrDefault().TripStatus, out string status, out string alert);
+                                    <span class="@alert">
+                                        @status
+                                    </span>
+                                }
+                                else
+                                {
+                                    statausTrip(100, out string status, out string alert);
+                                    <span class="@alert">
+                                        @status
+                                    </span>
+                                }
                             </div>
 
 

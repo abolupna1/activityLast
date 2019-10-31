@@ -19,28 +19,30 @@
         اضافة منتدبين
     </h5>
     <div class="card-body">
-        @if ( @TempData["message"] != null)
-        {
-            <div class="alert alert-danger">@TempData["message"] </div>
-
-        }
+     @if (ViewBag.amada != null)
+     {
+        <div class="alert alert-danger">
+            منتدبين العمادة : (  @ViewBag.amada )
+            منتدبين الجهات التعليمية :  ( @ViewBag.education )
+        </div>
+     }
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input hidden name="bokingId" value="@ViewBag.TripBookingId" />
             <table class="table table-bordered">
                 <thead>
-                <th>#</th>
-                <th>رقم الموظف</th>
-                <th>اسم الموظف</th>
-                <th>الجوال </th>
-
-                
-                <th>المسمى الوظيفي</th>
-                <th @ishidden()> الجهات التعليمية</th>
+                    <tr>
+                        <th>#</th>
+                        <th>رقم الموظف</th>
+                        <th>اسم الموظف</th>
+                        <th>الجوال </th>
+                        <th>المسمى الوظيفي</th>
+                        <th @ishidden()> الجهات التعليمية</th>
+                    </tr>
                 </thead>
                 <tbody>
                     @{int i = 1;}
-                    @for (int j = 0; j < ViewBag.countbus; j++)
+                    @for (int j = 0; j < ViewBag.embloyees; j++)
                     {
                     <tr>
                         <th>@i</th>
@@ -59,7 +61,7 @@
                             <span asp-validation-for="@Model[j].EmployeMobile" class="text-danger"></span>
                         </td>
 
-                        
+
                         <td>
                             <input asp-for="@Model[j].JopName" class="form-control" />
                             <span asp-validation-for="@Model[j].JopName" class="text-danger"></span>
@@ -71,10 +73,11 @@
                             <td class="text-center">
                                 <div class="form-group form-check">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" asp-for="@Model[j].IsFromEducationBody" />
+                                        <input class="form-check-input"  asp-for="@Model[j].IsFromEducationBody" />
                                     </label>
                                 </div>
                             </td>
+
                         }
 
                         else if (User.IsInRole("Supervisor"))
@@ -109,7 +112,7 @@
 
 
             <div class="form-group col-12 mt-5">
-                @if (ViewBag.countbus > 0)
+                @if (ViewBag.embloyees > 0)
                 {
                     <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
 

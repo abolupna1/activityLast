@@ -1,4 +1,6 @@
-﻿<li>
+﻿
+
+<li>
     @model AActivity.Models.SchedulingTripDetail
 
     <i class="fa fa-photo-video bg-blue"></i>
@@ -49,7 +51,8 @@
                 {
                     if (Model.TripBookings.FirstOrDefault().TripReports.Any())
                     {
-                        if (!Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().Status)
+                        int status = Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().Status;
+                        if (status == 0 || status == 2)
                         {
                             <a class="btn  btn-primary btn-lg"
                                asp-action="Edit" asp-controller="TripReports" asp-route-reportId="@Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().Id">
@@ -72,20 +75,67 @@
 
                 }
 
+                @if (!User.IsInRole("Supervisor"))
+                {
+                    @if (Model.TripBookings.FirstOrDefault().TripReports.Any())
+                    {
+                        var repo = Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault();
+                        <form class="mt-3" asp-action="StatusUpdate" asp-controller="TripReports">
+
+                            <input name="reportId" value="@repo.Id" hidden />
+                            <input name="bookingId" value="@repo.TripBookingId" hidden />
+                            <span id="confirmDeleteSpan_@Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().Id" style="display:none">
+                                <select name="Status" class="form-control mb-3">
+                                    <option value="0">الرجاء الإختيار </option>
+                                    <option value="1">مقبول </option>
+                                    <option value="2">غير مقبول </option>
+                                </select>
+                                <button type="submit" class="btn btn-danger mybutten btn-lg">ارسال</button>
+                                <a href="#" class="btn btn-primary mybutten btn-lg" onclick="confirmDelete('@Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().Id',false)">لا</a>
+                            </span>
+                            <span id="deleteSpan_@Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().Id">
+                                <a class="btn  btn-danger btn-lg mybutten" onclick="confirmDelete('@Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().Id',true)">
+                                    <i class="fas fa-question-circle"></i>
+                                    حالة التقرير
+                                </a>
+                            </span>
+                        </form>
+
+
+                    }
+                }
 
                 @if (Model.TripBookings.FirstOrDefault().TripReports.Any())
                 {
+                    var reportStatus = Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault();
+                    if (reportStatus.Status == 0)
+                    {
+                        <div class="alert alert-primary mt-3">انتظار قبول التقرير</div>
+                    }
+                    else if (reportStatus.Status == 2)
+                    {
+                        <div class="alert alert-danger  mt-3">
+                            يجب التعديل في التقرير :
+                            1 - الصور يجب ان تكون واضحة
+                            2 - التقرير يجب ان يكون مفصل وشامل للرحلة
+                        </div>
 
-                    <a class="btn  btn-primary btn-lg"
-                       asp-action="Create" asp-controller="TripReportsNotes" asp-route-reportId="@Model.TripBookings.FirstOrDefault().TripReports.FirstOrDefault().Id">
-                        ملاحظات على التقرير
-                    </a>
+                    }
+                    else
+                    {
+                        <div class="alert alert-success  mt-3"> التقرير مقبول </div>
 
+                      
+                            <a class="btn  btn-primary btn-lg"
+                               asp-action="IndexByBoking" asp-controller="FinishWorks" asp-route-bokingId="@Model.TripBookings.FirstOrDefault().Id">
+                                 انهاء مهمة
+                            </a>
+                        
+
+                    }
                 }
-
             </li>
         </ul>
     </div>
 </li>
-
 

@@ -31,7 +31,11 @@ namespace AActivity.Areas.Sociologist.Controllers
                 .Include(u => u.SchedulingTripDetail.EducationalBody.User)
                 .Include(e => e.SchedulingTripDetail.EducationalBody)
                 .FirstOrDefaultAsync(b => b.Id == bokingId);
-
+            if (boking==null)
+            {
+                Response.StatusCode = 404;
+                return View("LetterFoodsNotFound");
+            }
             var foods = new LetterFoodCreateViewModel()
             {
                 EducationBody=boking.SchedulingTripDetail.EducationalBody.Name,
@@ -43,7 +47,6 @@ namespace AActivity.Areas.Sociologist.Controllers
                 UserId= boking.SchedulingTripDetail.EducationalBody.User.Id,
                 TripBackDate=boking.TripToDate,
                 TripType=boking.SchedulingTripDetail.TripType.Name
-
             };
             return View(foods);
         }
@@ -66,6 +69,7 @@ namespace AActivity.Areas.Sociologist.Controllers
                     LastMealDate=foods.LastMealDate,LastMealTime=foods.LastMealTime
                 };
                 _context.LetterFoods.Add(leterFood);
+                _context.AddRange(NotificationLetter(letter.Id).Result);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("IndexByBoking", "Letters", new { bokingId = bokingId });
             }
@@ -90,6 +94,56 @@ namespace AActivity.Areas.Sociologist.Controllers
             };
             return View(food);
         }
+        private async Task<IEnumerable<NotificationLetter>> NotificationLetter(int letterId)
+        {
+            var modle = new List<NotificationLetter>();
+            var letter = await _context.Letters.FindAsync(letterId);
+            var typeofletterSignutres = await _context.TypesOfLettersAndSignatures
+                .Include(u => u.Signature).ThenInclude(u => u.User).Include(j => j.Signature.JobsSignatorie)
+                .Where(s => s.TypesOfletterId == letter.TypeLetter).ToListAsync();
+            foreach (var sig in typeofletterSignutres)
+            {
+                IhHaveDelegate(sig.Id, out bool wonerHaveChild);
+                if (!wonerHaveChild)
+                {
+                    var notification = new NotificationLetter()
+                    {
+                        LetterId = letter.Id,
+                        SignatureId = sig.SignatureId,
+                        Status = false,
+                        Time = DateTime.Now,
+                        UserId = sig.Signature.UserId,
+                        IsWonerSignutre = sig.IsSignatureOwner
+
+                    };
+                    if (sig.IsSignatureOwner)
+                    {
+                        notification.JobsSignatorieName = sig.Signature.JobsSignatorie.Name;
+                    }
+                    else
+                    {
+                        var b = await _context.TypesOfLettersAndSignatures
+                            .Include(s => s.Signature.JobsSignatorie)
+                            .FirstOrDefaultAsync(s => s.Id == sig.WonerSignatureId);
+                        notification.JobsSignatorieName = b.Signature.JobsSignatorie.Name;
+
+                    }
+                    modle.Add(notification);
+                }
+
+            }
+            return modle;
+        }
+
+
+        private void IhHaveDelegate(int typelettersignId, out bool wonerHaveChild)
+        {
+            var typelettersignbyId = _context.TypesOfLettersAndSignatures.Find(typelettersignId);
+            var typelettersign = _context.TypesOfLettersAndSignatures.ToList();
+            wonerHaveChild = typelettersign.Any(w => w.WonerSignatureId == typelettersignbyId.Id);
+
+
+        }
 
         [Route("Sociologist/LetterFoods/Details/{letterId:int}")]
         public async Task<IActionResult> Details(int letterId)
@@ -107,9 +161,10 @@ namespace AActivity.Areas.Sociologist.Controllers
                 .Include(t => t.TripBooking.SchedulingTripDetail.TripType)
                 .Include(t => t.TripBooking.StudentsParticipatingInTrips)
                 .Include(t => t.TripBooking.SchedulingTripDetail.EducationalBody)
+                .Include(d => d.NotificationLetters)
 
                 .FirstOrDefaultAsync(l => l.Id == letterId);
-            ViewBag.signutre = await _context.Signatures.Include(d => d.SignutreDelegates).ToListAsync();
+            ViewBag.signutre = await _context.Signatures.Include(d => d.JobsSignatorie).ToListAsync();
             return View(letter);
         }
 
@@ -134,7 +189,7 @@ namespace AActivity.Areas.Sociologist.Controllers
                 .Include(t => t.TripBooking.City)
                 .Include(t => t.TripBooking.StudentsParticipatingInTrips)
                 .Include(s => s.LetteSignutres).FirstOrDefaultAsync(i => i.Id == letterId);
-            var signutres = await _context.Signatures.Include(s => s.SignutreDelegates).Include(s => s.User).ToListAsync();
+            var signutres = await _context.Signatures.Include(s => s.JobsSignatorie).Include(s => s.User).ToListAsync();
             var appSettings = await _context.AppSettings.ToListAsync();
             PrintTripFoodView print = new PrintTripFoodView()
             {
@@ -152,7 +207,7 @@ namespace AActivity.Areas.Sociologist.Controllers
                 Academicyear=foods.TripBooking.SchedulingTripDetail.SchedulingTripHead.AcademicYear,
                 Stamp= appSettings.FirstOrDefault().Stamp,
                 StampEducationBody=foods.TripBooking.SchedulingTripDetail.EducationalBody.Stamp,
-                Signatures = signutres,
+               Signatures = signutres,
                 Students=foods.TripBooking.StudentsParticipatingInTrips.ToList(),
                 WhoHasSignutre=foods.LetteSignutres.ToList(),
                 NoMersal=foods.NoMersal

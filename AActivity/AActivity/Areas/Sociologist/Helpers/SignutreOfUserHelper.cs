@@ -31,17 +31,17 @@ namespace AActivity.Areas.Sociologist.Helpers
             return false;
         }
 
-        public static bool getUserHasSignutre(int userId,int signatureId, ApplicationDbContext context)
-        {
-            return context.SignutreDelegates.Any(s => s.SignatureId == signatureId && s.UserId == userId);
+        //public static bool getUserHasSignutre(int userId,int signatureId, ApplicationDbContext context)
+        //{
+        //    return context.SignutreDelegates.Any(s => s.SignatureId == signatureId && s.UserId == userId);
           
-        }
+        //}
 
-        public static bool getUserHasToEditSignutre(int id,int userId, int signatureId, ApplicationDbContext context)
-        {
-            return context.SignutreDelegates.Any(s =>s.Id==id && s.SignatureId == signatureId && s.UserId == userId);
+        //public static bool getUserHasToEditSignutre(int id,int userId, int signatureId, ApplicationDbContext context)
+        //{
+        //    return context.SignutreDelegates.Any(s =>s.Id==id && s.SignatureId == signatureId && s.UserId == userId);
 
-        }
+        //}
 
         public static async Task<IEnumerable<Signature>> getUsersHasSignutre(ApplicationDbContext context)
         {

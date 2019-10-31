@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AActivity.Data;
 using AActivity.Models;
+using AActivity.Areas.Sociologist.ModelViews;
+using System.Security.Claims;
 
 namespace AActivity.Areas.Sociologist.Controllers
 {
@@ -21,13 +23,70 @@ namespace AActivity.Areas.Sociologist.Controllers
         }
 
 
-      
+        private void getControllerName(int typeInt,out string controlleName, out string typeName)
+        {
+            
+            switch (typeInt)
+            {
+                case 1:
+                    controlleName = "LetterTransports";
+                    typeName = "تأمين وسيلة نقل";
+                    break;
+
+                case 2:
+                    controlleName = "LetterFoods";
+                    typeName = "تأمين تغذية ";
+                    break;
+
+                case 3:
+                    controlleName = "LetterDelegations";
+                    typeName = "انتداب جماعي";
+                    break;
+
+                case 4:
+                    controlleName = "LetterAdvancedDelegations";
+                    typeName = "سلفة من صندوق الطالب";
+                    break;
+
+                default:
+                    controlleName = "";
+                    typeName = "";
+                    break;
+            };
+         
+
+        }
 
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Letters.Where(m=>m.NoMersal == 0)
-                .Include(l=>l.LetterTransports);
-            return View(await applicationDbContext.OrderByDescending(i=>i.Id).ToListAsync());
+            var letters = new List<LettersModelView>();
+            var Allletters = await _context.Letters
+                .Include(t => t.TripBooking.SchedulingTripDetail.TripType)
+                .Include(t => t.TripBooking.SchedulingTripDetail.EducationalBody)
+                .Include(n=>n.NotificationLetters).ThenInclude(u=>u.User)
+
+                .ToListAsync();
+
+            foreach (var l in Allletters)
+            {
+                getControllerName(l.TypeLetter, out string controlleName,out string typeName);
+                var letter = new LettersModelView()
+                {
+                    TripId = l.TripBookingId,
+                    LetterId = l.Id,
+                    TypeLetter = typeName,
+                    ControlleName = controlleName,
+                    TripType = l.TripBooking.SchedulingTripDetail.TripType.Name,
+                    EducationBody = l.TripBooking.SchedulingTripDetail.EducationalBody.Name,
+                    TripDate = l.TripBooking.SchedulingTripDetail.TripDate,
+                    NotificationLettersStatus = l.NotificationLetters.FirstOrDefault().Status,
+                    NotificationLettersUserId=l.NotificationLetters.FirstOrDefault().UserId
+                };
+                letters.Add(letter);
+            }
+            ViewBag.userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            return View(letters);
+
         }
 
         [HttpPost]
@@ -58,10 +117,10 @@ namespace AActivity.Areas.Sociologist.Controllers
                .Include(b=>b.TripBooking.StudentsParticipatingInTrips)
                .Include(t => t.LetteSignutres)
                .Include(a => a.LetterAdvancedDelegations)
-               //.Include(b => b.LetterAdvancedEducations)
                .Include(f => f.LetterFoods)
                .Include(f => f.TripBooking.SchedulingTripDetail.TripType)
                .Include(f => f.TripBooking.SchedulingTripDetail.EducationalBody)
+           
                 .ToListAsync();
             ViewBag.bokingId = bokingId;
             ViewBag.detailId = boking.SchedulingTripDetailId;

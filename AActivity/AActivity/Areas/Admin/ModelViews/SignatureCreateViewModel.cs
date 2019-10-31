@@ -23,7 +23,7 @@ namespace AActivity.Areas.Admin.ModelViews
         public string Degree { get; set; }
 
         [Display(Name = "الوظيفة"), Required(ErrorMessage = "{0} مطلوب")]
-        public string SignatureRole { get; set; }
+        public int JobsSignatorieId { get; set; }
 
         [Display(Name = "حالة التوقيع"), Required(ErrorMessage = "{0} مطلوب")]
         public bool Status { get; set; }

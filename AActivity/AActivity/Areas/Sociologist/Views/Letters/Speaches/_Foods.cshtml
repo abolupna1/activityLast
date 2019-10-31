@@ -20,7 +20,7 @@
 </style>
 
 <div class="card mt-5">
-    <div class="card-header bg-primary text-white">
+    <div class="card-header bg-success text-white">
         <i class="fa fa-utensils"></i>
          طلب تأمين تغذية لفعاليات النشاط الاجتماعي
     </div>
@@ -164,10 +164,7 @@
         }
     </div>
     <div class="card-footer text-white">
-        <a class="btn  btn-primary  text-white  " asp-route-id="@ViewBag.detailId" asp-controller="SchedulingTripDetails" asp-action="DetailsMore">
-            <i class="fas fa-angle-right"></i>
-            تراجع
-        </a>
+     
         @if (foods == null)
         {
             <a asp-controller="LetterFoods" asp-action="Create" asp-route-bokingId="@ViewBag.bokingId" class="btn btn-primary">اضافة خطاب</a>

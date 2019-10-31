@@ -1,8 +1,35 @@
 ﻿@model IEnumerable<AActivity.Models.TripDelegate>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "المنتدبين";
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@functions{
+    string Remainder()
+    {
+
+        if (User.IsInRole("Admin") && ViewBag.Remainder == 0)
+        {
+            return "disabled";
+        }
+        else if ( User.IsInRole("SocialActivityOfficer") && ViewBag.RemainderAmada == 0)
+        {
+            return "disabled";
+        }
+           else if (User.IsInRole("DirectorOfSocialActivity") && ViewBag.RemainderAmada == 0)
+        {
+            return "disabled";
+        }
+        else if (User.IsInRole("Supervisor") && ViewBag.RemainderEducation == 0)
+        {
+            return "disabled";
+        }
+        else
+        {
+            return string.Empty;
+
+        }
+    }
 }
 <style>
     div.dataTables_wrapper div.dataTables_filter label {
@@ -21,38 +48,14 @@
 
     <p class="d-inline">
 
-        @*<a class="btn btn-outline-success btn-lg float-left ml-2 "
+
+
+
+        <a class="btn btn-outline-success btn-lg float-left ml-2 @Remainder()"
            data-toggle="modal" data-target="#CreateTrips" href="#">
             <i class="fas fa-plus"></i>    اضافة منتدبين
-        </a>*@
-
-
-        @if (User.IsInRole("Admin"))
-        {
-            <a class="btn  btn-outline-primary float-left ml-2 btn-lg" asp-area="Sociologist" asp-controller="TripDelegates" asp-action="Create" asp-route-bokingId="@ViewBag.TripBoking.Id">
-                <i class="fas fa-plus"></i>    اضافة منتدبين
-            </a>
-        }
-        else if (User.IsInRole("Supervisor"))
-        {
-            @if (ViewBag.TripBoking.TripStatus == 0)
-            {
-                <a class="btn  btn-outline-primary float-left ml-2 btn-lg" asp-area="Sociologist" asp-controller="TripDelegates" asp-action="Create" asp-route-bokingId="@ViewBag.TripBoking.Id">
-                    <i class="fas fa-plus"></i>    اضافة منتدبين
-                </a>
-            }
-        }
-        else if (User.IsInRole("DirectorOfSocialActivity") || User.IsInRole("SocialActivityOfficer"))
-        {
-            @if (ViewBag.TripBoking.TripStatus == 1)
-            {
-                <a class="btn  btn-outline-primary float-left ml-2 btn-lg" asp-area="Sociologist" asp-controller="TripDelegates" asp-action="Create" asp-route-bokingId="@ViewBag.TripBoking.Id">
-                    <i class="fas fa-plus"></i>    اضافة منتدبين
-                </a>
-            }
-        }
-
-        <a class="btn  btn-outline-primary float-left ml-2 btn-lg" asp-area="Sociologist" asp-controller="SchedulingTripDetails" asp-action="DetailsMore" asp-route-id="@ViewBag.TripBoking.SchedulingTripDetailId"> <i class="fas fa-share-square"></i> تراجع </a>
+        </a>
+        <a class="btn  btn-outline-primary float-left ml-2 btn-lg" asp-area="Sociologist" asp-controller="SchedulingTripDetails" asp-action="DetailsMore" asp-route-id="@ViewBag.scdualDetailId"> <i class="fas fa-share-square"></i> تراجع </a>
 
 
 
@@ -65,12 +68,6 @@
 @{ int i = 1;}
 <div class="table-responsive-sm">
 
-    @if (TempData["error"] != null)
-    {
-    <div class="alert alert-danger">
-        @TempData["error"]
-    </div>
-    }
 
     <table class="table  table-hover table-bordered table-striped " id="table">
         <thead class="table-primary ">
@@ -96,36 +93,36 @@
             {
                 @foreach (var item in Model)
                 {
-            <tr>
-                <th>@i</th>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EmployeeNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EmployeeName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.JopName)
-                </td>
-                <td>
-                    @if (item.IsFromEducationBody == true)
-                    {
-                        <spa>الجهات التعليمية</spa>
-                    }
-                    else
-                    {
-                        <spa>العمادة </spa>
+                    <tr>
+                        <th>@i</th>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmployeeNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmployeeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.JopName)
+                        </td>
+                        <td>
+                            @if (item.IsFromEducationBody == true)
+                            {
+                                <spa>الجهات التعليمية</spa>
+                            }
+                            else
+                            {
+                                <spa>العمادة </spa>
 
-                    }
-                </td>
+                            }
+                        </td>
 
-                <td>
-                    <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.Id">حذف</a>
-                    <a asp-action="Edit" class="btn btn-success btn-sm" asp-route-id="@item.Id">تعديل</a>
-                </td>
+                        <td>
+                            <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.Id">حذف</a>
+                            <a asp-action="Edit" class="btn btn-success btn-sm" asp-route-id="@item.Id">تعديل</a>
+                        </td>
 
 
-            </tr>
+                    </tr>
                     i++;
 
                 }
@@ -134,7 +131,7 @@
             else
             {
                 <tr>
-                    <td colspan="5" class="text-center">
+                    <td colspan="6" class="text-center">
                         لايوجد بيانات
                     </td>
                 </tr>
@@ -150,7 +147,7 @@
 <div class="modal  fade" id="CreateTrips">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header text-center">
+            <div class="modal-header">
 
 
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -162,33 +159,19 @@
                 </h4>
             </div>
 
-            <div class="alert alert-danger">
-                <h5>
-                    عدد الطلاب المشاركين في الرحلة  : @ViewBag.countStudend
-                </h5>
-                <h6>
-                    <strong>الطلاب في الباص الواحد (@ViewBag.settingForTrip.QtyPassengersInOneBus - 50)</strong>
-                </h6>
-                <h6>
-                    <strong>الكليات</strong> : منتدب (@ViewBag.settingForTrip.QtyCollegesDelegates) في كل باص
-                </h6>
-                <h6>
-                    <strong>المعاهد والدور</strong> : منتدبين (@ViewBag.settingForTrip.QtyInstitutesDelegates) في كل باص
-
-                </h6>
-            </div>
-            <form asp-action="Adapter" asp-controller="TripDelegates">
+            <form asp-area="Sociologist" asp-action="Adapter" 
+                  asp-controller="TripDelegates" >
                 <div class="modal-body">
 
 
 
-                    <input type="hidden" name="bokingId" value="@ViewBag.TripBoking.Id" />
+                    <input type="hidden" name="bokingId" value="@ViewBag.TripBookingId" />
 
-                    <div class="form-group  col-12 mt-5">
+                    <div class="form-group  col-12 ">
 
                         <div class="form-group">
                             <label class="control-label"> عدد المنتدبين  </label>
-                            <input lang="en" type="number" min="1" name="count" class="form-control" />
+                            <input type="number" min="1" name="count" class="form-control" />
                         </div>
 
 
@@ -207,12 +190,12 @@
         </div>
     </div>
 
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="~/Views/Shared/_DatatableJqueryPartial.cshtml" />
 
-
-        <partial name="~/Views/Shared/_DatatableJqueryPartial.cshtml" />
-
-    }
+}

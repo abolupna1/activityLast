@@ -32,6 +32,7 @@ DataType(DataType.Date, ErrorMessage = "المدخل يجب ان يكون تار
         [Display(Name = "المكان "), Required(ErrorMessage = "{0} مطلوب")]
 
         public string TripLocationName { get; set; }
+        public string TripTypeName { get; set; } // (زيارة خارجية - زيارة داخلية - خارجية - داخلية - عمرة)
 
         public int TripStatus { get; set; } = 0;
 
@@ -39,8 +40,9 @@ DataType(DataType.Date, ErrorMessage = "المدخل يجب ان يكون تار
         public IEnumerable<TripDelegate> TripDelegates { get; set; }
         public IEnumerable<Letter> Letters { get; set; }
         public IEnumerable<TripReport> TripReports { get; set; }
+        public IEnumerable<FinishWork> FinishWorks { get; set; }
 
-        
+
 
     }
 }

@@ -1,0 +1,74 @@
+﻿
+@model IList<AActivity.Models.TripDelegate>
+@{
+    ViewData["Title"] = "انهاء مهمة ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 1;
+}
+
+<a class="btn  btn-outline-primary btn-lg   mb-3" asp-action="DetailsMore" asp-controller="SchedulingTripDetails" asp-route-id="@ViewBag.detailId"> <i class="fas fa-share-square"></i> تراجع </a>
+
+<div>
+
+    <p class="d-inline text-secondary ">
+        <i class="fas fa-user-friends fa-2x"></i>
+        انهاء مهمة
+    </p>
+
+</div>
+<table class="table table-bordered  ">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>اسم الموظف</th>
+            <th>رقم الموظف</th>
+            <th>المسمى الوظيفي</th>
+            <th>وثيقة أداء مهمة </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var emp in Model)
+        {
+            <tr>
+                <th>@i</th>
+                <td>
+                    @emp.EmployeeName
+                </td>
+                <td>@emp.EmployeeNumber</td>
+                <td>@emp.JopName</td>
+                <td>
+                    @if (emp.FinishWorks.Any())
+                    {
+                        if (User.IsInRole("DirectorOfSocialActivity") || User.IsInRole("Admin") || User.IsInRole("SocialActivityOfficer"))
+                        {
+                            <a asp-controller="FinishWorks" class="ml-2" asp-action="Edit" asp-route-id="@emp.FinishWorks.FirstOrDefault().Id">
+                                <i class="fa fa-edit text-success"></i>
+                            </a>
+                            <a asp-controller="FinishWorks" class="ml-2" asp-action="Delete" asp-route-id="@emp.FinishWorks.FirstOrDefault().Id">
+                                <i class="fa fa-minus-circle text-danger"></i>
+                            </a>
+                        }
+
+                        <a asp-controller="FinishWorks" class="ml-2" asp-action="Details"  asp-route-id="@emp.FinishWorks.FirstOrDefault().Id">
+                            <i class="fa fa-file-pdf text-primary"></i>
+                        </a>
+
+                    }
+                    else
+                    {
+                        if (User.IsInRole("DirectorOfSocialActivity") || User.IsInRole("Admin") || User.IsInRole("SocialActivityOfficer"))
+                        {
+                            <a asp-controller="FinishWorks" class="ml-2" asp-action="Create" asp-route-tripDelegateId="@emp.Id">
+                                <i class="fa fa-plus-circle"></i>
+                            </a>
+                        }
+                    }
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+
+</table>
+

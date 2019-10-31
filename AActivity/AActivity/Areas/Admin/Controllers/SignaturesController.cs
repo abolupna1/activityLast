@@ -32,10 +32,13 @@ namespace AActivity.Areas.Admin.Controllers
         // GET: Admin/Signatures
         public async Task<IActionResult> Index()
         {
-            
-            var applicationDbContext = _context.Signatures.Include(s => s.User);
+
+            var applicationDbContext = _context.Signatures.Include(s => s.User)
+                .Include(j => j.JobsSignatorie)
+                .Include(j=>j.TypesOfLettersAndSignatures).ThenInclude(t=>t.TypesOfletter);
             return View(await applicationDbContext.ToListAsync());
         }
+
 
         // GET: Admin/Signatures/Details/5
 
@@ -43,7 +46,7 @@ namespace AActivity.Areas.Admin.Controllers
         // GET: Admin/Signatures/Create
         public IActionResult Create()
         {
-            ViewData["SignaturesRolesList"] = new SelectList(SignaturesRolesList(), "Name", "Name");
+            ViewData["JobsSignatorieId"] = new SelectList( _context.JobsSignatories, "Id", "Name");
             ViewData["DegreeList"] = new SelectList(DegreeList(), "Name", "Name");
             ViewData["ValidUnValidList"] = new SelectList(ValidUnValidHelpr.ValidUnValidHelprList(), "Value", "Name");
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName");
@@ -63,7 +66,7 @@ namespace AActivity.Areas.Admin.Controllers
                 ViewData["SignatureExists"] = "لايمكن اضافة توقيع آخر / يملك توقيع مسبقا!!";
                 ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName", signature.UserId);
                 ViewData["DegreeList"] = new SelectList(DegreeList(), "Name", "Name");
-                ViewData["SignaturesRolesList"] = new SelectList(SignaturesRolesList(), "Name", "Name");
+                ViewData["JobsSignatorieId"] = new SelectList(_context.JobsSignatories, "Id", "Name");
                 ViewData["ValidUnValidList"] = new SelectList(ValidUnValidHelpr.ValidUnValidHelprList(), "Value", "Name");
 
                 return View(signature);
@@ -90,7 +93,7 @@ namespace AActivity.Areas.Admin.Controllers
                     {
                         ViewBag.msg = "الصور المسموح بها يجب ان تكون بمتداد : " + "png , jpeg , jpg , gif , bmp ";
                         ViewData["DegreeList"] = new SelectList(DegreeList(), "Name", "Name", signature.Degree);
-                        ViewData["SignaturesRolesList"] = new SelectList(SignaturesRolesList(), "Name", "Name");
+                        ViewData["JobsSignatorieId"] = new SelectList(_context.JobsSignatories, "Id", "Name");
                         ViewData["ValidUnValidList"] = new SelectList(ValidUnValidHelpr.ValidUnValidHelprList(), "Value", "Name");
 
                         ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName", signature.UserId);
@@ -107,7 +110,7 @@ namespace AActivity.Areas.Admin.Controllers
                     UserId = signature.UserId,
                     SignaturePhoto = uniqFileName,
                     Degree=signature.Degree,
-                    SignatureRole=signature.SignatureRole,
+                    JobsSignatorieId =signature.JobsSignatorieId,
                     Status=signature.Status
                 };
                 _context.Signatures.Add(signatureforSave);
@@ -115,7 +118,8 @@ namespace AActivity.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DegreeList"] = new SelectList(DegreeList(), "Name", "Name");
-            ViewData["SignaturesRolesList"] = new SelectList(SignaturesRolesList(), "Name", "Name");
+            ViewData["JobsSignatorieId"] = new SelectList(_context.JobsSignatories, "Id", "Name");
+
             ViewData["ValidUnValidList"] = new SelectList(ValidUnValidHelpr.ValidUnValidHelprList(), "Value", "Name");
 
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName", signature.UserId);
@@ -143,11 +147,11 @@ namespace AActivity.Areas.Admin.Controllers
                 SignaturePhotoExists = signature.SignaturePhoto,
                 UserId=signature.UserId,
                 Degree=signature.Degree,
-                SignatureRole=signature.SignatureRole,
-                Status=signature.Status
+                JobsSignatorieId = signature.JobsSignatorieId,
+                Status =signature.Status
             };
             ViewData["DegreeList"] = new SelectList(DegreeList(), "Name", "Name",signature.Degree);
-            ViewData["SignaturesRolesList"] = new SelectList(SignaturesRolesList(), "Name", "Name",signature.SignatureRole);
+            ViewData["JobsSignatorieId"] = new SelectList(_context.JobsSignatories, "Id", "Name",signature.JobsSignatorieId);
             ViewData["ValidUnValidList"] = new SelectList(ValidUnValidHelpr.ValidUnValidHelprList(), "Value", "Name", signature.Status);
 
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName", signature.UserId);
@@ -195,7 +199,8 @@ namespace AActivity.Areas.Admin.Controllers
                         {
                             ViewBag.msg = "الصور المسموح بها يجب ان تكون بمتداد : " + "png , jpeg , jpg , gif , bmp ";
                         ViewData["DegreeList"] = new SelectList(DegreeList(), "Name", "Name", signature.Degree);
-                        ViewData["SignaturesRolesList"] = new SelectList(SignaturesRolesList(), "Name", "Name", signature.SignatureRole);
+                        ViewData["JobsSignatorieId"] = new SelectList(_context.JobsSignatories, "Id", "Name", signature.JobsSignatorieId);
+
                         ViewData["ValidUnValidList"] = new SelectList(ValidUnValidHelpr.ValidUnValidHelprList(), "Value", "Name", signature.Status);
 
                         ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName", signature.UserId);
@@ -213,7 +218,7 @@ namespace AActivity.Areas.Admin.Controllers
                     SignaturePhoto = filenameForEdit,
                     Id=id,
                     Degree = signature.Degree,
-                    SignatureRole = signature.SignatureRole,
+                 JobsSignatorieId= signature.JobsSignatorieId,
                     Status = signature.Status
 
                 };
@@ -223,7 +228,8 @@ namespace AActivity.Areas.Admin.Controllers
                     {
                         ViewData["SignatureExists"] = "لايمكن اضافة توقيع آخر / يملك توقيع مسبقا!!";
                         ViewData["DegreeList"] = new SelectList(DegreeList(), "Name", "Name", signature.Degree);
-                        ViewData["SignaturesRolesList"] = new SelectList(SignaturesRolesList(), "Name", "Name", signature.SignatureRole);
+                        ViewData["JobsSignatorieId"] = new SelectList(_context.JobsSignatories, "Id", "Name", signature.JobsSignatorieId);
+
                         ViewData["ValidUnValidList"] = new SelectList(ValidUnValidHelpr.ValidUnValidHelprList(), "Value", "Name", signature.Status);
 
                         ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName", signature.UserId);
@@ -239,7 +245,8 @@ namespace AActivity.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DegreeList"] = new SelectList(DegreeList(), "Name", "Name", signature.Degree);
-            ViewData["SignaturesRolesList"] = new SelectList(SignaturesRolesList(), "Name", "Name", signature.SignatureRole);
+            ViewData["JobsSignatorieId"] = new SelectList(_context.JobsSignatories, "Id", "Name", signature.JobsSignatorieId);
+
             ViewData["ValidUnValidList"] = new SelectList(ValidUnValidHelpr.ValidUnValidHelprList(), "Value", "Name", signature.Status);
 
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName", signature.UserId);

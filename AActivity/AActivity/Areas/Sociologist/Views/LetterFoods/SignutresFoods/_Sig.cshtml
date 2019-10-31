@@ -1,0 +1,235 @@
+﻿@model AActivity.Models.NotificationLetter
+
+@{
+    int userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+    var signutres1 = Model.Letter.LetteSignutres.FirstOrDefault(s => s.WhoHasSignutre == 1);
+    var signutres2 = Model.Letter.LetteSignutres.FirstOrDefault(s => s.WhoHasSignutre == 2);
+    var signutres3 = Model.Letter.LetteSignutres.FirstOrDefault(s => s.WhoHasSignutre == 3);
+    var signutres4 = Model.Letter.LetteSignutres.FirstOrDefault(s => s.WhoHasSignutre == 4);
+}
+
+
+
+
+@if (Model.JobsSignatorieName == "رئيس قسم النشاط الاجتماعي" && Model.UserId == userId)
+{
+    <div class="alert alert-secondary">
+        <h6 class="mt-3 mb-3">رئيس قسم النشاط الاجتماعي</h6>
+        @if (signutres1 == null)
+        {
+            <form asp-action="Create" asp-controller="LetterSignutres">
+                <input hidden name="NotificationId" value="@Model.Id" />
+                <input hidden name="WhoHasSignutre" value="1" />
+                <input hidden name="LetterId" value="@Model.LetterId" />
+                <input hidden name="SignatureId" value="@Model.SignatureId" />
+                <input hidden name="IsHeOwnerOfSignature" value="@Model.IsWonerSignutre" />
+                <input hidden name="ControllerName" value="LetterFoods" />
+                <span id="confirmDeleteSpan_@Model.Id" style="display:none">
+                    <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
+                    <button type="submit" class="btn btn-danger btn-sm">نعم</button>
+                    <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@Model.Id',false)">لا</a>
+                </span>
+                <span id="deleteSpan_@Model.Id">
+
+
+                    <a class="btn  btn-danger text-white " onclick="confirmDelete('@Model.Id',true)">
+                        <i class="fas fa-question-circle"></i>
+                        توقيع
+                    </a>
+
+                </span>
+            </form>
+
+
+        }
+        else
+        {
+            <h5>
+                <span class="badge badge-success badge-pill p-3">
+                    <i class="fa fa-check-circle"></i>
+                    تم التوقيع
+                </span>
+            </h5>
+        }
+    </div>
+}
+
+@*====================================================================================*@
+
+@if (Model.JobsSignatorieName == "مدير إدارة النشاط" && Model.UserId == userId)
+{
+    <div class="alert alert-secondary">
+        <h6 class="mt-3 mb-3">مدير إدارة النشاط</h6>
+        @if (signutres2 == null && signutres1 != null)
+        {
+            <form asp-action="Create" asp-controller="LetterSignutres">
+                <input hidden name="NotificationId" value="@Model.Id" />
+                <input hidden name="WhoHasSignutre" value="2" />
+                <input hidden name="LetterId" value="@Model.LetterId" />
+                <input hidden name="SignatureId" value="@Model.SignatureId" />
+                <input hidden name="IsHeOwnerOfSignature" value="@Model.IsWonerSignutre" />
+                <input hidden name="ControllerName" value="LetterFoods" />
+                <span id="confirmDeleteSpan_@Model.Id" style="display:none">
+                    <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
+                    <button type="submit" class="btn btn-danger btn-sm">نعم</button>
+                    <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@Model.Id',false)">لا</a>
+                </span>
+                <span id="deleteSpan_@Model.Id">
+
+
+                    <a class="btn  btn-danger text-white " onclick="confirmDelete('@Model.Id',true)">
+                        <i class="fas fa-question-circle"></i>
+                        توقيع
+                    </a>
+
+                </span>
+            </form>
+
+
+        }
+        else
+        {
+            if (signutres1 == null)
+            {
+                <h5>
+                    <span class="badge badge-warning badge-pill p-3">
+                        <i class="fa fa-times-circle"></i>
+                        رئيس قسم النشاط الاجتماعي لم يتم التوقيع
+                    </span>
+                </h5>
+            }
+            else
+            {
+                <h5>
+                    <span class="badge badge-success badge-pill p-3">
+                        <i class="fa fa-check-circle"></i>
+                        تم التوقيع
+                    </span>
+                </h5>
+            }
+
+        }
+    </div>
+}
+
+
+
+@*======================================================================================*@
+
+
+
+@if (Model.JobsSignatorieName == "وكيل العمادة لشؤون النشاط" && Model.UserId == userId)
+{
+    <div class="alert alert-secondary">
+        <h6 class="mt-3 mb-3">وكيل العمادة لشؤون النشاط</h6>
+        @if (signutres3 == null && signutres1 != null && signutres2 != null)
+        {
+            <form asp-action="Create" asp-controller="LetterSignutres">
+                <input hidden name="NotificationId" value="@Model.Id" />
+                <input hidden name="WhoHasSignutre" value="3" />
+                <input hidden name="LetterId" value="@Model.LetterId" />
+                <input hidden name="SignatureId" value="@Model.SignatureId" />
+                <input hidden name="IsHeOwnerOfSignature" value="@Model.IsWonerSignutre" />
+                <input hidden name="ControllerName" value="LetterFoods" />
+                <span id="confirmDeleteSpan_@Model.Id" style="display:none">
+                    <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
+                    <button type="submit" class="btn btn-danger btn-sm">نعم</button>
+                    <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@Model.Id',false)">لا</a>
+                </span>
+                <span id="deleteSpan_@Model.Id">
+
+
+                    <a class="btn  btn-danger text-white " onclick="confirmDelete('@Model.Id',true)">
+                        <i class="fas fa-question-circle"></i>
+                        توقيع
+                    </a>
+
+                </span>
+            </form>
+
+
+        }
+        else
+        {
+            if (signutres2 == null)
+            {
+                <h5>
+                    <span class="badge badge-warning badge-pill p-3">
+                        <i class="fa fa-times-circle"></i>
+                        مدير إدارة النشاط لم يتم التوقيع
+                    </span>
+                </h5>
+            }
+            else
+            {
+                <h5>
+                    <span class="badge badge-success badge-pill p-3">
+                        <i class="fa fa-check-circle"></i>
+                        تم التوقيع
+                    </span>
+                </h5>
+            }
+
+        }
+    </div>
+}
+
+
+@*========================================================================================*@
+
+
+@if (Model.JobsSignatorieName == "عميد شؤون الطلاب" && Model.UserId == userId)
+{
+    <div class="alert alert-secondary">
+        <h6 class="mt-3 mb-3">عميد شؤون الطلاب</h6>
+        @if (signutres4 == null && signutres1 != null && signutres2 != null && signutres3 != null)
+        {
+            <form asp-action="Create" asp-controller="LetterSignutres">
+                <input hidden name="NotificationId" value="@Model.Id" />
+                <input hidden name="WhoHasSignutre" value="4" />
+                <input hidden name="LetterId" value="@Model.LetterId" />
+                <input hidden name="SignatureId" value="@Model.SignatureId" />
+                <input hidden name="IsHeOwnerOfSignature" value="@Model.IsWonerSignutre" />
+                <input hidden name="ControllerName" value="LetterFoods" />
+                <span id="confirmDeleteSpan_@Model.Id" style="display:none">
+                    <span class="text-center text-danger font-weight-bold">هل تريد التوقيع ؟</span>
+                    <button type="submit" class="btn btn-danger btn-sm">نعم</button>
+                    <a href="#" class="btn btn-primary btn-sm" onclick="confirmDelete('@Model.Id',false)">لا</a>
+                </span>
+                <span id="deleteSpan_@Model.Id">
+
+
+                    <a class="btn  btn-danger text-white " onclick="confirmDelete('@Model.Id',true)">
+                        <i class="fas fa-question-circle"></i>
+                        توقيع
+                    </a>
+
+                </span>
+            </form>
+
+
+        }
+        else
+        {
+            if (signutres3 == null)
+            {
+                <h5>
+                    <span class="badge badge-warning badge-pill p-3">
+                        <i class="fa fa-times-circle"></i>
+                        وكيل العمادة لشؤون النشاط لم يتم التوقيع
+                    </span>
+                </h5>
+            }
+            else
+            {
+                <h5>
+                    <span class="badge badge-success badge-pill p-3">
+                        <i class="fa fa-check-circle"></i>
+                        تم التوقيع
+                    </span>
+                </h5>
+            }
+
+        }
+    </div>
+}

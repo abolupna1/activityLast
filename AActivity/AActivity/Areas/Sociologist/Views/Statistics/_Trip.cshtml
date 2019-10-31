@@ -1,0 +1,84 @@
+﻿@model IList<AActivity.Models.SchedulingTripDetail>
+
+@{ var EducationalBody = ViewData["Edus"] as IList<AActivity.Models.EducationalBody>;}
+<style>
+    .bg-gold{
+        background-color:#be9f5e !important;
+        color:white
+
+    }
+</style>
+
+<table class="table table-bordered table-hover table-condensed">
+    <thead class="text-center">
+        <tr class="bg-gold  ">
+            <th rowspan="2">#</th>
+            <th rowspan="2">الجهة</th>
+            <th colspan="5"> الرحلات</th>
+
+        </tr>
+        <tr class="bg-gold ">
+
+            <th> العمرة</th>
+            <th> داخلية</th>
+            <th> خارجية</th>
+            <th> زيارة</th>
+            <th> الجميع</th>
+
+        </tr>
+
+
+    </thead>
+
+    <tbody>
+        @{ int i = 1;}
+        @foreach (var edu in EducationalBody)
+        {
+
+            <tr class="text-center">
+                <th class="bg-gold">@i</th>
+                <td>@edu.Name</td>
+               
+                <td>
+                    @Model.Where(d => d.EducationalBodyId == edu.Id && d.TripType.Name == "عمرة").ToList().Count()
+                </td>
+                <td>
+                    @Model.Where(d => d.EducationalBodyId == edu.Id && d.TripType.Name == "داخلية").ToList().Count()
+                </td>
+
+                <td>
+                    @Model.Where(d => d.EducationalBodyId == edu.Id && d.TripType.Name == "خارجية").ToList().Count()
+                </td>
+                <td>
+                    @Model.Where(d => d.EducationalBodyId == edu.Id && d.TripType.Name == "زيارة").ToList().Count()
+                </td>
+                <td>
+                    @Model.Where(d => d.EducationalBodyId == edu.Id).ToList().Count()
+                </td>
+            </tr>
+            i++;
+        }
+        <tr class="text-center">
+            <th colspan="2">المجموع</th>
+           
+
+            <th>
+                @Model.Where(d => d.TripType.Name == "عمرة").ToList().Count()
+            </th>
+            <th>
+                @Model.Where(d =>d.TripType.Name == "داخلية").ToList().Count()
+            </th>
+
+            <th>
+                @Model.Where(d =>  d.TripType.Name == "خارجية").ToList().Count()
+            </th>
+            <th>
+                @Model.Where(d => d.TripType.Name == "زيارة").ToList().Count()
+            </th>
+            <th>
+                @Model.Count()
+            </th>
+        </tr>
+    </tbody>
+</table>
+

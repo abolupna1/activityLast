@@ -10,41 +10,6 @@
 
 
 
-@functions{
-
-
-    bool signutreRole(int user_id, string roleName)
-    {
-        var getSignutrelist = ViewBag.signutre as IEnumerable<AActivity.Models.Signature>;
-
-        foreach (var b in getSignutrelist)
-        {
-            if (b.UserId == user_id && b.SignatureRole == roleName)
-            {
-                return true;
-            }
-
-            if (b.SignatureRole == roleName)
-            {
-                foreach (var c in b.SignutreDelegates.Where(s => s.SignatureId == b.Id).ToList())
-                {
-                    if (c.UserId == user_id)
-                    {
-                        if (c.Status == true && c.EndAtDate > DateTime.Now)
-                        {
-                            return true;
-
-                        }
-                    }
-                }
-            }
-
-        }
-
-        return false;
-
-    }
-}
 
 
 <style>
@@ -100,26 +65,24 @@
 
 
         </ul>
+        <hr />
+        <h3 class="mt-2">توقيعات الخطاب</h3>
+        @if (Model.NotificationLetters.Any())
+        {
+            foreach (var noti in Model.NotificationLetters)
+            {
 
+
+                @await Html.PartialAsync("SignutresFoods/_Sig.cshtml", noti)
+
+
+
+            }
+
+        }
     </div>
     <div class="card-footer text-white">
-        @if (signutreRole(userId, "رئيس قسم النشاط الاجتماعي"))
-        {
-            @await Html.PartialAsync("Signutres/_Sig1.cshtml", Model)
-
-        }
-        else if (signutreRole(userId, "مدير إدارة النشاط"))
-        {
-            @await Html.PartialAsync("Signutres/_Sig2.cshtml", Model)
-        }
-        else if (signutreRole(userId, "وكيل العمادة لشؤون النشاط"))
-        {
-            @await Html.PartialAsync("Signutres/_Sig3.cshtml", Model)
-        }
-        else if (signutreRole(userId, "عميد شؤون الطلاب"))
-        {
-            @await Html.PartialAsync("Signutres/_Sig4.cshtml", Model)
-        }
+ 
 
         <a class="btn  btn-primary  text-white  mt-3" asp-route-LetterId="@Model.Id" asp-controller="LetterFoods" asp-action="Print">
             <i class="fas fa-eye"></i>

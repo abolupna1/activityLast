@@ -1,0 +1,145 @@
+﻿@model AActivity.Models.Signature
+
+@{
+    ViewData["Title"] = "التوقيع";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var TypesOfletters = ViewData["TypesOfletters"] as List< AActivity.Areas.Sociologist.ModelViews.DelegateToSignutreModelView>;
+}
+
+<nav aria-label="breadcrumb ">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-area="Sociologist" asp-controller="Home" asp-action="Index">الرئيسية</a></li>
+        <li class="breadcrumb-item active" aria-current="page"> التوقيع</li>
+    </ol>
+</nav>
+
+
+
+<div class="card mb-2">
+    <div class="card-header bg-primary text-white">
+        التوقيع
+    </div>
+    <div class="row no-gutters">
+        <div class="col-md-4 align-content-center">
+            <img src="~/img/signatures/@Model.SignaturePhoto" style="max-width:200px;max-height:200px" class="card-img  img-thumbnail" alt="التوقيع">
+        </div>
+        <div class="col-md-8 ">
+            <div class="card-body">
+                <div class="row">
+                    <p class="card-text col-6">
+                        <strong> توقيع :</strong> @Model.User.FullName
+                    </p>
+                    <p class="card-text col-6">
+                        <strong>الوظيفة :</strong> @Model.JobsSignatorie.Name
+                    </p>
+                    <p class="card-text col-12">
+                        <strong>حالة التوقيع  :</strong>
+                        @if (Model.Status)
+                        {
+                            <span class="badge badge-success">صالح</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger">غير صالح</span>
+
+                        }
+                    </p>
+                    <div class="col-12">
+                        <h5 class="">صلاحيات التوقيع:</h5>
+                        <div class="row">
+                            @foreach (var t in TypesOfletters.ToList())
+                            {
+                                <div class="col-3 badge badge-success m-1 badge-pill p-2">@t.TypesOfletterName</div>
+
+                            }
+                        
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+@if (Model.JobsSignatorie.Name!= "مفوض")
+{
+
+
+<div class="card mt-3 mb-3">
+    <div class="card-header bg-primary text-white">
+        <a class="text-white" asp-action="IndexByWonerSignutre" asp-route-signutreId="@Model.Id">
+            <i class="fa fa-cog"></i>
+            المفوضين بتوقيعي
+        </a>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>الاسم</th>
+                    <th>حالة التفويض</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int i = 1;}
+                @foreach (var de in Model.WonerSignutres.Where(c=>c.Status))
+                {
+                <tr>
+                    <th>@i</th>
+                    <td> @de.DelegatedToSignutre.User.FullName</td>
+                    <td>
+                        @if (de.Status)
+                        {
+                            <span>فعال</span>
+                        }
+                        else
+                        {
+                            <span>ملغي</span>
+
+                        }
+
+                    </td>
+                </tr>
+                    i++;
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+}
+<div class="card mt-3 mb-3">
+    <div class="card-header bg-primary text-white">مفوض بالتوقيع عن </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>الاسم</th>
+                    <th>الوظيفة</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int j = 1;}
+                @foreach (var de in Model.DelegateToSignutres.Where(c => c.Status))
+                {
+                    <tr>
+                        <th>@j</th>
+                        <td> @de.WonerSignutre.User.FullName</td>
+                        <td>
+
+                            @de.WonerSignutre.JobsSignatorie.Name
+                        </td>
+                    </tr>
+                    j++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

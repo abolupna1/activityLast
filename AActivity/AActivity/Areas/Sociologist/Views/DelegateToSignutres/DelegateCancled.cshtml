@@ -1,0 +1,76 @@
+﻿@model AActivity.Models.DelegateToSignutre
+
+@{
+    ViewData["Title"] = "DelegateCancled";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<nav aria-label="breadcrumb ">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-area="Sociologist" asp-controller="Home" asp-action="Index">الرئيسية</a></li>
+        <li class="breadcrumb-item">
+            <a asp-area="Sociologist" asp-controller="DelegateToSignutres"
+               asp-action="Details" asp-route-userId="@ViewBag.userId">التوقيع</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-area="Sociologist" asp-controller="DelegateToSignutres"
+               asp-action="IndexByWonerSignutre" asp-route-signutreId="@Model.WonerSignutreId">  المفوضين بتوقيعي</a>
+        </li>
+      
+        <li class="breadcrumb-item active" aria-current="page"> الغاء التفويض</li>
+    </ol>
+</nav>
+<div class="card">
+   
+
+
+    <div class="card-header bg-primary text-white">الغاء التفويض</div>
+    <div class="card-body">
+        <h3 class="text-danger mb-5">هل تريد الغاء التفويض بالفعل ؟</h3>
+
+
+        <dl class="row">
+         
+         
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DelegatedToSignutre)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DelegatedToSignutre.User.FullName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DateDelegate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DateDelegate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+            <dd class="col-sm-10">
+                @if (Model.Status)
+                {
+                    <span class="text-success">نشط</span>
+                }
+                else
+                {
+                    <span class="text-danger">ملغي</span>
+
+                }
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <form method="post" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="WonerSignutreId" />
+            <input type="hidden" asp-for="DelegatedToSignutreId" />
+            <button type="submit" class="btn btn-danger">
+                <i class="fa fa-minus-circle"></i>
+                الغاء التفويض
+            </button>
+        </form>
+    </div>
+ 
+</div>

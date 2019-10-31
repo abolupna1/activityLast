@@ -28,9 +28,10 @@ namespace AActivity.Areas.Sociologist.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int WhoHasSignutre,int LetterId,
-            int SignatureId,int IsHeOwnerOfSignature,string ControllerName)
+            int SignatureId,int IsHeOwnerOfSignature,string ControllerName,int NotificationId)
         {
             bool isSignutred = await _context.LetterSignutres.AnyAsync(l=>l.LetterId == LetterId && l.WhoHasSignutre == WhoHasSignutre);
+           
             if (!isSignutred)
             {
                 bool status = IsHeOwnerOfSignature == 0 ? false : true;
@@ -42,7 +43,11 @@ namespace AActivity.Areas.Sociologist.Controllers
                     SignatureId = SignatureId
                 };
 
+                var notification = await _context.NotificationLetter.FindAsync(NotificationId);
+                notification.Status = true;
+                _context.Update(notification);
                 _context.Add(sig);
+
                 await _context.SaveChangesAsync();
                 MessageSuccess = "تم التوقيع بنجاح";
                 return RedirectToAction("Details", ControllerName, new { letterId = LetterId });

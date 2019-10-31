@@ -1,60 +1,138 @@
-﻿@model AActivity.Models.TripBooking
+﻿@model AActivity.Areas.Sociologist.ModelViews.TripBookingCreateModelView
 
 @{
     ViewData["Title"] = "تعديل";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+
+
+}
+@functions{
+    string readJust()
+    {
+        if (Model.TripType == "عمرة") return "readonly";
+        return "";
+    }
+
+    string tripTypName(string tripname)
+    {
+        if (tripname == Model.TripTypeName)
+            return "selected";
+        return "";
+    }
 }
 
 <div class="card mt-5 mb-3">
     <h5 class="card-header bg-primary-bold ">
         <i class="fas fa-edit"></i>
-      تعديل الحجز
+         تعديل حجز رحلة 
     </h5>
     <div class="card-body">
         <ul class="list-group list-group-horizontal-md mt-3 mb-3">
             <li class="list-group-item bg-primary text-white">الجهة التعليمية</li>
-            <li class="list-group-item">@ViewBag.trip.EducationalBody.Name</li>
+            <li class="list-group-item">@Model.EducationName</li>
             <li class="list-group-item bg-primary text-white">نوع الرحلة</li>
-            <li class="list-group-item">@ViewBag.trip.TripType.Name</li>
+            <li class="list-group-item">@Model.TripType</li>
             <li class="list-group-item bg-primary text-white"> تاريخ انطلاق الرحلة</li>
             <li class="list-group-item">
-                @ViewBag.trip.TripDate.ToString("dd - MM - yyyy")
+                @Model.TripTime.ToString("dd-MM-yyyy")
             </li>
         </ul>
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input asp-for="Id" hidden/>
-            <div class="form-group" hidden>
+            <input asp-for="Id" class="form-control form-control-lg" hidden="hidden" />
+            <input id="ttype" value="@Model.TripType" hidden="hidden" />
+            <input asp-for="TripTime" hidden="hidden" />
+
+            <div class="form-group" hidden="hidden">
                 <label asp-for="SchedulingTripDetailId" class="control-label"></label>
-                <select asp-for="SchedulingTripDetailId" class="form-control form-control-lg" asp-items="ViewBag.SchedulingTripDetailId"></select>
+                <input asp-for="SchedulingTripDetailId" class="form-control form-control-lg" />
             </div>
-            <div class="form-group">
-                <label asp-for="CityId" class="control-label"></label>
-                <select asp-for="CityId" class="form-control form-control-lg" asp-items="ViewBag.CityId"></select>
+            @if (Model.TripType == "زيارة")
+            {
+
+                <div class="form-group">
+                    <label class="control-label">نوع الزيارة</label>
+                    <select name="tripToOption" id="tripToOption" class="form-control form-control-lg">
+                        @if (Model.TripTypeName == "زيارة داخلية")
+                        {
+                            <option value="0">الرجاء الإختيار</option>
+                            <option value="1" selected="selected">داخلية </option>
+                            <option value="2">خارجية </option>
+                        }
+                        else if (Model.TripTypeName == "زيارة خارجية")
+                        {
+                            <option value="0">الرجاء الإختيار</option>
+                            <option value="1">داخلية </option>
+                            <option value="2" selected="selected">خارجية </option>
+                        }
+                        else
+                        {
+                            <option value="0" selected="selected">الرجاء الإختيار</option>
+                            <option value="1">داخلية </option>
+                            <option value="2" selected="selected">خارجية </option>
+                        }
+                    </select>
+                </div>
+            }
+
+
+            <div class="form-group" hidden="hidden">
+                <label asp-for="TripTypeName" class="control-label"></label>
+                <input asp-for="TripTypeName" value="@Model.TripType" id="TripTypeName" class="form-control form-control-lg" readonly />
+                <span asp-validation-for="TripTypeName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                
-                <label asp-for="TripToDate" class="control-label"></label>
-                <input asp-for="TripToDate"  readonly  id="TripToDate" type="text" class="form-control form-control-lg" />
-                <span asp-validation-for="TripToDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TripQtyDays" class="control-label"></label>
-                <input asp-for="TripQtyDays" readonly  class="form-control form-control-lg" />
-                <span asp-validation-for="TripQtyDays" class="text-danger"></span>
-            </div>
+            @if (Model.TripType == "زيارة" && !User.IsInRole("Admin"))
+            {
+                <div class="form-group">
+
+                    <label asp-for="CityId" class="control-label"></label>
+                    <select asp-for="CityId" id="SubCityId" class="form-control form-control-lg"
+                            asp-items="@(new SelectList(string.Empty,"Id", "LocationName"))"></select>
+                    <span asp-validation-for="CityId" class="text-danger"></span>
+
+                </div>
+            }
+
+            else if (Model.TripType == "زيارة" && User.IsInRole("Admin"))
+            {
+                <div class="form-group">
+
+                    <label asp-for="CityId" class="control-label"></label>
+                    <select asp-for="CityId" id="vv" class="form-control form-control-lg" asp-items="ViewBag.CityId"></select>
+                    <span asp-validation-for="CityId" class="text-danger"></span>
+
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+
+                    <label asp-for="CityId" class="control-label"></label>
+                    <select asp-for="CityId" id="CityId" class="form-control form-control-lg" asp-items="ViewBag.CityId"></select>
+                    <span asp-validation-for="CityId" class="text-danger"></span>
+
+                </div>
+            }
+
             <div class="form-group">
                 <label asp-for="TripLocationName" class="control-label"></label>
-                <input asp-for="TripLocationName" class="form-control form-control-lg" />
+                <input asp-for="TripLocationName" id="TripLocationName" class="form-control form-control-lg" />
                 <span asp-validation-for="TripLocationName" class="text-danger"></span>
             </div>
 
+
+            <div class="form-group">
+                <label asp-for="TripQtyDays" class="control-label"></label>
+                <input asp-for="TripQtyDays" id="TripQtyDays" readonly class="form-control form-control-lg" />
+                <span asp-validation-for="TripQtyDays" class="text-danger"></span>
+            </div>
+
             <div class="form-group col-12 mt-5">
+                <a class="btn  btn-outline-primary btn-lg" asp-controller="SchedulingTripDetails" asp-action="DetailsMore" asp-route-id="@Model.SchedulingTripDetailId"> <i class="fas fa-share-square"></i> تراجع </a>
 
-                <button class="btn btn-outline-gold  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
-
-                <a class="btn  btn-outline-primary btn-lg" asp-action="Index"> <i class="fas fa-share-square"></i> تراجع </a>
-
+                <button class="btn btn-outline-gold float-left  btn-lg" style="cursor:pointer"> <i class="fas fa-save"></i>   احفظ </button>
             </div>
         </form>
     </div>
@@ -62,7 +140,96 @@
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+
+    <script>
+        $(document).ready(function () {
+            tripLocationName($("#CityId").val())
+             tripTypeName($("#tripToOption").val())
+
+            $("#CityId").on('change', function () {
+                var cityId = $(this).val();
+                tripLocationName(cityId)
+            });//end #CityId
+
+             $("#tripToOption").on('change', function () {
+                var tripToOp = $(this).val();
+                 tripTypeName(tripToOp)
+
+            });//end #tripToOption
+
+        function tripTypeName(TripType) {
+            if (TripType == 1) {
+                $("#TripTypeName").val("");
+                $("#TripTypeName").val("زيارة داخلية");
+                var itemes = '';
+                 $("#SubCityId").empty();
+               var stringArray = @Html.Raw(Json.Serialize(ViewData["CityId"]));
+               var eduCity = @Html.Raw(Json.Serialize(Model.EducationCity));
+                $.each(stringArray, function (i, cityname) {
+                    if (eduCity == cityname.text) {
+                        itemes += "<option value='" + cityname.value + "'>" + cityname.text + "</option>";
+
+                    }
+
+                });
+                $("#SubCityId").html(itemes);
+
+                 $("#TripQtyDays").val("@Model.QtyDaysVisitEternal");
+
+            }
+             if (TripType == 2) {
+                $("#TripTypeName").val("");
+                 $("#TripTypeName").val("زيارة خارجية");
+                 var itemes = '';
+                 $("#SubCityId").empty();
+               var stringArray = @Html.Raw(Json.Serialize(ViewData["CityId"]));
+               var eduCity = @Html.Raw(Json.Serialize(Model.EducationCity));
+                $.each(stringArray, function (i, cityname) {
+                    if (eduCity != cityname.text) {
+                        itemes += "<option value='" + cityname.value + "'>" + cityname.text + "</option>";
+
+                    }
+
+                });
+                 $("#SubCityId").html(itemes);
+                  $("#TripQtyDays").val("@Model.QtyDaysVisitInternal");
+
+            }
+            if (TripType == 0) {
+                 $("#SubCityId").empty();
+                 $("#TripQtyDays").val("");
+
+            }
+        }
+        function tripLocationName(cityId) {
+            var location;
+            var ttype = $("#ttype").val();
+
+                if (cityId == 1 && ttype == "عمرة") {
+                     $("#TripLocationName").attr("readonly",true);
+                    $("#TripLocationName").val("");
+                    $("#TripQtyDays").val("");
+                    location = $("#TripLocationName").val("سكن الجامعة الاسلامية");
+                   $("#TripQtyDays").val("@Model.QtyDays");
+                } else if (cityId == 2 && ttype == "عمرة") {
+                     $("#TripLocationName").attr("readonly",true);
+                    $("#TripLocationName").val("");
+                    location = $("#TripLocationName").val("سكن دار الحديث المكية ");
+                    $("#TripQtyDays").val("");
+
+                    $("#TripQtyDays").val("@ViewBag.qtDaysTripToMakkah");
+            } else {
+                    $("#TripLocationName").attr("readonly", false);
+                      $("#TripQtyDays").val("");
+                    $("#TripQtyDays").val("@Model.QtyDays");
+                   }
+
+            return location;
+            }
+
+                });//end dockument
+    </script>
 
 
 

@@ -5,6 +5,7 @@ using AActivity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using AActivity.Areas.Sociologist.ModelViews;
 
 namespace AActivity.Data
 {
@@ -24,39 +25,22 @@ namespace AActivity.Data
         }
 
 
-
-        public DbSet<EducationalBody> EducationalBodies { get; set; }
-        public DbSet<AcademicYear> AcademicYears { get; set; }
-        public DbSet<TripType> TripTypes { get; set; }
-        public DbSet<City> Cities { get; set; }
-        public DbSet<AppSetting> AppSettings { get; set; }
-        public DbSet<SchedulingTripHead> SchedulingTripHead { get; set; }
-
-        public DbSet<SchedulingTripDetail> SchedulingTripDetails { get; set; }
-        public DbSet<TripBooking> TripBookings { get; set; }
-        public DbSet<StudentsParticipatingInTrip> StudentsParticipatingInTrip { get; set; }
-        public DbSet<TripDelegate> TripDelegates { get; set; }
-        public DbSet<Signature> Signatures { get; set; }
-        public DbSet<SignutreDelegate> SignutreDelegates { get; set; }
-        public DbSet<Letter> Letters { get; set; }
-        public DbSet<LetterTransport> LetterTransports { get; set; }       
-        public DbSet<LetterSignutre> LetterSignutres { get; set; }
-        public DbSet<LetterFood> LetterFoods { get; set; }
-      //  public DbSet<LetterAdvancedEducation> LetterAdvancedEducations { get; set; }
-        public DbSet<LetterAdvancedDelegation> LetterAdvancedDelegations { get; set; }
-        public DbSet<LetterSignutreForAdvance> LetterSignutreForAdvances { get; set; }
-        public DbSet<TripReport> TripReports { get; set; }
-        public DbSet<TripReportImage> TripReportImages { get; set; }
-        public DbSet<TripReportsNote> TripReportsNotes { get; set; }
-        
-
-
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<DelegateToSignutre>()
+              .HasKey(t => new {t.Id,t.WonerSignutreId, t.DelegatedToSignutreId });
 
+            builder.Entity<DelegateToSignutre>()
+                .HasOne(pt => pt.WonerSignutre)
+                .WithMany(p => p.WonerSignutres)
+                .HasForeignKey(pt => pt.WonerSignutreId);
+
+            builder.Entity<DelegateToSignutre>()
+                .HasOne(pt => pt.DelegatedToSignutre)
+                .WithMany(p => p.DelegateToSignutres)
+                .HasForeignKey(pt => pt.DelegatedToSignutreId);
 
             builder.Entity<AppUserRole>(
 
@@ -74,7 +58,7 @@ namespace AActivity.Data
 
                 );
 
-  
+
 
 
 
@@ -84,7 +68,45 @@ namespace AActivity.Data
 
         }
 
-     
+
+
+
+        public DbSet<EducationalBody> EducationalBodies { get; set; }
+        public DbSet<AcademicYear> AcademicYears { get; set; }
+        public DbSet<TripType> TripTypes { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<AppSetting> AppSettings { get; set; }
+        public DbSet<SchedulingTripHead> SchedulingTripHead { get; set; }
+
+        public DbSet<SchedulingTripDetail> SchedulingTripDetails { get; set; }
+        public DbSet<TripBooking> TripBookings { get; set; }
+        public DbSet<StudentsParticipatingInTrip> StudentsParticipatingInTrip { get; set; }
+        public DbSet<TripDelegate> TripDelegates { get; set; }
+        public DbSet<JobsSignatorie> JobsSignatories { get; set; }
+        public DbSet<TypesOfletter> TypesOfletters { get; set; }
+
+        
+        public DbSet<Signature> Signatures { get; set; }
+        public DbSet<TypesOfLettersAndSignature> TypesOfLettersAndSignatures { get; set; }
+        public DbSet<DelegateToSignutre> DelegateToSignutres { get; set; }
+        public DbSet<Letter> Letters { get; set; }
+        public DbSet<LetterTransport> LetterTransports { get; set; }       
+        public DbSet<LetterSignutre> LetterSignutres { get; set; }
+        public DbSet<LetterFood> LetterFoods { get; set; }
+        public DbSet<LetterAdvancedDelegation> LetterAdvancedDelegations { get; set; }
+        public DbSet<LetterSignutreForAdvance> LetterSignutreForAdvances { get; set; }
+        public DbSet<TripReport> TripReports { get; set; }
+        public DbSet<TripReportImage> TripReportImages { get; set; }
+        public DbSet<FinishWork> FinishWorks { get; set; }
+
+
+        
+
+        public DbSet<NotificationLetter> NotificationLetter { get; set; }
+
+
+
+
 
     }
 }

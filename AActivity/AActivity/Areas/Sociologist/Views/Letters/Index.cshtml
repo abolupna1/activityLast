@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AActivity.Models.Letter>
+﻿@model IEnumerable<AActivity.Areas.Sociologist.ModelViews.LettersModelView>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,64 +6,6 @@
 }
 
 
-@functions{
-    string  getTypeName(int typeInt)
-    {
-        string typeName;
-        switch (typeInt)
-        {
-            case 1:
-                typeName= "تأمين وسيلة نقل";
-                break;
-
-            case 2:
-            typeName= "تأمين تغذية ";
-            break;
-
-            case 3:
-            typeName= "انتداب جماعي";
-            break;
-
-            case 4:
-            typeName= "سلفة من صندوق الطالب";
-            break;
-
-            default:
-                typeName="";
-                break;
-        };
-        return typeName;
-    }
-
-   string  getControllerName(int typeInt)
-    {
-          string typeName;
-        switch (typeInt)
-        {
-            case 1:
-                typeName= "LetterTransports";
-                break;
-
-            case 2:
-                typeName= "LetterFoods";
-                break;
-
-            case 3:
-                typeName= "LetterDelegations";
-                break;
-
-             case 4:
-                typeName= "LetterAdvancedDelegations";
-                break;
-
-            default:
-                typeName="";
-                break;
-        };
-        return typeName;
-    
-    }
-}
 
 <div class="mt-5 mb-3">
     <p class="d-inline text-secondary "> <i class="fas fa-envelope-open-text fa-2x"></i>
@@ -77,44 +19,58 @@
         <tr>
             <th>#</th>
             <th>
-                @Html.DisplayNameFor(model => model.TypeLetter)
+                @Html.DisplayNameFor(model => model.TripId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NoMersal)
+                @Html.DisplayNameFor(model => model.EducationBody)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TripType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TypeLetter)
             </th>
 
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @{ int i = 1;}
-        @foreach (var item in Model)
+        @if (Model.Any())
+        {
+
+
+            int i = 1;
+
+            @foreach (var letter in Model)
+            {
+                if (!letter.NotificationLettersStatus && letter.NotificationLettersUserId == ViewBag.userId)
+                {
+                    <tr>
+                        <th>@i</th>
+                        <td>@letter.TripId</td>
+                        <td>@letter.EducationBody</td>
+                        <td>@letter.TripType</td>
+                        <td>@letter.TypeLetter</td>
+
+                        <td>
+                            <a asp-action="Details" asp-controller="@letter.ControlleName" asp-route-letterId="@letter.LetterId">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    i++;
+                }
+             
+
+
+            }
+
+        }
+        else
         {
             <tr>
-                <th>@i</th>
-
-                <td>
-                    @getTypeName(item.TypeLetter)
-                 
-                </td>
-
-                <td>
-                    @if (item.NoMersal == 0)
-                    {
-                        <span class="text-danger">انتظار التواقيع</span>
-                    }
-                    else
-                    { @item.NoMersal}
-                </td>
-                <td>
-
-                    <a asp-action="Details" asp-controller="@getControllerName(item.TypeLetter)" asp-route-letterId="@item.Id">
-                        <i class="fas fa-eye"></i>
-                    </a> 
-
-                </td>
+                <th colspan="6">لاتوجد خطابات</th>
             </tr>
-            i++;
         }
     </tbody>
 </table>

@@ -22,215 +22,339 @@ namespace AActivity.Areas.Sociologist.Controllers
             _context = context;
         }
 
-     
-        [HttpGet()]
-        [Route("Sociologist/TripDelegates/Index/{bokingId:int}")]
-        public async Task<IActionResult> Index(int bokingId ,string error = null )
+        private void booking(int bokingId, out int scdualDetailId, out List<TripDelegate> employees,
+            out int qtyStudentInBus, out int qtyStudentRegisterd,
+             out int Required, out int Registered, out int Remainder,
+            out int RequiredAmada, out int RequiredEducation,
+            out int RegisteredAmadd, out int RegisteredEducation,
+            out int RemainderAmada, out int RemainderEducation)
         {
-            if (!TripBookingExists(bokingId))
-            {
-                Response.StatusCode = 404;
-                return View("TripDelegatesNotFound");
-            }
-            var TripBoking = await _context.TripBookings.Include(s=>s.StudentsParticipatingInTrips).FirstOrDefaultAsync(b => b.Id == bokingId);
-          ViewBag.countStudend =  TripBoking.StudentsParticipatingInTrips.Where(t => t.TripBookingId == bokingId).Count();
-           var settingForTrip = await _context.AppSettings.FirstOrDefaultAsync();
-            ViewData["settingForTrip"] = settingForTrip;
-              TempData["error"] = error;
-            ViewData["TripBoking"] = TripBoking;
-             
-            var applicationDbContext = _context.TripDelegates.Where(d=>d.TripBookingId == bokingId).Include(t => t.TripBooking);
-            return View(await applicationDbContext.ToListAsync());
-        }
-      
-        public async Task<int> countbuses(int bokingId)
-        {
-
-            int countbus=0;
-            var students = await _context.StudentsParticipatingInTrip.Where(s => s.TripBookingId == bokingId).CountAsync();
-            var boking = await _context.TripBookings.FindAsync(bokingId);
-            var EducationalBody = await _context.SchedulingTripDetails.Include(c => c.EducationalBody).FirstOrDefaultAsync(e=>e.Id==boking.SchedulingTripDetailId); ;
-            var b= EducationalBody.EducationalBody.EntityType;
-            int typeEdu = b == "الكليات" ? 1 : 2;
-            if (students < 60 && students >= 30)
-            {
-                countbus = 1 * typeEdu;
-                return countbus;
-            }
-            else if (students >= 60 && students <= 100)
-            {
-                 countbus = 2 * typeEdu;
-                return countbus;
-            }
-            else
+            var boking = _context.TripBookings
+                .Include(e=>e.SchedulingTripDetail.EducationalBody)
+                .Include(e=>e.TripDelegates)
+                .Include(e=>e.StudentsParticipatingInTrips)
+                .FirstOrDefault(i=>i.Id== bokingId);
+            employees = boking.TripDelegates.ToList();
+            var appSetting = _context.AppSettings.FirstOrDefault();
+            scdualDetailId = boking.SchedulingTripDetailId;
+            qtyStudentRegisterd = boking.StudentsParticipatingInTrips.Count();
+            if (boking.TripTypeName =="عمرة")
             {
               
-                while (students >= 50)
+                RequiredAmada = appSetting.QtyDeanshipDelegates * appSetting.QtyUmrahBuses;
+                RegisteredAmadd = boking.TripDelegates.Where(a => a.IsFromEducationBody == false).Count();
+                RemainderAmada = RequiredAmada - RegisteredAmadd;
+                
+                if (boking.SchedulingTripDetail.EducationalBody.EntityType == "المعاهد والدور")
                 {
-                    countbus++;
-                    students -= 50;
-                }
+                    qtyStudentInBus = 46;
+                    RequiredEducation = appSetting.QtyInstitutesDelegates * appSetting.QtyUmrahBuses;
+                    RegisteredEducation = boking.TripDelegates.Where(a => a.IsFromEducationBody == true).Count();
+                    RemainderEducation = RequiredEducation - RegisteredEducation;
 
-                if (students < 50 && students >= 30)
-                {
-                    countbus++;
-                }
-                return countbus * typeEdu;
-            }
-
-          
-        }
-
-        public async Task<int> countbusesForAmada(int bokingId)
-        {
-
-            int countbus = 0;
-            var students = await _context.StudentsParticipatingInTrip.Where(s => s.TripBookingId == bokingId).CountAsync();
-   
-            if (students < 60 && students >= 30)
-            {
-                countbus = 1 ;
-                return countbus;
-            }
-            else if (students >= 60 && students <= 100)
-            {
-                countbus = 2 ;
-                return countbus;
-            }
-            else
-            {
-
-                while (students >= 50)
-                {
-                    countbus++;
-                    students -= 50;
-                }
-
-                if (students < 50 && students >= 30)
-                {
-                    countbus++;
-                }
-                return countbus ;
-            }
-
-
-        }
-
-        // GET: Sociologist/TripDelegates/Create
-        [HttpGet(), Route("Sociologist/TripDelegates/Create/{bokingId:int}")]
-
-        public async Task<IActionResult> Create(int bokingId )
-        {
-            if (!TripBookingExists(bokingId))
-            {
-                Response.StatusCode = 404;
-                return View("TripDelegatesNotFound");
-            }
-            var FromEducationBody = await _context.TripDelegates.Where(c => c.TripBookingId == bokingId && c.IsFromEducationBody == true).CountAsync();
-            var FromAmada = await _context.TripDelegates.Where(c => c.TripBookingId == bokingId && c.IsFromEducationBody == false).CountAsync();
-            var jha = countbuses(bokingId).Result;
-            var amada = countbusesForAmada(bokingId).Result;
-            if (User.IsInRole("Admin")) {
-                if ((FromEducationBody + FromAmada) >= (jha + amada))
-                {
-                    string CanNotAdd = "لايمكن اضافة منتدبين آخرين!! ";
-                    return RedirectToAction(nameof(Index), new { bokingId = bokingId, error = CanNotAdd });
-                }
-                ViewData["countbus"] = (jha + amada) - (FromEducationBody + FromAmada);
-            }
-            else if (User.IsInRole("Supervisor")) {
-                if (FromEducationBody  >= jha )
-                {
-                    string CanNotAdd = "لايمكن اضافة منتدبين آخرين!! ";
-                    return RedirectToAction(nameof(Index), new { bokingId = bokingId, error = CanNotAdd });
-                }
-                var edBody = await _context.TripDelegates.Where(c => c.TripBookingId == bokingId && c.IsFromEducationBody == true).CountAsync();
-                ViewData["countbus"] = (jha - edBody) ;
-            }
-            else if (User.IsInRole("DirectorOfSocialActivity") || User.IsInRole("SocialActivityOfficer")) {
-                if (FromAmada >=  amada )
-                {
-                    string CanNotAdd = "لايمكن اضافة منتدبين آخرين!! ";
-                    return RedirectToAction(nameof(Index), new { bokingId = bokingId, error = CanNotAdd });
-                }
-                var edBody = await _context.TripDelegates.Where(c => c.TripBookingId == bokingId && c.IsFromEducationBody == false).CountAsync();
-                ViewData["countbus"] = (amada - edBody);
-            
-            }
-            else { ViewData["countbus"] = 0; }
-          
-          
-            
-            ViewData["TripBookingId"] = bokingId;
-            return View();
-        }
-        
-        // POST: Sociologist/TripDelegates/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int bokingId ,List<TripDelegate> tripDelegate)
-        {
-
-
-            if (ModelState.IsValid)
-            {
-                List<int> ii = tripDelegate.Select(s => s.EmployeeNumber).ToList();
-                if (studentsCeck(ii) > 0)
-                {
-                    TempData["message"] = "رقم الموظف مكرر :" + studentsCeck(ii);
-                }
-                else if(studentsCeckInDb(tripDelegate, bokingId) > 0)
-                {
-                    TempData["message"] = " الموظف موجود في قائمة المنتدبين مسبقا :" + studentsCeckInDb(tripDelegate, bokingId);
+                    Required = RequiredAmada + RequiredEducation;
+                    Registered = boking.TripDelegates.Count();
+                    Remainder = RemainderAmada + RemainderEducation;
                 }
                 else
                 {
-                    _context.AddRangeAsync(tripDelegate);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index), new { bokingId = tripDelegate.FirstOrDefault().TripBookingId });
+                    qtyStudentInBus = 47;
+                    RequiredEducation = appSetting.QtyCollegesDelegates * appSetting.QtyUmrahBuses;
+                    RegisteredEducation = boking.TripDelegates.Where(a => a.IsFromEducationBody == true).Count();
+                    RemainderEducation = RequiredEducation - RegisteredEducation;
+
+                    Required = RequiredAmada + RequiredEducation;
+                    Registered = boking.TripDelegates.Count();
+                    Remainder = RemainderAmada + RemainderEducation;
                 }
-     
+            }
+            else if (boking.TripTypeName == "داخلية")
+            {
+                RequiredAmada = 0 ;
+                RegisteredAmadd = 0;
+                RemainderAmada = 0;
+                qtyStudentInBus = 47;
+                if (boking.SchedulingTripDetail.EducationalBody.EntityType == "المعاهد والدور")
+                {
+                   
+                    RequiredEducation = appSetting.QtyInstitutesDelegates * appSetting.QtyIntirnalBuses;
+                    RegisteredEducation = boking.TripDelegates.Where(a => a.IsFromEducationBody == true).Count();
+                    RemainderEducation = RequiredEducation - RegisteredEducation;
+
+                    Required = RequiredAmada + RequiredEducation;
+                    Registered = boking.TripDelegates.Count();
+                    Remainder = RemainderAmada + RemainderEducation;
+                }
+                else
+                {
+                    RequiredEducation = appSetting.QtyCollegesDelegates * appSetting.QtyIntirnalBuses;
+                    RegisteredEducation = boking.TripDelegates.Where(a => a.IsFromEducationBody == true).Count();
+                    RemainderEducation = RequiredEducation - RegisteredEducation;
+
+                    Required = RequiredAmada + RequiredEducation;
+                    Registered = boking.TripDelegates.Count();
+                    Remainder = RemainderAmada + RemainderEducation;
+                }
+            }
+            else if (boking.TripTypeName == "خارجية")
+            {
+                RequiredAmada = appSetting.QtyDeanshipDelegates * appSetting.QtyExtirnalBuses;
+                RegisteredAmadd = boking.TripDelegates.Where(a => a.IsFromEducationBody == false).Count();
+                RemainderAmada = RequiredAmada - RegisteredAmadd;
+                if (boking.SchedulingTripDetail.EducationalBody.EntityType == "المعاهد والدور")
+                {
+                    qtyStudentInBus = 46;
+                    RequiredEducation = appSetting.QtyInstitutesDelegates * appSetting.QtyExtirnalBuses;
+                    RegisteredEducation = boking.TripDelegates.Where(a => a.IsFromEducationBody == true).Count();
+                    RemainderEducation = RequiredEducation - RegisteredEducation;
+
+                    Required = RequiredAmada + RequiredEducation;
+                    Registered = boking.TripDelegates.Count();
+                    Remainder = RemainderAmada + RemainderEducation;
+                }
+                else
+                {
+                    qtyStudentInBus = 47;
+                    RequiredEducation = appSetting.QtyCollegesDelegates * appSetting.QtyExtirnalBuses;
+                    RegisteredEducation = boking.TripDelegates.Where(a => a.IsFromEducationBody == true).Count();
+                    RemainderEducation = RequiredEducation - RegisteredEducation;
+
+                    Required = RequiredAmada + RequiredEducation;
+                    Registered = boking.TripDelegates.Count();
+                    Remainder = RemainderAmada + RemainderEducation;
+                }
+            }
+            else if (boking.TripTypeName == "زيارة داخلية")
+            {
+                RequiredAmada = 0;
+                RegisteredAmadd = 0;
+                RemainderAmada =0;
+                qtyStudentInBus = 47;
+                if (boking.SchedulingTripDetail.EducationalBody.EntityType == "المعاهد والدور")
+                {
+                    RequiredEducation = appSetting.QtyInstitutesDelegates * appSetting.QtyVisitIntirnalBuses;
+                    RegisteredEducation = boking.TripDelegates.Where(a => a.IsFromEducationBody == true).Count();
+                    RemainderEducation = RequiredEducation - RegisteredEducation;
+
+                    Required = RequiredAmada + RequiredEducation;
+                    Registered = boking.TripDelegates.Count();
+                    Remainder = RemainderAmada + RemainderEducation;
+                }
+                else
+                {
+                    RequiredEducation = appSetting.QtyCollegesDelegates * appSetting.QtyVisitIntirnalBuses;
+                    RegisteredEducation = boking.TripDelegates.Where(a => a.IsFromEducationBody == true).Count();
+                    RemainderEducation = RequiredEducation - RegisteredEducation;
+
+                    Required = RequiredAmada + RequiredEducation;
+                    Registered = boking.TripDelegates.Count();
+                    Remainder = RemainderAmada + RemainderEducation;
+                }
+            }
+            else if (boking.TripTypeName == "زيارة خارجية")
+            {
+                RequiredAmada = appSetting.QtyDeanshipDelegates * appSetting.QtyVisitExtirnalBuses;
+                RegisteredAmadd = boking.TripDelegates.Where(a => a.IsFromEducationBody == false).Count();
+                RemainderAmada = RequiredAmada - RegisteredAmadd;
+                if (boking.SchedulingTripDetail.EducationalBody.EntityType == "المعاهد والدور")
+                {
+                    qtyStudentInBus = 46;
+                    RequiredEducation = appSetting.QtyInstitutesDelegates * appSetting.QtyVisitExtirnalBuses;
+                    RegisteredEducation = boking.TripDelegates.Where(a => a.IsFromEducationBody == true).Count();
+                    RemainderEducation = RequiredEducation - RegisteredEducation;
+
+                    Required = RequiredAmada + RequiredEducation;
+                    Registered = boking.TripDelegates.Count();
+                    Remainder = RemainderAmada + RemainderEducation;
+                }
+                else
+                {
+                    qtyStudentInBus = 47;
+                    RequiredEducation = appSetting.QtyCollegesDelegates * appSetting.QtyVisitExtirnalBuses;
+                    RegisteredEducation = boking.TripDelegates.Where(a => a.IsFromEducationBody == true).Count();
+                    RemainderEducation = RequiredEducation - RegisteredEducation;
+
+                    Required = RequiredAmada + RequiredEducation;
+                    Registered = boking.TripDelegates.Count();
+                    Remainder = RemainderAmada + RemainderEducation;
+                }
+            }
+            else
+            {
+                Required = 0; Registered = 0; Remainder = 0;
+                RequiredAmada = 0; RegisteredAmadd = 0; RemainderAmada = 0;
+                RequiredEducation = 0; RegisteredEducation = 0; RemainderEducation = 0;
+                qtyStudentInBus = 0;
+
+            }
+        }
+
+        [HttpGet()]
+        [Route("Sociologist/TripDelegates/Index/{bokingId:int}")]
+        public async Task<IActionResult> Index(int bokingId)
+        {
+            if (!TripBookingExists(bokingId))
+            {
+                Response.StatusCode = 404;
+                return View("TripDelegatesNotFound");
             }
 
-            var check = await _context.TripDelegates.Where(c => c.TripBookingId == bokingId).CountAsync();
-            var jha = countbuses(bokingId).Result;
-            var amada = countbusesForAmada(bokingId).Result;
+            booking(bokingId, out int scdualDetailId, out List<TripDelegate> employees,
+              out int qtyStudentInBus, out int qtyStudentRegisterd,
+             out int Required, out int Registered, out int Remainder,
+            out int RequiredAmada, out int RequiredEducation,
+            out int RegisteredAmadd, out int RegisteredEducation,
+            out int RemainderAmada, out int RemainderEducation) ;
+
+            int buses = countBuses(qtyStudentInBus, qtyStudentRegisterd);
+            ViewBag.TripBookingId = bokingId;
+            ViewBag.scdualDetailId = scdualDetailId;
+            ViewBag.Remainder = Remainder <= buses ? Remainder : buses;
+            ViewBag.RemainderAmada = RemainderAmada <= buses ? RemainderAmada : buses;
+            ViewBag.RemainderEducation = RemainderEducation <= buses ? RemainderEducation : buses;
+            return View( employees);
+        }
+        public IActionResult Adapter(int bokingId, int count)
+        {
+
+            return RedirectToAction(nameof(Create), new { bokingId = bokingId, count = count });
+        }
+
+        [HttpGet(), Route("Sociologist/TripDelegates/Create/{bokingId:int}/{count:int}")]
+
+        public async Task<IActionResult> Create(int bokingId ,int count)
+        {
+            if (!TripBookingExists(bokingId))
+            {
+                Response.StatusCode = 404;
+                return View("TripDelegatesNotFound");
+            }
+            ViewBag.TripBookingId = bokingId;
+            countEmps( bokingId, count, out int countEmployees);
+            ViewBag.embloyees = countEmployees;
+            return View();
+        }
+        
+        private int countBuses(int qtyStudentInBus, int qtyStudentRegisterd)
+        {
+            int bus = 0;
+            int minBus =  _context.AppSettings.FirstOrDefault().QtyPassengersInOneBus;
+          
+            while (qtyStudentRegisterd >= qtyStudentInBus)
+            {
+                bus++;
+                qtyStudentRegisterd -= qtyStudentInBus;
+            }
+
+            if (qtyStudentRegisterd < qtyStudentInBus && qtyStudentRegisterd >= minBus)
+            {
+                bus++;
+            }
+            return bus;
+        }
+        private void countEmps(int bokingId,int count, out int countEmployees)
+        {
+            booking(bokingId,   out int scdualDetailId, out List<TripDelegate> employees,
+                                out int qtyStudentInBus, out int qtyStudentRegisterd,
+                                out int Required, out int Registered, out int Remainder,
+                                out int RequiredAmada, out int RequiredEducation,
+                                out int RegisteredAmadd, out int RegisteredEducation,
+                                out int RemainderAmada, out int RemainderEducation);
+           int buses =  countBuses( qtyStudentInBus,  qtyStudentRegisterd);
             if (User.IsInRole("Admin"))
             {
-                if (check > (jha + amada))
+                if(Remainder > count)
                 {
-                    string CanNotAdd = "لايمكن اضافة منتدبين آخرين!! ";
-                    return RedirectToAction(nameof(Index), new { bokingId = bokingId, error = CanNotAdd });
+                    countEmployees = count <= buses ? count : buses;
                 }
-                ViewData["countbus"] = (jha + amada) - check;
-            }
-            else if (User.IsInRole("Supervisor"))
-            {
-                if (check > (jha - amada))
+                else
                 {
-                    string CanNotAdd = "لايمكن اضافة منتدبين آخرين!! ";
-                    return RedirectToAction(nameof(Index), new { bokingId = bokingId, error = CanNotAdd });
+                    countEmployees = Remainder <= buses ? Remainder : buses;
                 }
-                var edBody = await _context.TripDelegates.Where(c => c.TripBookingId == bokingId && c.IsFromEducationBody == true).CountAsync();
-                ViewData["countbus"] = (jha - edBody);
+
             }
             else if (User.IsInRole("DirectorOfSocialActivity") || User.IsInRole("SocialActivityOfficer"))
             {
-                if (check > (jha - amada))
+                if (RemainderAmada > count)
                 {
-                    string CanNotAdd = "لايمكن اضافة منتدبين آخرين!! ";
-                    return RedirectToAction(nameof(Index), new { bokingId = bokingId, error = CanNotAdd });
+                    countEmployees = count <= buses ? count : buses;
                 }
-                var edBody = await _context.TripDelegates.Where(c => c.TripBookingId == bokingId && c.IsFromEducationBody == false).CountAsync();
-                ViewData["countbus"] = (amada - edBody);
+                else
+                {
+                    countEmployees = RemainderAmada <= buses ? RemainderAmada : buses;
+                }
 
             }
-            else { ViewData["countbus"] = 0; }
+            else if (User.IsInRole("Supervisor"))
+            {
+                if (RemainderEducation > count)
+                {
+                    countEmployees = count <= buses ? count : buses;
+                }
+                else
+                {
+                    countEmployees = RemainderEducation >= buses ? RemainderEducation : buses;
+                }
+
+            }
+            else
+            {
+                countEmployees = 0;
+            }
+          
+            
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [HttpPost(), Route("Sociologist/TripDelegates/Create/{bokingId:int}/{count:int}")]
+        public async Task<IActionResult> Create(int bokingId ,int count, List<TripDelegate> tripDelegate)
+        {
+            // tripDelegate.ForEach(e=>e.IsFromEducationBody ==)
+            booking(bokingId, out int scdualDetailId, out List<TripDelegate> employees,
+            out int qtyStudentInBus, out int qtyStudentRegisterd,
+            out int Required, out int Registered, out int Remainder,
+            out int RequiredAmada, out int RequiredEducation,
+            out int RegisteredAmadd, out int RegisteredEducation,
+            out int RemainderAmada, out int RemainderEducation);
+            int amada = tripDelegate.Where(e => e.IsFromEducationBody == false).Count();
+            int education = tripDelegate.Where(e => e.IsFromEducationBody == true).Count();
+            if (RemainderAmada >= amada && education >= RemainderEducation)
+            {
+
+          
 
 
-            ViewData["TripBookingId"] = bokingId;
+                if (ModelState.IsValid)
+                {
+                    List<int> ii = tripDelegate.Select(s => s.EmployeeNumber).ToList();
+                    if (studentsCeck(ii) > 0)
+                    {
+                        TempData["message"] = "رقم الموظف مكرر :" + studentsCeck(ii);
+                    }
+                    else if (studentsCeckInDb(tripDelegate, bokingId) > 0)
+                    {
+                        TempData["message"] = " الموظف موجود في قائمة المنتدبين مسبقا :" + studentsCeckInDb(tripDelegate, bokingId);
+                    }
+                    else
+                    {
+                        _context.AddRangeAsync(tripDelegate);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index), new { bokingId = tripDelegate.FirstOrDefault().TripBookingId });
+                    }
+
+                }
+            }
+            else
+            {
+                ViewBag.TripBookingId = bokingId;
+                countEmps(bokingId, count, out int countEmployees);
+                ViewBag.embloyees = countEmployees;
+                ViewBag.amada = RemainderAmada;
+                ViewBag.education = RemainderEducation;
+                return View(tripDelegate);
+            }
+
             return View(tripDelegate);
         }
 

@@ -1,15 +1,18 @@
 ﻿@model AActivity.Areas.Sociologist.ModelViews.SchedulingTripDetailsView
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "تفاصيل";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+    <h3 class="text-muted">الرحلات</h3>
 <div class="card  ">
     <div class="card-header text-white bg-primary ">
 
         السنة الدراسية : @Model.SchedulingTripHead.AcademicYear / @Model.SchedulingTripHead.Semester / التاريخ : @Model.SchedulingTripHead.FromDate.ToString("dd / MM / yyyy") - @Model.SchedulingTripHead.ToDate.ToString("dd / MM / yyyy")
     </div>
     <div class="card-body">
+        
         <div class="row">
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
@@ -25,7 +28,7 @@
                 <div class="info-box">
                     <span class="info-box-icon bg-success  "><i class="fa fa-mosque text-white"></i></span>
                     <div class="info-box-content text-center">
-                        <span class="info-box-text mb-3 "> رحلة عمرة</span>
+                        <span class="info-box-text mb-3 ">  عمرة</span>
                         <span class="info-box-number ">@Model.SchedulingTripDetails.Where(o => o.TripTypeId == 1).Count()</span>
                     </div>
                 </div>
@@ -35,7 +38,7 @@
                 <div class="info-box">
                     <span class="info-box-icon bg-warning   "><i class="fa fa-map-marker-alt text-white"></i></span>
                     <div class="info-box-content text-center">
-                        <span class="info-box-text mb-3 "> رحلة داخلية</span>
+                        <span class="info-box-text mb-3 ">  داخلية</span>
                         <span class="info-box-number ">@Model.SchedulingTripDetails.Where(o => o.TripTypeId == 2).Count()</span>
                     </div>
                 </div>
@@ -46,8 +49,18 @@
                 <div class="info-box">
                     <span class="info-box-icon bg-info   "><i class="fa fa-map-marked-alt text-white"></i></span>
                     <div class="info-box-content text-center">
-                        <span class="info-box-text mb-3 "> رحلة خارجية</span>
+                        <span class="info-box-text mb-3 ">  خارجية</span>
                         <span class="info-box-number ">@Model.SchedulingTripDetails.Where(o => o.TripTypeId == 3).Count()</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-danger   "><i class="fa fa-location-arrow text-white"></i></span>
+                    <div class="info-box-content text-center">
+                        <span class="info-box-text mb-3 ">  زيارة</span>
+                        <span class="info-box-number ">@Model.SchedulingTripDetails.Where(o => o.TripTypeId == 4).Count()</span>
                     </div>
                 </div>
             </div>
@@ -75,6 +88,7 @@
             <th>عمرة</th>
             <th>داخلية</th>
             <th>خارجية</th>
+            <th>زيارة</th>
         </tr>
     </thead>
     <tbody>
@@ -83,29 +97,50 @@
         {
             if (Model.SchedulingTripDetails.Any(e => e.EducationalBodyId == edu.Id))
             {
-                <tr>
-                    <th>@i</th>
-                    <td>
-<a asp-action="Details" asp-route-id="@edu.Id" asp-controller="SchedulingTripDetails">@edu.Name</a></td>
-                    <td>
-                        @foreach (var omr in Model.SchedulingTripDetails.Where(o => o.TripTypeId == 1 && o.EducationalBodyId == edu.Id))
-                        {
-                            <span class="badge badge-success">@omr.TripDate.ToString("dd / MM / yyyy")</span>
-                        }
-                    </td>
-                    <td>
-                        @foreach (var omr in Model.SchedulingTripDetails.Where(o => o.TripTypeId == 2 && o.EducationalBodyId == edu.Id))
-                        {
-                            <span class="badge badge-warning">@omr.TripDate.ToString("dd / MM / yyyy")</span>
-                        }
-                    </td>
-                    <td>
-                        @foreach (var omr in Model.SchedulingTripDetails.Where(o => o.TripTypeId == 3 && o.EducationalBodyId == edu.Id))
-                        {
-                            <span class="badge badge-info">@omr.TripDate.ToString("dd / MM / yyyy")</span>
-                        }
-                    </td>
-                </tr>
+        <tr>
+            <th>@i</th>
+            <td>
+                <a asp-action="Details" asp-route-id="@edu.Id" asp-controller="SchedulingTripDetails">@edu.Name</a>
+            </td>
+            <td>
+                @foreach (var omr in Model.SchedulingTripDetails.Where(o => o.TripTypeId == 1 && o.EducationalBodyId == edu.Id))
+                {
+
+                    <a asp-route-id="@omr.Id" asp-action="DetailsMore" asp-controller="SchedulingTripDetails">
+                        <span class="badge badge-success">@omr.TripDate.ToString("dd / MM / yyyy")</span>
+
+                    </a>
+                }
+            </td>
+            <td>
+                @foreach (var omr in Model.SchedulingTripDetails.Where(o => o.TripTypeId == 2 && o.EducationalBodyId == edu.Id))
+                {
+                    <a asp-route-id="@omr.Id" asp-action="DetailsMore" asp-controller="SchedulingTripDetails">
+
+                        <span class="badge badge-warning">@omr.TripDate.ToString("dd / MM / yyyy")</span>
+                    </a>
+                }
+            </td>
+            <td>
+                @foreach (var omr in Model.SchedulingTripDetails.Where(o => o.TripTypeId == 3 && o.EducationalBodyId == edu.Id))
+                {
+                    <a asp-route-id="@omr.Id" asp-action="DetailsMore" asp-controller="SchedulingTripDetails">
+
+                        <span class="badge badge-info">@omr.TripDate.ToString("dd / MM / yyyy")</span>
+                    </a>
+                }
+            </td>
+
+            <td>
+                @foreach (var omr in Model.SchedulingTripDetails.Where(o => o.TripTypeId == 4 && o.EducationalBodyId == edu.Id))
+                {
+                    <a asp-route-id="@omr.Id" asp-action="DetailsMore" asp-controller="SchedulingTripDetails">
+
+                        <span class="badge badge-primary">@omr.TripDate.ToString("dd / MM / yyyy")</span>
+                    </a>
+                }
+            </td>
+        </tr>
             }
 
             i++;

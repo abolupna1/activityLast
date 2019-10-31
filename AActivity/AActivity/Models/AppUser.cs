@@ -13,10 +13,10 @@ namespace AActivity.Models
         public ICollection<EducationalBody> EducationalBodies { get; set; }
         public ICollection<SchedulingTripHead> SchedulingTripHeads { get; set; }
         public ICollection<Signature> Signatures { get; set; }
-        public IEnumerable<SignutreDelegate> SignutreDelegates { get; set; }
+       // public IEnumerable<SignutreDelegate> SignutreDelegates { get; set; }
         public IEnumerable<LetterTransport> LetterTransports { get; set; }
         public IEnumerable<LetterFood> LetterFood { get; set; }
-        public IEnumerable<TripReportsNote> TripReportsNotes { get; set; }
+        public IEnumerable<NotificationLetter> NotificationLetters { get; set; }
 
 
 

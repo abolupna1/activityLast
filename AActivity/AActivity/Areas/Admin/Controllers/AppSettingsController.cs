@@ -86,9 +86,17 @@ namespace AActivity.Areas.Admin.Controllers
                     QtyExternalDaysTrip= appSetting.QtyExternalDaysTrip,
                     QtyInstitutesDelegates = appSetting.QtyInstitutesDelegates,
                     QtyInternalDaysTrip= appSetting.QtyInternalDaysTrip,
-                    QtyOmrahDaysTrip= appSetting.QtyOmrahDaysTrip,
-                    QtyPassengersInOneBus= appSetting.QtyPassengersInOneBus,
-                    
+                    QtyOmrahMakkahDaysTrip = appSetting.QtyOmrahMakkahDaysTrip,
+                    QtyOmrahMedinaDaysTrip = appSetting.QtyOmrahMedinaDaysTrip,
+                    QtyPassengersInOneBus = appSetting.QtyPassengersInOneBus,
+                    QtyExtirnalBuses = appSetting.QtyExtirnalBuses,
+                    QtyVisitExtirnalBuses = appSetting.QtyVisitExtirnalBuses,
+                    QtyVisitIntirnalBuses = appSetting.QtyVisitIntirnalBuses,
+                    QtyIntirnalBuses = appSetting.QtyIntirnalBuses,
+                    QtyUmrahBuses = appSetting.QtyUmrahBuses,
+                    QtyDaysVisitEternal=appSetting.QtyDaysVisitEternal,
+                    QtyDaysVisitInternal=appSetting.QtyDaysVisitInternal
+
                 };
                 _context.Add(settengSave);
                 await _context.SaveChangesAsync();
@@ -112,7 +120,7 @@ namespace AActivity.Areas.Admin.Controllers
                 Response.StatusCode = 404;
                 return View("AppSettingsNotFound");
             }
-            var appSettingEdit = new AppSettingCreateModelView()
+            var appSettingEdit = new AppSettingEditModelView()
             {
                 AmountExternalCreditToTrip = appSetting.AmountExternalCreditToTrip,
                 Stamp = appSetting.Stamp,
@@ -126,8 +134,16 @@ namespace AActivity.Areas.Admin.Controllers
                 QtyExternalDaysTrip = appSetting.QtyExternalDaysTrip,
                 QtyInstitutesDelegates = appSetting.QtyInstitutesDelegates,
                 QtyInternalDaysTrip = appSetting.QtyInternalDaysTrip,
-                QtyOmrahDaysTrip = appSetting.QtyOmrahDaysTrip,
+                QtyOmrahMakkahDaysTrip = appSetting.QtyOmrahMakkahDaysTrip,
+                QtyOmrahMedinaDaysTrip = appSetting.QtyOmrahMedinaDaysTrip,
                 QtyPassengersInOneBus = appSetting.QtyPassengersInOneBus,
+                QtyExtirnalBuses=appSetting.QtyExtirnalBuses,
+                QtyVisitExtirnalBuses=appSetting.QtyVisitExtirnalBuses,
+               QtyVisitIntirnalBuses=appSetting.QtyVisitIntirnalBuses,
+               QtyIntirnalBuses=appSetting.QtyIntirnalBuses,
+               QtyUmrahBuses=appSetting.QtyUmrahBuses,
+                QtyDaysVisitEternal = appSetting.QtyDaysVisitEternal,
+                QtyDaysVisitInternal = appSetting.QtyDaysVisitInternal
             };
             return View(appSettingEdit);
         }
@@ -137,7 +153,7 @@ namespace AActivity.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AppSettingCreateModelView appSetting)
+        public async Task<IActionResult> Edit(int id, AppSettingEditModelView appSetting)
         {
             if (id != appSetting.Id)
             {
@@ -188,9 +204,16 @@ namespace AActivity.Areas.Admin.Controllers
                     QtyExternalDaysTrip = appSetting.QtyExternalDaysTrip,
                     QtyInstitutesDelegates = appSetting.QtyInstitutesDelegates,
                     QtyInternalDaysTrip = appSetting.QtyInternalDaysTrip,
-                    QtyOmrahDaysTrip = appSetting.QtyOmrahDaysTrip,
+                    QtyOmrahMakkahDaysTrip = appSetting.QtyOmrahMakkahDaysTrip,
+                    QtyOmrahMedinaDaysTrip = appSetting.QtyOmrahMedinaDaysTrip,
                     QtyPassengersInOneBus = appSetting.QtyPassengersInOneBus,
-
+                    QtyExtirnalBuses = appSetting.QtyExtirnalBuses,
+                    QtyVisitExtirnalBuses = appSetting.QtyVisitExtirnalBuses,
+                    QtyVisitIntirnalBuses = appSetting.QtyVisitIntirnalBuses,
+                    QtyIntirnalBuses = appSetting.QtyIntirnalBuses,
+                    QtyUmrahBuses = appSetting.QtyUmrahBuses,
+                    QtyDaysVisitEternal = appSetting.QtyDaysVisitEternal,
+                    QtyDaysVisitInternal = appSetting.QtyDaysVisitInternal
                 };
                 _context.Update(settengUpdate);
                 await _context.SaveChangesAsync();

@@ -56,43 +56,66 @@
 
 
 
-        <div class="col">
-            <a asp-controller="SchedulingTripHeads" asp-area="Sociologist" asp-action="Index" class="btnA">
-                <div class="counter">
-                    <i class="fa fa-stream fa-3x"></i>
-                    <p class="count-text ">
-                        <h4 class="mt-4">جدولة الرحلات</h4>
-                    </p>
-                </div>
-            </a>
-        </div>
-
-
-        <div class="col">
-            <a asp-controller="SchedulingTripDetails" asp-area="Sociologist" asp-action="Index" class="btnA">
-                <div class="counter">
-                    <i class="fa fa-list-ol fa-3x"></i>
-                    <p class="count-text ">
-                        <h4 class="mt-4"> الرحلات</h4>
-                    </p>
-                </div>
-            </a>
-        </div>
-
-        @if (ViewBag.Signutre > 0 && ViewBag.SignutreName != null && ViewBag.SignutreName ==true)
+        @if (User.IsInRole("Admin") || User.IsInRole("DirectorOfSocialActivity") || User.IsInRole("SocialActivityOfficer"))
         {
             <div class="col">
-                <a asp-controller="SignutreDelegates" asp-area="Sociologist" asp-action="Index" class="btnA">
+                <a asp-controller="SchedulingTripHeads" asp-area="Sociologist" asp-action="Index" class="btnA">
+                    <div class="counter">
+                        <i class="fa fa-stream fa-3x"></i>
+                        <p class="count-text ">
+                            <h4 class="mt-4">جدولة الرحلات</h4>
+                        </p>
+                    </div>
+                </a>
+            </div>
+        }
+
+
+        @if (User.IsInRole("Admin") || User.IsInRole("Supervisor"))
+        {
+            <div class="col">
+                <a asp-controller="SchedulingTripDetails" asp-area="Sociologist" asp-action="Index" class="btnA">
+                    <div class="counter">
+                        <i class="fa fa-list-ol fa-3x"></i>
+                        <p class="count-text ">
+                            <h4 class="mt-4"> الرحلات</h4>
+                        </p>
+                    </div>
+                </a>
+            </div>
+        }
+        @if (ViewBag.DoesHeHaveSignature !=null && ViewBag.DoesHeHaveSignature)
+        {
+            <div class="col">
+                <a asp-controller="DelegateToSignutres" asp-area="Sociologist" asp-action="Details" 
+                  asp-route-userId="@ViewBag.userId" class="btnA">
                     <div class="counter">
                         <i class="fa fa-fingerprint fa-3x"></i>
                         <p class="count-text ">
-                            <h4 class="mt-4">  المفوضين بالتوقيع </h4>
+                            <h4 class="mt-4">   التوقيع </h4>
                         </p>
                     </div>
                 </a>
             </div>
 
         }
+
+
+        @if (User.IsInRole("Admin") || User.IsInRole("DirectorOfSocialActivity") || User.IsInRole("SocialActivityOfficer"))
+        {
+            <div class="col">
+                <a asp-controller="Statistics" asp-area="Sociologist" asp-action="Index" class="btnA">
+                    <div class="counter">
+                        <i class="fa fa-chart-pie fa-3x"></i>
+                        <p class="count-text ">
+                            <h4 class="mt-4">  الإحصائيات </h4>
+                        </p>
+                    </div>
+                </a>
+            </div>
+
+        }
+
 
 
 

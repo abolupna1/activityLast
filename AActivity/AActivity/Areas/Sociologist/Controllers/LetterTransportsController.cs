@@ -41,9 +41,11 @@ namespace AActivity.Areas.Sociologist.Controllers
                 .Include(t=>t.TripBooking.SchedulingTripDetail.TripType)
                 .Include(t=>t.TripBooking.StudentsParticipatingInTrips)
                 .Include(t=>t.TripBooking.SchedulingTripDetail.EducationalBody)
+                .Include(d=>d.NotificationLetters).ThenInclude(u=>u.User)
+               
 
                 .FirstOrDefaultAsync(l=>l.Id== letterId);
-            ViewBag.signutre = await _context.Signatures.Include(d=>d.SignutreDelegates).ToListAsync();
+            ViewBag.signutre = await _context.Signatures.Include(d=>d.JobsSignatorie).ToListAsync();
             return View(letter);
         }
         public async Task<int> countbuses(int bokingId)
@@ -140,10 +142,10 @@ namespace AActivity.Areas.Sociologist.Controllers
                 await _context.SaveChangesAsync();
                 var letterTrans = new LetterTransport() { LetterId = letter.Id, UserId = trans.UserId, QtyStudents = trans.QtyStudents ,QtyBuses=trans.QtyBuses};
                 _context.LetterTransports.Add(letterTrans);
+                _context.AddRange(NotificationLetter(letter.Id).Result);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("IndexByBoking", "Letters", new { bokingId = bokingId });
             }
-        
 
             var transport = new LetterTRansportCreateModelView()
             {
@@ -155,11 +157,61 @@ namespace AActivity.Areas.Sociologist.Controllers
                 TripType = boking.SchedulingTripDetail.TripType.Name,
                 EducationBody = boking.SchedulingTripDetail.EducationalBody.Name,
                 QtyBuses = countbuses(bokingId).Result
-
             };
             return View(trans);
         }
+        private async Task<IEnumerable<NotificationLetter>> NotificationLetter(int letterId)
+        {
+            var modle = new List<NotificationLetter>();
+            var letter = await _context.Letters.FindAsync(letterId);
+            var typeofletterSignutres = await _context.TypesOfLettersAndSignatures
+                .Include(u=>u.Signature).ThenInclude(u=>u.User).Include(j=>j.Signature.JobsSignatorie)
+                .Where(s => s.TypesOfletterId == letter.TypeLetter).ToListAsync();
+            foreach (var sig in typeofletterSignutres)
+            {
+                IhHaveDelegate(sig.Id, out bool wonerHaveChild);
+                if (!wonerHaveChild)
+                {
+                    var notification = new NotificationLetter()
+                    {
+                        LetterId = letter.Id,
+                        SignatureId = sig.SignatureId,
+                        Status = false,
+                        Time = DateTime.Now,
+                        UserId = sig.Signature.UserId,
+                        IsWonerSignutre=sig.IsSignatureOwner
+                     
+                    };
+                    if (sig.IsSignatureOwner)
+                    {
+                        notification.JobsSignatorieName = sig.Signature.JobsSignatorie.Name;
+                    }
+                    else
+                    {
+                        var b = await _context.TypesOfLettersAndSignatures
+                            .Include(s=>s.Signature.JobsSignatorie)
+                            .FirstOrDefaultAsync(s => s.Id == sig.WonerSignatureId);
+                        notification.JobsSignatorieName = b.Signature.JobsSignatorie.Name;
 
+                    }
+                    modle.Add(notification);
+                }
+           
+            }
+            return modle;
+        }
+
+     
+       private void IhHaveDelegate(int typelettersignId,  out bool wonerHaveChild)
+        {
+            var typelettersignbyId = _context.TypesOfLettersAndSignatures.Find(typelettersignId);
+            var typelettersign = _context.TypesOfLettersAndSignatures.ToList();
+            wonerHaveChild = typelettersign.Any(w => w.WonerSignatureId == typelettersignbyId.Id);
+      
+
+        }
+        
+        
         [Route("Sociologist/LetterTransports/Print/{LetterId:int}")]
         public async Task<IActionResult> Print(int LetterId)
         {
@@ -191,7 +243,7 @@ namespace AActivity.Areas.Sociologist.Controllers
                 WhoHasSignutre=letter.LetteSignutres,
                 QtyBuses=letter.LetterTransports.FirstOrDefault().QtyBuses,
                 cultureInfo = new CultureInfo("ar-Sa"),
-                Signatures=await _context.Signatures.Include(u=>u.User).Where(s=>s.Status == true).ToListAsync()
+                Signatures=await _context.Signatures.Include(u=>u.User).Include(d=>d.JobsSignatorie).Where(s=>s.Status == true).ToListAsync()
 
 
         };

@@ -82,19 +82,25 @@
                 }
                 else
                 {
-                    <li class="list-group-item">
-                        <a class="btn  btn-primary btn-lg"
-                           asp-action="Create" asp-controller="TripBookings" asp-route-tripId="@Model.Id">
-                            <i class="fas fa-plus"></i>
-                            احجز الآن
-                        </a>
+            <li class="list-group-item">
+                @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))
+                {
 
+                    <a class="btn  btn-primary btn-lg"
+                       asp-action="Create" asp-controller="TripBookings" asp-route-tripId="@Model.Id">
+                        <i class="fas fa-plus"></i>
+                        احجز الآن
+                    </a>
 
-
-                    </li>
                 }
+                else
+                {
+                    <div class="alert alert-warning">انتظار حجز الجهة</div>
+                }
+            </li>
+                        }
 
-            </ul>
+                    </ul>
         </div>
 
     </div>

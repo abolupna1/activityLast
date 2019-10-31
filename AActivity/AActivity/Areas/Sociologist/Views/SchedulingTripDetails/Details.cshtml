@@ -2,7 +2,7 @@
 @model IList<AActivity.Models.SchedulingTripDetail>
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "تفاصيل";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int bb = ViewBag.tripCount;
 }
@@ -62,7 +62,7 @@
             <div class="form-group col-12 mt-5">
 
 
-                <a class="btn  btn-outline-primary btn-lg" asp-action="Details" asp-route-id="@ViewBag.SchedulingTripHeadId.Id" asp-controller="SchedulingTripHeads"> <i class="fas fa-share-square"></i> تراجع </a>
+                <a class="btn  btn-outline-primary btn-lg" asp-action="Details" asp-route-id="@ViewBag.SchedulingTripHeadId.Id" asp-controller="SchedulingTripHeads"> <i class="fas fa-share-square"></i> الرحلات </a>
                 <a class="btn  btn-outline-success btn-lg" asp-action="Edit" asp-route-id="@ViewBag.EducationalBodies.Id" asp-controller="SchedulingTripDetails"><i class="fas fa-edit"></i>تعديل  </a>
                 <a class="btn  btn-outline-danger btn-lg" asp-action="Delete" asp-route-id="@ViewBag.EducationalBodies.Id" asp-controller="SchedulingTripDetails"><i class="fas fa-trash"></i>حذف  </a>
 

@@ -1,4 +1,4 @@
-﻿@model AActivity.Areas.Admin.ModelViews.AppSettingCreateModelView
+﻿@model AActivity.Areas.Admin.ModelViews.AppSettingEditModelView
 
 
 @{
@@ -36,17 +36,32 @@
                     <input asp-for="QtyCollegesDelegates" type="text" class="form-control form-control-lg" />
                     <span asp-validation-for="QtyCollegesDelegates" class="text-danger"></span>
                 </div>
-                <div class="form-group   col-md-3 mb-4">
+                <div class="form-group   col-md-4 mb-4">
                     <label asp-for="QtyPassengersInOneBus" class="control-label"></label>
                     <input asp-for="QtyPassengersInOneBus" type="text" class="form-control form-control-lg" />
                     <span asp-validation-for="QtyPassengersInOneBus" class="text-danger"></span>
                 </div>
-                <div class="form-group   col-md-3 mb-4">
-                    <label asp-for="QtyOmrahDaysTrip" class="control-label"></label>
-                    <input asp-for="QtyOmrahDaysTrip" type="text" class="form-control form-control-lg" />
-                    <span asp-validation-for="QtyOmrahDaysTrip" class="text-danger"></span>
+                <div class="form-group   col-md-4 mb-4">
+                    <label asp-for="QtyDaysVisitEternal" class="control-label"></label>
+                    <input type="text" asp-for="QtyDaysVisitEternal" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyDaysVisitEternal" class="text-danger"></span>
                 </div>
-                <div class="form-group   col-md-3 mb-4">
+                <div class="form-group   col-md-4 mb-4">
+                    <label asp-for="QtyDaysVisitInternal" class="control-label"></label>
+                    <input type="text" asp-for="QtyDaysVisitInternal" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyDaysVisitInternal" class="text-danger"></span>
+                </div>
+                <div class="form-group   col-md-4 mb-4">
+                    <label asp-for="QtyOmrahMakkahDaysTrip" class="control-label"></label>
+                    <input type="text" asp-for="QtyOmrahMakkahDaysTrip" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyOmrahMakkahDaysTrip" class="text-danger"></span>
+                </div>
+                <div class="form-group   col-md-4 mb-4">
+                    <label asp-for="QtyOmrahMedinaDaysTrip" class="control-label"></label>
+                    <input type="text" asp-for="QtyOmrahMedinaDaysTrip" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyOmrahMedinaDaysTrip" class="text-danger"></span>
+                </div>
+                <div class="form-group   col-md-4 mb-4">
                     <label asp-for="QtyInternalDaysTrip" class="control-label"></label>
                     <input asp-for="QtyInternalDaysTrip" type="text" class="form-control form-control-lg" />
                     <span asp-validation-for="QtyInternalDaysTrip" class="text-danger"></span>
@@ -80,15 +95,44 @@
                     <span asp-validation-for="AmountVisitCreditToTrip" class="text-danger"></span>
                 </div>
 
+
                 <div class="form-group   col-md-3 mb-4">
-                    <label asp-for="StampFile" class="control-label"></label>
-                    <input asp-for="StampFile" onchange="FillImage(event);" class="form-control form-control-lg" />
-                    <span asp-validation-for="StampFile" class="text-danger"></span>
+                    <label asp-for="QtyVisitIntirnalBuses" class="control-label"></label>
+                    <input type="text" asp-for="QtyVisitIntirnalBuses" onchange="FillImage(event);" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyVisitIntirnalBuses" class="text-danger"></span>
                 </div>
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="QtyVisitExtirnalBuses" class="control-label"></label>
+                    <input type="text" asp-for="QtyVisitExtirnalBuses" onchange="FillImage(event);" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyVisitExtirnalBuses" class="text-danger"></span>
+                </div>
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="QtyUmrahBuses" class="control-label"></label>
+                    <input type="text" asp-for="QtyUmrahBuses" onchange="FillImage(event);" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyUmrahBuses" class="text-danger"></span>
+                </div>
+
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="QtyExtirnalBuses" class="control-label"></label>
+                    <input type="text" asp-for="QtyExtirnalBuses" onchange="FillImage(event);" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyExtirnalBuses" class="text-danger"></span>
+                </div>
+
+                <div class="form-group   col-md-3 mb-4">
+                    <label asp-for="QtyIntirnalBuses" class="control-label"></label>
+                    <input type="text" asp-for="QtyIntirnalBuses" onchange="FillImage(event);" class="form-control form-control-lg" />
+                    <span asp-validation-for="QtyIntirnalBuses" class="text-danger"></span>
+                </div>
+
+
 
                 <div class="form-group   col-md-12 mb-4">
                     <div class="row">
-
+                        <div class="form-group   col-md-12 mb-4">
+                            <label asp-for="StampFile" class="control-label"></label>
+                            <input asp-for="StampFile" onchange="FillImage(event);" class="form-control form-control-lg" />
+                            <span asp-validation-for="StampFile" class="text-danger"></span>
+                        </div>
                         <div class="col-3">
                             <img id="image" asp-append-version="true" class="w-100 img-thumbnail" src="~/img/stamps/@Model.Stamp" alt="الصورة" />
                             <input hidden asp-for="Stamp" />

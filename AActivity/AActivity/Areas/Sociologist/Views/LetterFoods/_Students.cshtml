@@ -19,15 +19,7 @@
             <td>@student.StudentNumber</td>
             <td>
                 @student.StudentName
-            @if (i==Model.QtyStudents - 4)
-            {
-         
-                <span class="stamp">
-                  
-                    <img width="150" src="~/img/stamps/@Model.StampEducationBody" />
-                </span>
-         
-        }
+     
             </td>
         </tr>
             i++;
@@ -35,4 +27,14 @@
       
        
     </tbody>
+    <tfoot>
+        <tr >
+            <td colspan="3">
+                <span >
+
+                    <img style="margin-top: -250px; margin-right:250px" width="150" src="~/img/stamps/@Model.StampEducationBody" />
+                </span>
+            </td>
+        </tr>
+    </tfoot>
 </table>

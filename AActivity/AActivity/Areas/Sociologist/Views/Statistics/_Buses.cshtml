@@ -1,0 +1,122 @@
+﻿@model IList<AActivity.Models.SchedulingTripDetail>
+ 
+
+
+<style>
+    .bg-gold {
+        background-color: #be9f5e !important;
+        color: white
+    }
+</style>
+
+<table class="table table-bordered table-hover table-condensed">
+    <thead class="text-center">
+        <tr class="bg-gold  ">
+            <th rowspan="2">#</th>
+            <th rowspan="2">الجهة</th>
+            <th colspan="5"> الباصات</th>
+
+        </tr>
+        <tr class="bg-gold ">
+
+            <th> العمرة</th>
+            <th> داخلية</th>
+            <th> خارجية</th>
+            <th> زيارة</th>
+            <th> الجميع</th>
+
+        </tr>
+
+
+    </thead>
+
+    <tbody>
+        @{ int i = 1;}
+        @foreach (var edu in ViewBag.Edus)
+        {
+
+            <tr class="text-center">
+                <th class="bg-gold">@i</th>
+                <td>@edu.Name</td>
+
+                <td>
+                    @foreach (var transports in Model.Where(e=>e.EducationalBodyId==edu.Id && e.TripType.Name == "عمرة").ToList())
+                    {
+                        foreach (var trans in transports.TripBookings.ToList())
+                        {
+                           @trans.Letters.Sum(e=>e.LetterTransports.Sum(f=>f.QtyBuses))
+                        }
+                    }
+                </td>
+                <td>
+                    @foreach (var transports in Model.Where(e => e.EducationalBodyId == edu.Id && e.TripType.Name == "داخلية").ToList())
+                    {
+                        foreach (var trans in transports.TripBookings.ToList())
+                        {
+                            @trans.Letters.Sum(e => e.LetterTransports.Sum(f => f.QtyBuses))
+                        }
+                    }
+                </td>
+
+                <td>
+                    @foreach (var transports in Model.Where(e => e.EducationalBodyId == edu.Id && e.TripType.Name == "خارجية").ToList())
+                    {
+                        foreach (var trans in transports.TripBookings.ToList())
+                        {
+                            @trans.Letters.Sum(e => e.LetterTransports.Sum(f => f.QtyBuses))
+                        }
+                    }
+                </td>
+                <td>
+                    @{ var ziara = 0;}
+                    @foreach (var transports in Model.Where(e => e.EducationalBodyId == edu.Id && e.TripType.Name == "زيارة").ToList())
+                    {
+                        foreach (var trans in transports.TripBookings.ToList())
+                        {
+                             ziara = trans.Letters.Sum(e => e.LetterTransports.Sum(f => f.QtyBuses));
+
+                        }
+                    }
+                    @ziara
+                </td>
+                <td>
+                   @{ int tot = 0;}
+                    @foreach (var transports in Model.Where(e => e.EducationalBodyId == edu.Id ).ToList())
+                    {
+                        foreach (var trans in transports.TripBookings.ToList())
+                        {
+                            tot = trans.Letters.Sum(d=>d.LetterTransports.Sum(f=>f.QtyBuses));
+
+                        }
+                        tot += tot;
+                    }
+                    @tot
+                </td>
+
+            </tr>
+            i++;
+        }
+        <tr class="text-center">
+            <th colspan="2">المجموع</th>
+
+
+            <th>
+                @Model.Where(d => d.TripType.Name == "عمرة").ToList().Count()
+            </th>
+            <th>
+                @Model.Where(d => d.TripType.Name == "داخلية").ToList().Count()
+            </th>
+
+            <th>
+                @Model.Where(d => d.TripType.Name == "خارجية").ToList().Count()
+            </th>
+            <th>
+                @Model.Where(d => d.TripType.Name == "زيارة").ToList().Count()
+            </th>
+            <th>
+                @Model.Count()
+            </th>
+        </tr>
+    </tbody>
+</table>
+

@@ -139,28 +139,72 @@ namespace AActivity.Data
             }
             // ======================
 
+            //====================================
+            if (!context.JobsSignatories.Any(t => t.Id > 0))
+            {
+                IList<JobsSignatorie> jobs = new List<JobsSignatorie>()
+            {
+                new JobsSignatorie(){Name="رئيس قسم النشاط الاجتماعي" },
+                new JobsSignatorie(){Name="مدير إدارة النشاط" },
+                new JobsSignatorie(){Name="وكيل العمادة لشؤون النشاط" },
+                new JobsSignatorie(){Name="عميد شؤون الطلاب" },
+                new JobsSignatorie(){Name="مفوض" },
+
+
+            };
+
+                foreach (var t in jobs)
+                {
+                    context.Add(t);
+                    await context.SaveChangesAsync();
+                }
+            }
+            // ======================
+
+            //====================================
+            if (!context.TypesOfletters.Any(t => t.Id > 0))
+            {
+                IList<TypesOfletter> typesletters = new List<TypesOfletter>()
+            {
+                new TypesOfletter(){Name="النقل" },
+                new TypesOfletter(){Name="التغذية" },
+                new TypesOfletter(){Name="الإنتداب" },
+                new TypesOfletter(){Name="السلف" },
+                new TypesOfletter(){Name="الى من يهمه الأمر" },
+                new TypesOfletter(){Name="انهاء مهمة" },
+
+
+
+            };
+
+                context.AddRange(typesletters);
+                await context.SaveChangesAsync();
+            }
+            // ======================
+
+
 
             ////====================================
-            //if (context.StudentsParticipatingInTrip.ToList().Count < 1000)
-            //{
+            if (context.StudentsParticipatingInTrip.ToList().Count == 0)
+            {
 
-            //    var boking = await context.TripBookings.LastOrDefaultAsync();
-            //    for (int i = 0; i < 70; i++)
-            //    {
-            //        StudentsParticipatingInTrip student = new StudentsParticipatingInTrip()
-            //        {
-            //            StudentName = "student" + i + "",
-            //            StudentNumber = 111111 + i,
-            //            TripBookingId = 4002,
-            //        };
+                var boking = await context.TripBookings.LastOrDefaultAsync();
+                for (int i = 0; i < 92; i++)
+                {
+                    StudentsParticipatingInTrip student = new StudentsParticipatingInTrip()
+                    {
+                        StudentName = "student" + i + "",
+                        StudentNumber = 111111 + i,
+                        TripBookingId = 1,
+                    };
 
-            //        context.Add(student);
-            //        await context.SaveChangesAsync();
+                    context.Add(student);
+                    await context.SaveChangesAsync();
 
-            //    }
+                }
 
 
-            //}
+            }
             //// ======================
 
 

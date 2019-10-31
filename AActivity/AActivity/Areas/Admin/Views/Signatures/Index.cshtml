@@ -17,62 +17,105 @@
 
 
 </div>
-@{ int i = 1;}
-<table class="table  table-hover table-bordered table-striped ">
-    <thead class="table-primary ">
-        <tr class="text-center">
-            <th>#</th>
-          
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
+@if (Model.Count() > 0)
+{
+     int i = 1;
+    @foreach (var item in Model)
+    {
+<div class="card mb-2">
+    <div class="card-header bg-primary text-white">
+       # @i
+    </div>
+    <div class="row no-gutters">
+        <div class="col-md-4 align-content-center">
+            <img src="~/img/signatures/@item.SignaturePhoto"  style="max-width:200px;max-height:200px"  class="card-img  img-thumbnail" alt="التوقيع">
+        </div>
+        <div class="col-md-8 ">
+            <div class="card-body">
+                <div class="row">
+                    <p class="card-text col-6">
+                        <strong> توقيع :</strong> @item.User.FullName
+                    </p>
+                    <p class="card-text col-6">
+                        <strong>الوظيفة :</strong> @item.JobsSignatorie.Name
+                    </p>
+                    <p class="card-text col-12">
+                        <strong>حالة التوقيع  :</strong>
+                        @if (item.Status)
+                        {
+                            <span class="badge badge-success">صالح</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger">غير صالح</span>
 
-            <th>
-                @Html.DisplayNameFor(model => model.SignaturePhoto)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Count() > 0)
+                        }
+                    </p>
+                    <h4> صلاحيات التوقيع:</h4>
+
+                    <div class="col-12">
+
+                        الخطابات:
+                        @foreach (var v in item.TypesOfLettersAndSignatures)
+                        {
+                            <div class="badge badge-primary badge-pill ml-1 p-2" role="alert">
+                                @v.TypesOfletter.Name
+                            </div>
+                        }
+
+
+                    </div>
+                   
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="card-footer">
+        @if (item.JobsSignatorie.Name!="مفوض")
         {
-            @foreach (var item in Model)
-            {
-        <tr class="text-center">
-            <th class="pt-5">@i</th>
-         
-            <td class="pt-5">
-                @Html.DisplayFor(modelItem => item.Degree)
-                @Html.DisplayFor(modelItem => item.User.FullName)
-            </td>
-            <td>
-                <img asp-append-version="true" alt="الصورة" src="~/img/signatures/@item.SignaturePhoto" width="100" height="100" />
+            <a asp-action="IndexBysignutre" asp-controller="TypesOfLettersAndSignatures" class="btn  btn-outline-primary" 
+               asp-route-signutreId="@item.Id">
 
-            </td>
-            <td class="pt-5">
-                <a asp-action="Edit" class="btn btn-sm btn-outline-success" asp-route-id="@item.Id">
-
-                    <i class="fas fa-edit"></i>
-                    تعديل
-                </a>
-
-                <a asp-action="Delete" class="btn btn-sm btn-outline-danger" asp-route-id="@item.Id">
-                    <i class="fas fa-trash"></i>
-                    حذف
-                </a>
-            </td>
-        </tr>
-                i++;
-            } 
-
+                <i class="fas fa-edit"></i>
+                صلاحيات التوقيع
+            </a>
         }
-        else
-        {
-            <tr>
-                <td colspan="5" class="text-center">
-                    لايوجد بيانات
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+
+        <a asp-action="Edit" class="btn  btn-outline-success" asp-route-id="@item.Id">
+
+            <i class="fas fa-edit"></i>
+            تعديل
+        </a>
+
+        <a asp-action="Delete" class="btn  btn-outline-danger" asp-route-id="@item.Id">
+            <i class="fas fa-trash"></i>
+            حذف
+        </a>
+    </div>
+</div>
+        i++;
+    }
+
+}
+else
+{
+    <tr>
+        <td colspan="5" class="text-center">
+            لايوجد بيانات
+        </td>
+    </tr>
+}

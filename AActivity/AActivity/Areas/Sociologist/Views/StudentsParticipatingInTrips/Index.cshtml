@@ -11,6 +11,14 @@
         return "checkbox" + id;
 
     }
+    string disabled()
+    {
+        if(ViewBag.Remainder == 0)
+        return "disabled";
+
+        return string.Empty;
+    }
+
 }
 
 <style>
@@ -26,12 +34,8 @@
     <p class="d-inline">
 
 
-        <!-- Button trigger modal -->
-        @*<button type="button" class="btn  btn-outline-danger float-left  btn-lg" data-toggle="modal" data-target="#exampleModal">
-            <i class="fas fa-trash"></i>     حذف السجلات المحددة
-        </button>*@
 
-        <a class="btn btn-outline-success btn-lg float-left ml-2 "
+        <a class="btn btn-outline-success btn-lg float-left ml-2 @disabled()"
            data-toggle="modal" data-target="#CreateTrips" href="#">
             <i class="fas fa-plus"></i>    اضافة طلاب
         </a>
@@ -47,20 +51,35 @@
 @{ int i = 1;}
 <div class="table-responsive-sm">
 
+<style>
+    .alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+</style>
+    @if (ViewBag.Required != null)
+    {
+    <div class="alert alert-warning border">
+        <span class="ml-5"> عدد المقاعد المتوفر للرحلة   ( @ViewBag.Required ) مقعد</span>
+        <span class="ml-5"> عدد المسجلين   ( @ViewBag.Registered ) مقاعد</span>
+        <span class="ml-5"> عدد المقاعد المتبقية    ( @ViewBag.Remainder ) مقعد</span>
+    </div>
 
+    }
 
     <table class="table  table-hover table-bordered table-striped " id="table">
         <thead class="table-primary ">
             <tr>
-                <th >#</th>
-                <th >
+                <th>#</th>
+                <th>
                     رقم الطالب
                 </th>
-                <th >
+                <th>
                     اسم الطالب
                 </th>
 
-                <th ></th>
+                <th></th>
 
                 @*<th>
 
@@ -81,30 +100,25 @@
 
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <th>@i</th>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.StudentNumber)
-                            </td>
-                            <td class="d-inline-block text-truncate">
-                                @Html.DisplayFor(modelItem => item.StudentName)
-                            </td>
-
+                    <tr>
+                        <th>@i</th>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StudentNumber)
+                        </td>
+                        <td class="d-inline-block text-truncate">
+                            @Html.DisplayFor(modelItem => item.StudentName)
+                        </td>
+                     
                             <td>
                                 <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.Id">حذف</a>
                                 <a asp-action="Edit" class="btn btn-success btn-sm" asp-route-id="@item.Id">تعديل</a>
                             </td>
+                        
 
 
 
-                            @*<td>
-                                    <div class="custom-control custom-checkbox">
 
-                                        <input type="checkbox" name="checkForDelete" value="@Model[j].Id" class="custom-control-input chkId" id="@checkbox(Model[j].Id)">
-                                        <label class="custom-control-label" for="@checkbox(Model[j].Id)"></label>
-                                    </div>
-                                </td>*@
-                        </tr>
+                    </tr>
                         i++;
                         j++;
                     }
@@ -202,7 +216,7 @@
         </div>
     </div>
 
-
+</div>
 
 
 

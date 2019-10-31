@@ -93,7 +93,7 @@ namespace AActivity.Areas.Sociologist.Controllers
                 .Include(a=>a.LetterAdvancedDelegations)
                 .ThenInclude(l=>l.LetterSignutreForAdvances)
                 .FirstOrDefaultAsync(l => l.Id == letterId);
-            ViewBag.signutre = await _context.Signatures.Include(d => d.SignutreDelegates).ToListAsync();
+           // ViewBag.signutre = await _context.Signatures.Include(d => d.SignutreDelegates).ToListAsync();
             return View(letter);
         }
         [Route("Sociologist/LetterAdvancedDelegations/IndexByBokingId/{bokingId:int}")]

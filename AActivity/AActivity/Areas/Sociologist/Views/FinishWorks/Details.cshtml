@@ -1,0 +1,328 @@
+﻿
+@model AActivity.Areas.Sociologist.ModelViews.FinishWorkCreateModelView
+
+@{
+    ViewData["Title"] = "طباعة";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    .lead {
+        font-size: 1rem;
+        font-weight: 200;
+    }
+
+    .fa-2x {
+        font-size: 1em;
+    }
+</style>
+<button id="print" class="btn btn-outline-gold "><i class="fa fa-print fa-3x"></i></button>
+<hr />
+
+<div class="row printed ar">
+    <div class="col-12">
+        <table id="table" >
+            <thead>
+                <tr>
+                    <th colspan="4">
+                        <img src="~/img/letter/letterHeade.PNG" class="w-100 h-50" />
+                    </th>
+
+                </tr>
+                <tr class="text-center">
+                    <th class="pt-4" colspan="4">
+                        <h5>
+                            وثيقة أداء  مهمة
+                        </h5>
+                    </th>
+                </tr>
+            </thead>
+          
+        </table>
+
+        <div class="row border p-3 ar">
+            <div class="col-md-4">
+                اسم الموظف : @Model.EmployeeName
+            </div>
+            <div class="col-md-4">
+                مسمى الوظيفة: @Model.JopName
+            </div>
+            <div class="col-md-4">
+                المرتبة : @Model.JopDegree
+            </div>
+            <div class="col-md-12 mt-3 text-center">
+                بناء على قرار الانتداب رقم  : @Model.DelegationNumber
+                وتاريخ  : @Model.DateDelgation.ToString("dd-MM-yyyy")
+            </div>
+            <div class="col-md-12 mt-4 text-center">
+                قد تم  إنهاء المهمة في مدة (@Model.EndWorkDuration)
+                أيام اعتباراً من @Model.FromDateDelgation.ToString("dd-MM-yyyy")
+                جهة الانتداب (@Model.DelegationBudy)
+            </div>
+            <div class="col-md-6 mt-3 ">
+                علما بأن وسيلة النقل على حساب
+            </div>
+
+            <div class="col-md-3 mt-4 ">
+                @if (Model.CashAdvance == true)
+                {
+                    <text>الموظف</Text>
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                        <i class="fa fa-check"></i>
+                    </span>
+                }
+                else
+                {
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                    </span>
+                    <text>الموظف</Text>
+
+                }
+            </div>
+            <div class="col-md-3 mt-4 ">
+                @if (Model.CashAdvance == false)
+                {
+                    <text>الجهة</Text>
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                        <i class="fa fa-check"></i>
+
+                    </span>
+                }
+                else
+                {
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                    </span>
+                    <text>الجهة</Text>
+
+                }
+
+            </div>
+            <div class="col-md-6 mt-4 ">
+                والسكن على حساب
+            </div>
+            <div class="col-md-3 mt-4 ">
+                @if (Model.LivingBuy == true)
+                {
+                    <text>الموظف</Text>
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                        <i class="fa fa-check"></i>
+                    </span>
+                }
+                else
+                {
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                    </span>
+                    <text>الموظف</Text>
+
+                }
+            </div>
+            <div class="col-md-3 mt-4 ">
+                @if (Model.LivingBuy == false)
+                {
+                    <text>الجهة</Text>
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                        <i class="fa fa-check"></i>
+
+                    </span>
+                }
+                else
+                {
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                    </span>
+                    <text>الجهة</Text>
+
+                }
+
+            </div>
+
+
+            <!--====================-->
+            <div class="col-md-6 mt-4 ">
+                والطعام على حساب
+            </div>
+            <div class="col-md-3 mt-4">
+                @if (Model.FoodsBuy == true)
+                {
+                    <text>الموظف</Text>
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                        <i class="fa fa-check"></i>
+                    </span>
+                }
+                else
+                {
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                    </span>
+                    <text>الموظف</Text>
+
+                }
+            </div>
+            <div class="col-md-3 mt-4 ">
+                @if (Model.FoodsBuy == false)
+                {
+                    <text>الجهة</Text>
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                        <i class="fa fa-check"></i>
+
+                    </span>
+                }
+                else
+                {
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                    </span>
+                    <text>الجهة</Text>
+
+                }
+
+            </div>
+
+
+
+            <!--====================-->
+            <div class="col-md-6 mt-4 ">
+                والمواصلات للعمل الرسمي على حساب
+            </div>
+            <div class="col-md-3 mt-4 ">
+                @if (Model.TransportBuy == true)
+                {
+                    <text>الموظف</Text>
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                        <i class="fa fa-check"></i>
+                    </span>
+                }
+                else
+                {
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                    </span>
+                    <text>الموظف</Text>
+
+                }
+            </div>
+            <div class="col-md-3 mt-4 ">
+                @if (Model.TransportBuy == false)
+                {
+                    <text>الجهة</Text>
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                        <i class="fa fa-check"></i>
+
+                    </span>
+                }
+                else
+                {
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                    </span>
+                    <text>الجهة</Text>
+
+                }
+
+            </div>
+
+
+
+            <!--====================-->
+            <div class="col-md-6 mt-4 ">
+                هل سبق صرف سلفة نقدية على حساب مصاريف السفرية
+                مقدار السلفة (@Model.CashAdvanceAmont)
+            </div>
+            <div class="col-md-3 mt-4 ">
+                @if (Model.CashAdvance == true)
+                {
+                    <text>نعم&nbsp;	&nbsp;&nbsp;	&nbsp;		</Text>
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                        <i class="fa fa-check"></i>
+                    </span>
+                }
+                else
+                {
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                    </span>
+                    <text>نعم&nbsp;	&nbsp;&nbsp;	&nbsp;		</Text>
+
+                }
+            </div>
+            <div class="col-md-3 mt-4 ">
+                @if (Model.CashAdvance == false)
+                {
+                    <text>&nbsp;	&nbsp;&nbsp;	&nbsp;لا</Text>
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                        <i class="fa fa-check"></i>
+
+                    </span>
+                }
+                else
+                {
+                    <span class="border pt-2 pb-2 pl-4 pr-4">
+                    </span>
+                    <text> لا&nbsp;	&nbsp;&nbsp;	&nbsp;</Text>
+
+                }
+
+            </div>
+            <div class="col-12"><hr /><hr /></div>
+            <!--=====================-->
+
+            <div class="col-md-6">
+                <div class="row">
+                    <h6>الموظف المنتدب </h6>
+                    <div class="col-12">اسم الموظف:  @Model.EmployeeName</div>
+                    <div class="col-12">
+                        التوقيع:............................
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <h6> </h6>
+                    <div class="col-12">الاسم : @ViewBag.amaidSignutre</div>
+                    <div class="col-12">
+                        التوقيع:.........................
+                    </div>
+                </div>
+            </div>
+
+            ملاحظة / يتم تعبئة الجدول قبل اظهار اتهاء المهمة من قبل مشرف النشاط الاجتماعي
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+    <script src="~/lib/printThis/printThis.js"></script>
+
+    <script>
+        $('#print').click(function () {
+          
+            $(".printed").printThis({
+                debug: false,               // show the iframe for debugging
+                importCSS: true,            // import parent page css
+                importStyle: true,         // import style tags
+                printContainer: true,       // print outer container/$.selector
+                loadCSS: "",                // path to additional css file - use an array [] for multiple
+                pageTitle: "",              // add title to print page
+                removeInline: false,        // remove inline styles from print elements
+                removeInlineSelector: "*",  // custom selectors to filter inline styles. removeInline must be true
+                printDelay: 333,            // variable print delay
+                header: null,               // prefix to html
+                footer: null,               // postfix to html
+                base: false,                // preserve the BASE tag or accept a string for the URL
+                formValues: true,           // preserve input/form values
+                canvas: false,              // copy canvas content
+                doctypeString: '...',       // enter a different doctype for older markup
+                removeScripts: false,       // remove script tags from print content
+                copyTagClasses: false,      // copy classes from the html & body tag
+                beforePrintEvent: null,     // function for printEvent in iframe
+                beforePrint: null,          // function called before iframe is filled
+                afterPrint: null            // function called before iframe is removed
+            });
+
+        });
+
+
+    </script>
+}
+
